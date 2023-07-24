@@ -1,9 +1,13 @@
 # Table of contents
 
+## HTML
+
 * [HTML](README.md)
-* [CSS](css.md)
-* [JavaScript](javascript.md)
 
-## Group 1
+## CSS
 
-* [Page 1](group-1/page-1.md)
+* [CSS](css/css.md)
+
+## JavaScript
+
+* [JavaScript](javascript/javascript.md)
