@@ -17,13 +17,38 @@
 
 ### HTML结构规范
 
+{% code fullWidth="false" %}
+```html
+<!-- 协议版本声明 -->
+<!DOCTYPE html>
+
+<!-- html开始结束标签 -->
+<html lang="en">
+
+    <!-- 头部声明，非页面内容 -->
+    <head>
+        <meta charset="UTF-8">
+        <title>页面标题</title>
+    </head>
+    
+    <!-- 页面内容 -->
+    <body>
+    </body>
+</html>
+```
+{% endcode %}
+
+<details>
+
+<summary></summary>
+
+
+
+</details>
+
 
 
 ### HTML常用标签
-
-
-
-
 
 
 
