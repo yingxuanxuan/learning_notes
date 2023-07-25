@@ -1,6 +1,6 @@
-# gitbook
+# gitbook.com使用问题记录
 
-### gitbook space与github同步
+## gitbook space与github同步
 
 * 打开gitbook右上角菜单栏，配置当前space
 * 点击`Synchronize with Git`
@@ -16,8 +16,29 @@
 
 <figure><img src=".gitbook/assets/1690254313000.png" alt=""><figcaption></figcaption></figure>
 
-### gitbook第一个page问题
+## gitbook第一个page问题
 
 * gitbook中创建的第一个page在git目录中保存为README.md
 * 自动保存的README.md会阻碍在git目录中创建group和subpage目录
-* 打开outline
+* 打开outline功能会自动生成一个SUMMARY.md作为space目录，gitbook会自动维护该目录
+
+## gitbook中使用heading标签
+
+* page名称在markdown中会保存为h1标签
+* gitbook中使用的h1标签在markdown中会降级为h2标签
+
+## gitbook中代码换行设置
+
+* github不支持gitbook的代码换行设置
+
+## gitbook中内容折叠
+
+* github支持gitbook中的内容折叠设置
+* gitbook使用html标签实现内容折叠
+
+```html
+<details>
+    <summary>概要<summary>
+    折叠的内容
+</details>
+```
