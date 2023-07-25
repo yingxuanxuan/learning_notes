@@ -9,7 +9,7 @@
 * 下拉菜单选择`Account`
 * 下拉菜单选择`Repository`（仓库需要提前在GitHub中创建）
 * 下拉菜单选择`Branch`（新建空Repository首次提交需要手动输入默认branch名称）
-* 选择`Project directory`（需要手动输入）
+* 选择`Project directory`（需要手动输入，留空为仓库根目录）
 * 选择首次连接时同步方向（空`GitHub Repository`选择`GitBook to GitHub`）
 
 <figure><img src=".gitbook/assets/1690254284615.png" alt=""><figcaption></figcaption></figure>
