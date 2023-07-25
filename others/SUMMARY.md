@@ -2,5 +2,5 @@
 
 * [README.md](README.md)
 * [windows](windows.md)
-* [gitbook](gitbook.md)
-* [github](github.md)
+* [gitbook.com](gitbook.com.md)
+* [github.com](github.com.md)
