@@ -84,7 +84,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### p标签，paragraph，段落标签
 
@@ -121,7 +121,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### strong标签，强调，em标签，emphasis，着重标签
 
@@ -152,7 +152,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 
 ### br标签，换行
 
@@ -190,7 +190,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### hr标签，horizontal，水平分割线
 
@@ -288,15 +288,300 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 <figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 
-### dl标签，description list，定义列表，描述列表
+### dl标签，description list，描述列表
+
+* dl也可以解释为definition list，定义列表
+* dt，description term，描述项
+* dd，description details，描述细节
 
 #### dl示例
 
 代码：
 
-dl示例效果：
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>Cryptids of Cornwall:</p>
 
+    <dl>
+        <dt>Beast of Bodmin</dt>
+        <dd>A large feline inhabiting Bodmin Moor.</dd>
+    
+        <dt>Morgawr</dt>
+        <dd>A sea serpent.</dd>
+    
+        <dt>Owlman</dt>
+        <dd>A giant owl-like creature.</dd>
+    </dl>
+    
+</html>
+```
 
+效果：
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+## table，表格
+
+* \<table>\</table> 最外层表格标签
+* \<thead>\</thead> 表头结构，可选
+* \<tbody>\</tbody> 表身结构，可选
+* \<tfoot>\</tfoot> 表尾结构，可选
+* \<tr>\</tr> 表的一行
+* \<td>\</td> 行中的一列
+* \<th>\</th> 标题项，可选，可以在首行中均为th，也可以在各行中第一列为th
+* \<caption> 表标题，可选
+* \<colgroup> 列组，可选，给列分组，整体设置属性
+
+#### 完整表格示例
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        <colgroup>
+            <col style="background-color: #0f0" />
+            <col span="2" />
+        </colgroup>
+        <caption>表标题</caption>
+        <thead>
+            <tr>
+                <th>第一行第一列，纵向表头</th>
+                <th>第一行第二列，纵向表头</th>
+                <th>第一行第三列，纵向表头</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>第二行第一列，横向表头</th>
+                <td>第二行第二列，内容</td>
+                <td>第二行第三列，内容</td>
+            </tr>
+            <tr>
+                <th>第三行第一列，横向表头</th>
+                <td>第三行第二列，内容</td>
+                <td>第三行第三列，内容</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <th>第四行第一列，表尾横向表头</th>
+                <td>第四行第二列，表尾内容</td>
+                <td>第四行第三列，表尾内容</td>
+            </tr>
+        </tfoot>
+    </table>
+</html>
+```
+
+效果：
+
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+#### 最简表格示例
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>第一行第一列</td>
+            <td>第一行第二列</td>
+            <td>第一行第三列</td>
+        </tr>
+        <tr>
+            <td>第二行第一列</td>
+            <td>第二行第二列</td>
+            <td>第二行第三列</td>
+        </tr>
+    </table>
+</html>
+```
+
+效果：
+
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+
+#### 跨行跨列示例
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table, td{
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>1x1</td>
+            <td colspan="3">1x2</td>
+            <!-- <td>1x3</td> -->
+            <!-- <td>1x4</td> -->
+            <td>1x5</td>
+            <td>1x6</td>
+        </tr>
+        <tr>
+            <td>2x1</td>
+            <td>2x2</td>
+            <td>2x3</td>
+            <td>2x4</td>
+            <td>2x5</td>
+            <td>2x6</td>
+        </tr>
+        <tr>
+            <td>3x1</td>
+            <td>3x2</td>
+            <td rowspan="3">3x3</td>
+            <td>3x4</td>
+            <td>3x5</td>
+            <td>3x6</td>
+        </tr>
+        <tr>
+            <td>4x1</td>
+            <td>4x2</td>
+            <!-- <td>4x3</td> -->
+            <td>4x4</td>
+            <td>4x5</td>
+            <td>4x6</td>
+        </tr>
+        <tr>
+            <td>5x1</td>
+            <td>5x2</td>
+            <!-- <td>5x3</td> -->
+            <td>5x4</td>
+            <td>5x5</td>
+            <td>5x6</td>
+        </tr>
+        <tr>
+            <td>6x1</td>
+            <td>6x2</td>
+            <td>6x3</td>
+            <td>6x4</td>
+            <td>6x5</td>
+            <td>6x6</td>
+        </tr>
+    </table>
+</html>
+```
+
+效果：
+
+<figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+
+#### 单像素边框设置css
+
+```css
+/* 打开所有table外层边框，td内层边框 */
+table, td{
+    border: 1px solid red;
+}
+/* table内所有td边框间距为0 */
+table{
+    border-spacing: 0;
+}
+/* 关闭单个td上边和左边（只保留下边和右边） */
+td {
+    border-top-width: 0;
+    border-left-width: 0;
+}
+/* 关闭所有tr中最后一个td的右边（使用table的右边） */
+td:last-child{
+    border-right-width: 0;
+}
+/* 关闭最后一行tr中所有td的下边（使用table的下边） */
+tr:last-child td{
+    border-bottom-width: 0;
+}
+```
+
+### a标签，anchor，锚点
+
+#### target属性
+
+* 通过target可以设置打开链接的方式
+* target默认值是`_self`，在本页面打开连接
+* 所有选项：
+  * `_self`：当前页面加载。（默认）
+  * `_blank`：通常在新标签页打开，但用户可以通过配置选择在新窗口打开。
+  * `_parent`：当前浏览环境的父级浏览上下文。如果没有父级框架，行为与 `_self` 相同。
+  * `_top`：最顶级的浏览上下文（当前浏览上下文中最“高”的祖先）。如果没有祖先，行为与 `_self` 相同。
+
+#### 相对路径
+
+```markup
+<a href="//example.com">相对于协议的 URL</a>
+<a href="/zh-CN/docs/Web/HTML">相对于源的 URL</a>
+<a href="./p">相对于路径的 URL</a>
+```
+
+#### 同页面跳转
+
+```html
+<!-- <a> 元素链接到id所在的位置 -->
+<p><a href="#Section_further_down">跳转到id所在位置</a></p>
+
+<!-- 要链接到的标签 -->
+<h2 id="Section_further_down">id所在位置</h2>
+```
+
+####
+
+#### a标签示例
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>You can reach Michael at:</p>
+
+    <ul>
+        <li><a href="https://example.com">Website</a></li>
+        <li><a href="mailto:m.bluth@example.com">Email</a></li>
+        <li><a href="tel:+123456789">Phone</a></li>
+    </ul>
+    
+</html>
+```
+
+效果：
+
+## ![](<.gitbook/assets/image (8).png>)
 
 ## HTML特殊符号
 
