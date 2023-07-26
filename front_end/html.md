@@ -84,7 +84,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### p标签，paragraph，段落标签
 
@@ -121,7 +121,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### strong标签，强调，em标签，emphasis，着重标签
 
@@ -325,9 +325,9 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
 
-## table，表格
+### table标签，表格
 
 * \<table>\</table> 最外层表格标签
 * \<thead>\</thead> 表头结构，可选
@@ -388,7 +388,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### 最简表格示例
 
@@ -420,7 +420,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 
 #### 跨行跨列示例
 
@@ -543,7 +543,7 @@ tr:last-child td{
 <a href="./p">相对于路径的 URL</a>
 ```
 
-#### 同页面跳转
+#### 页面内跳转
 
 ```html
 <!-- <a> 元素链接到id所在的位置 -->
@@ -552,8 +552,6 @@ tr:last-child td{
 <!-- 要链接到的标签 -->
 <h2 id="Section_further_down">id所在位置</h2>
 ```
-
-####
 
 #### a标签示例
 
@@ -582,6 +580,120 @@ tr:last-child td{
 效果：
 
 ## ![](<.gitbook/assets/image (8).png>)
+
+### img标签，image，图片
+
+* alt属性，在获取不到图片时，在图片位置替代显示
+* width和height只设置一个时，会自动保持宽高比
+
+#### img标签示例
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <img src="https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png">
+</html>
+```
+
+效果：
+
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+### form标签，表单
+
+#### form常用属性
+
+* action属性，值为表单提交的路径
+* method属性，值为表单提交的http方法，默认为get，可能的值
+  * get，表单数据附加在action指向的提交路径url后，以?分隔
+  * post，表单数据附加在表单体内
+  * dialog，略
+
+#### input常用属性
+
+* `type`属性默认值为`text`，即不填写属性时`type="text"`
+* `type="text"`时，输入的文字正常显示
+* `type="password"`时，输入文字显示为`*`
+* `type="submit"`时，input标签展示为提交控件，按钮内容默认为`"提交"`
+* `type="submit"`时，可以通过value属性修改按钮内容
+
+#### label使用方法
+
+
+
+#### form get提交示例
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything">
+        <input type="text" name="username">
+        <input type="password" name="password">
+        <input type="submit" value="发送">
+    </form>
+</html>
+```
+
+界面：
+
+![](<.gitbook/assets/image (2).png>)
+
+url:
+
+```url
+http://192.168.4.101:5555/anything?username=yx&password=123456
+```
+
+#### form post提交示例
+
+代码：
+
+```markup
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything" method="post">
+        <input type="text" name="username">
+        <input type="password" name="password">
+        <input type="submit" value="发送">
+    </form>
+</html>
+```
+
+界面：
+
+![](<.gitbook/assets/image (2).png>)
+
+http post内容：
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+#### label使用示例
+
+
+
+
 
 ## HTML特殊符号
 
