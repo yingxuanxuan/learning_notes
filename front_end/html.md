@@ -84,7 +84,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### p标签，paragraph，段落标签
 
@@ -228,7 +228,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 
 ### ul标签，unordered list，无序列表
 
@@ -325,7 +325,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 ### table标签，表格
 
@@ -388,7 +388,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 #### 最简表格示例
 
@@ -605,7 +605,7 @@ tr:last-child td{
 
 效果：
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
 
 ### form标签，表单
 
@@ -622,12 +622,11 @@ tr:last-child td{
 * `type`属性默认值为`text`，即不填写属性时`type="text"`
 * `type="text"`时，输入的文字正常显示
 * `type="password"`时，输入文字显示为`*`
+* `type`为`"text"`或`"password"`时，可以通过设置value属性为input填写默认内容
 * `type="submit"`时，input标签展示为提交控件，按钮内容默认为`"提交"`
-* `type="submit"`时，可以通过value属性修改按钮内容
-
-#### label使用方法
-
-
+* `type="submit"`时，可以设置value属性修改按钮内容
+* 通过设置input的placeholder属性设置无内容时input控件显示的提示词
+* 通过设置intput的name属性为表单输入项设置名称
 
 #### form get提交示例
 
@@ -652,7 +651,7 @@ tr:last-child td{
 
 界面：
 
-![](<.gitbook/assets/image (2).png>)
+![](<.gitbook/assets/image (4).png>)
 
 url:
 
@@ -683,13 +682,95 @@ http://192.168.4.101:5555/anything?username=yx&password=123456
 
 界面：
 
-![](<.gitbook/assets/image (2).png>)
+![](<.gitbook/assets/image (4).png>)
 
 http post内容：
 
 <figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
 
-#### label使用示例
+#### label关联input
+
+* 点击label，定位到input
+* label标签的for属性设置为关联input标签的id属性
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* 给label设置固定宽度 */
+        form label{
+            display: inline-block;
+            width: 4em;
+        }
+    </style>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything" method="post">
+        <div>
+            <label for="u">用户名：</label>
+            <input type="text" name="username" id="u">
+        </div>
+        <div>
+            <label for="m">密码：</label>
+            <input type="password" name="password" id="m">
+        </div>
+        <div>
+            <input type="submit" value="发送">
+        </div>
+    </form>
+</html>
+```
+
+效果：
+
+<figure><img src=".gitbook/assets/test.gif" alt=""><figcaption></figcaption></figure>
+
+### \<input type="radio"> 单选
+
+* name属性值相同的radio标签为相同单选的不同选项
+* 相同单选的不同选项互斥
+* 可以结合label标签for属性为input.radio设置关联标签
+* 设置`input.checked="checked"`的单选input标签为默认选项，或者仅添加`input.checked`属性
+* `input.value`属性的值为`input.radio`当前值，即表单提交时`input.radio.name`对应表单项的值
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything" method="post">
+        <div>
+            <label for="m">男</label>
+            <input type="radio" name="sex" id="m" value="male" checked>
+        </div>
+        <div>
+            <label for="f">女</label>
+            <input type="radio" name="sex" id="f" value="female">
+        </div>
+        <div>
+            <input type="submit">
+        </div>
+    </form>
+</html>
+```
+
+效果：
+
+<figure><img src=".gitbook/assets/test (1).gif" alt=""><figcaption></figcaption></figure>
+
+### \<input type="checkbox">
 
 
 
@@ -697,7 +778,7 @@ http post内容：
 
 ## HTML特殊符号
 
-* 空格，`&nbsp;`，不会空白折叠
+* 空格，`&nbsp;`，不会空白折叠，一个`&nbsp;`占一个英文宽度，两个英文宽度占一个中文宽度
 * 版权，`&copy;`，copyright
 * 标准文档：[https://html.spec.whatwg.org/multipage/named-characters.html#named-character-references](https://html.spec.whatwg.org/multipage/named-characters.html#named-character-references)
 * 简化文档：[https://tool.chinaz.com/tools/htmlchar.aspx](https://tool.chinaz.com/tools/htmlchar.aspx)
