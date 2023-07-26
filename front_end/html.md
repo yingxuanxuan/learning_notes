@@ -59,7 +59,6 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 代码：
 
-````html
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -80,11 +79,14 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </body>
 </html>
 ```
-````
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### p标签，paragraph，段落标签
 
@@ -119,7 +121,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### strong标签，强调，em标签，emphasis，着重标签
 
@@ -150,7 +156,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### br标签，换行
 
@@ -188,7 +198,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### hr标签，horizontal，水平分割线
 
@@ -226,7 +240,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### ul标签，unordered list，无序列表
 
@@ -257,7 +275,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### ol标签，ordered list，有序列表
 
@@ -284,7 +306,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### dl标签，description list，描述列表
 
@@ -323,7 +349,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### table标签，表格
 
@@ -386,7 +416,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 #### 最简表格示例
 
@@ -418,7 +452,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 #### 跨行跨列示例
 
@@ -493,7 +531,11 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 #### 单像素边框设置css
 
@@ -577,7 +619,11 @@ tr:last-child td{
 
 效果：
 
-## ![](<.gitbook/assets/image (8).png>)
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### img标签，image，图片
 
@@ -603,7 +649,11 @@ tr:last-child td{
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### form标签，表单
 
@@ -657,7 +707,11 @@ tr:last-child td{
 
 界面：
 
-![](<.gitbook/assets/image (4).png>)
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 url:
 
@@ -688,11 +742,19 @@ http://192.168.4.101:5555/anything?username=yx&password=123456
 
 界面：
 
-![](<.gitbook/assets/image (4).png>)
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 http post内容：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 #### label关联input
 
@@ -735,7 +797,11 @@ http post内容：
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/test.gif" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### \<input type="radio"> 单选
 
@@ -774,7 +840,11 @@ http post内容：
 
 效果：
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/test (1).gif" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### \<input type="checkbox"> 多选
 
@@ -807,17 +877,29 @@ http post内容：
 
 效果1：无选择时无payload
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 
 
 效果2：单选
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 效果3：多选
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### \<select> 下拉列表
 
@@ -869,7 +951,11 @@ http post内容：
 
 效果：payload
 
+<div align="left">
+
 <figure><img src=".gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 ### \<textarea> 文本区域
 
