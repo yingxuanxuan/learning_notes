@@ -288,7 +288,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 <figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 
-### dl标签，定义列表
+### dl标签，description list，定义列表，描述列表
 
 #### dl示例
 
