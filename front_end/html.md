@@ -95,7 +95,6 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 代码：
 
-````markup
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -117,7 +116,6 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </body>
 </html>
 ```
-````
 
 效果：
 
