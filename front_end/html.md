@@ -611,11 +611,15 @@ tr:last-child td{
 
 #### form常用属性
 
-* action属性，值为表单提交的路径
-* method属性，值为表单提交的http方法，默认为get，可能的值
+* action属性，值为表单提交的路径，这个值可被 `<button>`、`<input type="submit">` 或`<input type="image">` 元素上的 `formaction` 属性覆盖。
+* method属性，值为表单提交的http方法，默认为get，可能的值：
   * get，表单数据附加在action指向的提交路径url后，以?分隔
   * post，表单数据附加在表单体内
   * dialog，略
+* enctype属性，值为post上报HTTP头中content-type的类型：
+  * `application/x-www-form-urlencoded`：未指定属性时的默认值
+  * `multipart/form-data`：当表单包含 `type=file` 的`<input>`元素时使用此值
+  * `text/plain`：出现于 HTML5，用于调试。这个值可被 `<button>`、`<input type="submit">` 或 `<input type="image">` 元素上的 `formenctype` 属性覆盖。
 
 #### input常用属性
 
@@ -627,6 +631,10 @@ tr:last-child td{
 * `type="submit"`时，可以设置value属性修改按钮内容
 * 通过设置input的placeholder属性设置无内容时input控件显示的提示词
 * 通过设置intput的name属性为表单输入项设置名称
+
+#### input类型示例
+
+[https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input#input\_%E7%B1%BB%E5%9E%8B](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input#input\_%E7%B1%BB%E5%9E%8B)
 
 #### form get提交示例
 
@@ -770,9 +778,115 @@ http post内容：
 
 <figure><img src=".gitbook/assets/test (1).gif" alt=""><figcaption></figcaption></figure>
 
-### \<input type="checkbox">
+### \<input type="checkbox"> 多选
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything" method="post">
+        <div>
+            <label for="h1">跑步</label>
+            <input type="checkbox" name="hobby" id="h1" value="running">
+            <label for="h2">游泳</label>
+            <input type="checkbox" name="hobby" id="h2" value="swimming">
+            <label for="h3">跳舞</label>
+            <input type="checkbox" name="hobby" id="h3" value="dancing">
+        </div>
+        <div>
+            <input type="submit">
+        </div>
+    </form>
+</html>
+```
+
+效果1：无选择时无payload
+
+<figure><img src=".gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
 
 
+
+效果2：单选
+
+<figure><img src=".gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
+
+效果3：多选
+
+<figure><img src=".gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
+
+### \<select> 下拉列表
+
+* select默认是单选，下拉列表
+* 给select标签添加multiple即可变成多选，样式变为选择框，按住ctrl键即可多选
+* 多选情况下可以添加多个selected作为默认选项
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything" method="post">
+        <div>
+            <select name="skill" multiple>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript" selected>JavaScript</option>
+            </select>
+        </div>
+        <div>
+            <input type="submit">
+        </div>
+    </form>
+</html>
+```
+
+效果：单选下拉列表
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+效果：多选框
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (15).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+效果：payload
+
+<figure><img src=".gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
+
+### \<textarea> 文本区域
+
+* 支持多行输入显示
+* 自动换行
+* 可以调整区域大小
+* 可以设置默认宽高
+
+代码：
+
+
+
+
+
+样式：
 
 
 
