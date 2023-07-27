@@ -24,12 +24,15 @@
 <!DOCTYPE html>
 
 <!-- html开始结束标签 -->
+<!-- 页面语言 -->
 <html lang="en">
 
     <!-- 头部声明，非页面内容 -->
     <head>
+        <!-- 页面编码 -->
         <meta charset="UTF-8">
         <title>页面标题</title>
+        <link rel="shortcut icon" href="快捷图标.ico">
     </head>
     
     <!-- 页面内容 -->
@@ -84,7 +87,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -158,7 +161,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -200,7 +203,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -351,7 +354,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (2) (2).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -418,7 +421,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -537,7 +540,32 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 </div>
 
-#### 单像素边框设置css
+#### 简单单线边框，分割线为2像素
+
+```css
+table, td{
+    border: 1px solid red;
+}
+table{
+    /* table属性使用cellspacing（弃用）*/
+    /* cellspacing: 0; */
+    /* css使用border-spacing */
+    border-spacing: 0;
+}
+```
+
+#### 边框合并属性，border-collaps
+
+```css
+table, td{
+    border: 1px solid red;
+}
+table{
+    border-collapse: collapse;
+}
+```
+
+#### 单像素边框设置css，表头固定表身滚动时border-collapse不能正确显示
 
 ```css
 /* 打开所有table外层边框，td内层边框 */
@@ -651,7 +679,7 @@ tr:last-child td{
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -677,8 +705,12 @@ tr:last-child td{
 * `type`为`"text"`或`"password"`时，可以通过设置value属性为input填写默认内容
 * `type="submit"`时，input标签展示为提交控件，按钮内容默认为`"提交"`
 * `type="submit"`时，可以设置value属性修改按钮内容
-* 通过设置input的placeholder属性设置无内容时input控件显示的提示词
-* 通过设置intput的name属性为表单输入项设置名称
+* 设置input的placeholder属性设置无内容时input控件显示的提示词
+* 设置input的name属性为表单提交的数据项设置名称
+* 设置input的readonly属性，使输入框只读（页面生成前会从后端获取默认值），效果为可选不可修改
+* 设置input的disabled属性，使得输入框组件不可操作
+* 设置input的required属性，使得输入框组件无值时，前端不允许提交
+*
 
 #### input类型示例
 
@@ -901,7 +933,49 @@ http post内容：
 
 </div>
 
-### \<select> 下拉列表
+### \<input type="file"> 文件选择
+
+* 上传文件时，form.method必须为"post"，form.enctype必须为"multipart/form-data"，否则只会有文件名表单字段上传
+* 设置input.file.multiple属性，可以上传多个文件
+* 设置input.file.accept属性，可以限制上传文件的MIME类型
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything" method="post" enctype="multipart/form-data">
+        <div>
+            <input type="file" name="f">
+        </div>
+        <div>
+            <input type="submit" value="上传">
+        </div>
+    </form>
+</html>
+```
+
+效果：
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+### select标签，下拉列表
 
 * select默认是单选，下拉列表
 * 给select标签添加multiple即可变成多选，样式变为选择框，按住ctrl键即可多选
@@ -957,26 +1031,119 @@ http post内容：
 
 </div>
 
-### \<textarea> 文本区域
+### textarea标签，文本区域
 
 * 支持多行输入显示
 * 自动换行
 * 可以调整区域大小
 * 可以设置默认宽高
+* textarea是双闭合标签，内部包含的内容会显示在文本框内，所以空textarea中间不能包含空白
 
 代码：
 
-
-
-
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything" method="post">
+        <div>
+            <textarea name="ta" id="t" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            <input type="submit">
+        </div>
+    </form>
+</html>
+```
 
 样式：
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+### \<input type="reset"> 复位
+
+* 类似input.submit，可以通过value属性设置按钮名称，默认名称是”复位“
+* 按下按钮会将form内所有input内容清空，有默认值则恢复默认值
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything" method="post">
+        <div>
+            <textarea name="ta" id="t" cols="30" rows="10"></textarea>
+        </div>
+        <div>
+            <input type="submit">
+            <input type="reset" value="复位">
+        </div>
+    </form>
+</html>
+```
+
+### button标签，普通按钮
+
+* button标签与input.submit默认样式可能不同
+* button标签默认`type="submit"`
+* button标签在form外部时，不会自动与form产生关联，不能用于form提交内容
+* button标签在form内部时：
+  * `type="submit"`，等同于`<input type="submit">`
+  * `type="button"`，等同于`<input type="button">`
+  * `type="reset"`，等同于`<input type="reset">`
+
+代码：
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="http://192.168.4.101:5555/anything" method="post">
+        <div>
+            <input type="submit">
+            <input type="reset" value="复位">
+            <Button>按钮</Button>
+        </div>
+    </form>
+    <Button>按钮</Button>
+</html>
+```
+
+效果：
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+### div标签，division，内容划分
 
 
 
 ## HTML特殊符号
 
-* 空格，`&nbsp;`，不会空白折叠，一个`&nbsp;`占一个英文宽度，两个英文宽度占一个中文宽度
+* 空格，`&nbsp;`，不会空白折叠
 * 版权，`&copy;`，copyright
 * 标准文档：[https://html.spec.whatwg.org/multipage/named-characters.html#named-character-references](https://html.spec.whatwg.org/multipage/named-characters.html#named-character-references)
 * 简化文档：[https://tool.chinaz.com/tools/htmlchar.aspx](https://tool.chinaz.com/tools/htmlchar.aspx)
