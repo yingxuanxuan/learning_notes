@@ -6,10 +6,12 @@
 * 用来控制网页样式，将样式与内容、结构的配置表
 * html发展早期通过元素属性来控制样式，但是结构与样式混用会使网页代码难以维护，逐步从html中解耦出来
 * CSS2.1之后，标准分模块制定，进展差异很大，所以放弃版本控制，采用定期发布标准
+* 浏览器会忽略不存在的属性和无效的属性值
 
 ### CSS基本语法
 
 * 使用`/*注释*/`注释
+* 属性名称和属性值均不区分大小写
 
 #### 行内CSS基本语法
 
@@ -132,25 +134,57 @@
 
 ### 原子选择器
 
-#### 元素（标签）选择器
+#### 元素选择器（类型选择器、标签选择器）
 
-
-
-#### ID选择器
-
-
+```css
+h1 {
+}
+```
 
 #### 类选择器
 
+```css
+.box {
+}
+```
 
+#### ID选择器
 
-#### 属性选择器
+```css
+#unique {
+}
+```
 
+#### 标签属性选择器
 
+根据标签上属性是否存在选择：
 
-#### 伪类选择器
+```css
+a[title] {
+}
+```
 
+根据标签上属性的值选择：
 
+```css
+a[href="https://example.com"] {
+}
+```
+
+#### 伪类、伪元素选择器
+
+* 伪类
+  * 选择元素的某个状态
+  * 使用单冒号
+
+```css
+a:hover {
+}
+```
+
+* 伪元素
+  * 选择元素的某个部分，或者某个位置
+  * 使用双冒号
 
 ### 组合（关系，Combinator）选择器
 
@@ -178,9 +212,91 @@
 
 ### 继承
 
+* 某些css属性会被内部元素集成，如font-size，font-wight，color
+* 某些css属性不会被内部元素继承，如width、margin、padding、border
 
+#### 默认值
 
-### 权重
+* 协议中会规定每个属性的默认值（初始值）
+* 浏览器（user-agent）为了使得html结构在默认效果下能够区分，给属性设置了一部分默认值
+
+#### 继承控制
+
+* 5个特殊的属性值：
+  * `inherit`使子元素属性和父元素相同。开启继承。
+  * `initial`设置为该属性的初始值。协议初始。
+  * `revert`重置为浏览器的默认样式。在许多情况下，此值的作用类似于 `unset`。
+  * `revert-layer` 重置为在上一个层叠层中建立的值。
+  * `unset`将属性重置为自然值，也就是如果属性是自然继承那么就是 `inherit`，否则和 `initial` 一样
+
+示例：
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>CSS</title>
+        <style>
+            body {
+                color: green;
+            }
+            .my-class-1 a {
+                color: inherit;
+            }
+            .my-class-2 a {
+                color: initial;
+            }
+            .my-class-3 a {
+                color: unset;
+            }
+        </style>
+    </head>
+    <body>
+        <ul>
+            <li>Default <a href="#">link</a> color</li>
+            <li class="my-class-1">Inherit the <a href="#">link</a> color</li>
+            <li class="my-class-2">Reset the <a href="#">link</a> color</li>
+            <li class="my-class-3">Unset the <a href="#">link</a> color</li>
+        </ul>
+    </body>
+</html>   
+```
+
+效果：
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (16).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+说明：
+
+* 浏览器对\<a>标签有默认样式绿色，默认会覆盖继承自父元素\<body>的绿色
+* 强制使用inherit属性值，则强制继承父元素\<body>的绿色
+* 强制使用initial属性值，color属性的协议默认值为黑色
+* 强制使用unset属性值，color属性为自然继承，则继承\<body>元素的绿色
+
+#### 重置所有属性
+
+* 使用all关键字指代所有属性
+
+```css
+p {
+    all: unset;
+}
+```
+
+### 优先级（specificity），权重
+
+* 指向更具体的选择器权重越高，如id选择器>类选择器>元素选择器
+* 选择器中有一个id选择器，记100分
+* 选择器中有一个类选择器，记10分
+* 选择器中有一个元素选择器，记1分
+* 内联样式记1000分
+* 计分不进位
+* 继承优先级低于所有选择器
 
 HTML：
 
@@ -200,10 +316,20 @@ p {
 }
 ```
 
-以上代码效果为红色，class选择器权重大于元素选择器\
+以上代码效果为红色，class选择器权重大于元素选择器
 
 
-### 层叠
+
+#### !important强制优先，尽量避免使用
+
+```css
+.better {
+    background-color: gray;
+    border: none !important;
+}
+```
+
+### 层叠（cascade）
 
 ```css
 p {
