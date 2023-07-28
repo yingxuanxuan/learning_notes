@@ -134,17 +134,50 @@
 
 ### 原子选择器
 
-#### 元素选择器（类型选择器、标签选择器）
+#### 元素选择器（类型选择器、标签选择器、标签名选择器）
+
+示例：
 
 ```css
 h1 {
 }
 ```
 
+特殊元素选择器，全局选择器：
+
+```css
+* {
+    margin: 0;
+}
+```
+
+全局选择器特殊用途，区别自带选择器和伪类选择器：
+
+```css
+/* 
+    artical元素选择器与:first-child中间有一个空格
+    表示选择artical元素的后代的第一个元素
+*/
+article :first-child {
+}
+/*
+    artical元素选择器与:first-child中间无空格
+    表示选择artical作为其他元素的第一个子元素
+*/
+article:first-child {
+}
+/*
+    使用*:first-child可以与伪类选择器显著区别
+*/
+article *:first-child {
+}
+```
+
 #### 类选择器
 
 ```css
-.box {
+.highlight {
+    background-color: yellow;
 }
 ```
 
@@ -182,9 +215,28 @@ a:hover {
 }
 ```
 
+* 常见伪类：
+  * :first-child
+  * :last-child
+  * :only-child
+  * :invalid
+* 用户行为伪类
+  * :hover
+  * :focus
+  * :link
+  * :visited
 * 伪元素
   * 选择元素的某个部分，或者某个位置
   * 使用双冒号
+
+
+
+* 常用伪元素：
+  * ::first-line
+  * ::before，特殊伪元素
+  * ::after，特殊伪元素
+
+
 
 ### 组合（关系，Combinator）选择器
 
