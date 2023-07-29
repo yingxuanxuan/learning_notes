@@ -54,10 +54,13 @@
 
 ### 在HTML中使用CSS的方式
 
-#### 内联样式表
+#### 内联样式表（行内式）
 
-* 页面多个元素之间会重复编码，不易维护
-* 与html结构代码糅合在一起，不易阅读
+* 页面多个元素之间会重复编码
+* 不易维护
+* 不易阅读
+* 无法排版
+* 与html结构代码耦合
 
 ```html
 <!doctype html>
@@ -75,7 +78,7 @@
 </html>
 ```
 
-#### 内部样式表
+#### 内部样式表（嵌入式）
 
 * 多个页面之间会重复编码，不易维护
 
@@ -105,6 +108,8 @@
 
 #### 外部样式表
 
+* css保存在独立文件，产生额外一次http请求
+
 示例：
 
 ```html
@@ -113,7 +118,20 @@
 
 完整示例：
 
+```css
+/* styles.css */
+h1 {
+  color: blue;
+  background-color: yellow;
+  border: 1px solid black;
+}
+p {
+  color: red;
+}
+```
+
 ```html
+<!-- index.html -->
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -128,8 +146,6 @@
 </html>
 ```
 
-
-
 ## CSS选择器
 
 ### 原子选择器
@@ -143,7 +159,7 @@ h1 {
 }
 ```
 
-特殊元素选择器，全局选择器：
+#### 全局选择器
 
 ```css
 * {
@@ -151,9 +167,9 @@ h1 {
 }
 ```
 
-全局选择器特殊用途，区别自带选择器和伪类选择器：
-
 ```css
+/* 全局选择器特殊用途，区别自带选择器和伪类选择器： */
+
 /* 
     artical元素选择器与:first-child中间有一个空格
     表示选择artical元素的后代的第一个元素
@@ -175,13 +191,73 @@ article *:first-child {
 
 #### 类选择器
 
+* 使用点加类名表示选择器
+* 不同html元素可以设置相同class
+* 一个html元素可以设置多个class类，使用空格分开
+
+示例：
+
 ```css
 .highlight {
     background-color: yellow;
 }
 ```
 
-#### ID选择器
+* html多个元素分类设置属性，而飞每个元素设置所有属性是一种解耦的思想
+
+示例：
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>CSS</title>
+        <style>
+            /* 按元素设置css属性存在耦合 */
+            #p1 {
+                color: green;
+                font-size: 20px;
+            }
+            #p2 {
+                color: green;
+                font-weight: bold;
+            }
+            #p3 {
+                font-weight: bold;
+                font-size: 20px;
+            }
+
+            /* 先将样式封装成类别，再设置给元素，将样式从元素解耦 */
+            .green {
+                color: green;
+            }
+            .big_font {
+                font-size: 20px;
+            }
+            .bold_font {
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <p id="p1">id选择器第1行</p>
+        <p id="p2">id选择器第2行</p>
+        <p id="p3">id选择器第3行</p>
+        <hr/>
+        <p class="green big_font">class选择器第1行</p>
+        <p class="green bold_font">class选择器第2行</p>
+        <p class="big_font bold_font">class选择器第3行</p>
+    </body>
+</html>
+```
+
+#### id选择器
+
+* 使用井号加类名表示选择器
+* html元素id页面唯一
+
+示例：
 
 ```css
 #unique {
@@ -206,6 +282,8 @@ a[href="https://example.com"] {
 
 #### 伪类、伪元素选择器
 
+[https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building\_blocks/Selectors/Pseudo-classes\_and\_pseudo-elements](https://developer.mozilla.org/zh-CN/docs/Learn/CSS/Building\_blocks/Selectors/Pseudo-classes\_and\_pseudo-elements)
+
 * 伪类
   * 选择元素的某个状态
   * 使用单冒号
@@ -221,44 +299,102 @@ a:hover {
   * :only-child
   * :invalid
 * 用户行为伪类
-  * :hover
-  * :focus
-  * :link
-  * :visited
+  * `a:link` 没有被访问过时
+  * `a:visited` 访问过时
+  * `a:hover` 鼠标悬浮时
+  * `a:active` 鼠标按住时
+  * `a:focus`&#x20;
 * 伪元素
   * 选择元素的某个部分，或者某个位置
   * 使用双冒号
-
-
-
 * 常用伪元素：
   * ::first-line
   * ::before，特殊伪元素
   * ::after，特殊伪元素
 
+### 关系选择器（关系，Combinator，组合选择器）
 
+#### 组合选择器（官方文档中不认为是关系选择器的一种）
 
-### 组合（关系，Combinator）选择器
+* 多个选择器之间使用逗号分隔
+* 官方建议多个选择器之间换行排版
+* 官方认为只是将多个相同定义的选择器合并写在一起的一种写法
+
+```css
+/* 分开写法 */
+h3 {
+    color: gray;
+    font-size: 14px;
+}
+span {
+    color: gray;
+    font-size: 14px;
+}
+
+/* 合并写法 */
+h3,
+span {
+    color: gray;
+    font-size: 14px;
+}
+```
+
+#### 交集选择器（官方文档中不认为是关系选择器的一种）
+
+* 多个原子选择器紧挨着书写
+* 由于没有分隔符，所以元素选择器只能在第一位
+* 由于一个html元素只有自身一种类型，所以元素选择器只能出现一次
+* 由于一个html元素只能设置一个id，所以id选择器只能出现一次
+* 由于一个html元素能设置多个class，所以class选择器可以出现多次
+
+```css
+/* 元素交类 */
+p.active {
+}
+
+/* 元素交id */
+p#pid{
+}
+
+/* 过滤多个类都存在的元素 */
+.class1.class2{
+}
+```
 
 #### 后代选择器
 
+* DOM树中元素的后代元素（支持多层嵌套，不必是直接孩子，包含子代）
+* 使用空格分隔原子选择器
 
+```
+// Some code
+```
 
 #### 子代关系选择器
 
+* DOM树中元素直接孩子元素
+* 使用大于号>分隔原子选择器
 
-
-
+```markup
+```
 
 #### 邻接兄弟选择器
 
+* DOM树中元素的邻接兄弟元素
+* 使用加号+分隔原子选择器
 
+```
+// Some code
+```
 
 #### 通用兄弟选择器
 
+* DOM书中元素的兄弟元素（可不邻接）
+* 使用波浪号\~分隔原子选择器
 
-
-
+```
+// Some code
+```
 
 ## CSS生效优先级
 
@@ -266,6 +402,40 @@ a:hover {
 
 * 某些css属性会被内部元素集成，如font-size，font-wight，color
 * 某些css属性不会被内部元素继承，如width、margin、padding、border
+* 浏览器对部分标签的部分属性有特定设置，优先级较高，不会继承自父元素，如a，h1
+
+```html
+<!-- h1标签和p标签均继承了body的color属性  -->
+<!-- h1标签有单独的font-size设置，body的font-size设置只被p继承 -->
+<!-- h1标签的font-size是2em，em单位的基准取自父元素，所以h1的尺寸会同步变大  -->
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>CSS</title>
+        <style>
+            body{
+                color: blue;
+                font-size: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <p>paragraph段落</p>
+        <div>
+            <h1>H1标题</h1>
+            <h2>H2标题</h2>
+        </div>
+    </body>
+</html>
+```
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+</div>
 
 #### 默认值
 
@@ -370,8 +540,6 @@ p {
 
 以上代码效果为红色，class选择器权重大于元素选择器
 
-
-
 #### !important强制优先，尽量避免使用
 
 ```css
@@ -383,7 +551,12 @@ p {
 
 ### 层叠（cascade）
 
+* 同优先级的选择器，按解析顺序，后出现的属性覆盖先出现的
+
+&#x20; 示例：
+
 ```css
+/* 效果为绿色，样式存在层叠覆盖，后出现的覆盖先出现的 */
 p {
   color: red;
 }
@@ -392,39 +565,218 @@ p {
 }
 ```
 
-以上代码效果为绿色，样式存在层叠覆盖，后出现的覆盖先出现的
+## 常用属性
+
+### 字体属性
+
+#### font综合属性
+
+```
+// Some code
+```
+
+#### font-family
+
+* 字体在用户设备上没有时，使用默认字体
+* 可以设置多个备选字体，用逗号分隔
+
+#### font-size
+
+* px，像素，相对设备分辨率
+* em，相对字体大小，1em=1倍字体大小
+* rem
+
+#### color
+
+* 可使用单词（枚举值）表示法赋值，不用加引号
+* rgb(0-255, 0-255, 0-255)，RGB表示法
+* rgba(0-255, 0-255, 0-255, 0-1)，RGBA表示法，多一个透明度（alpha）
+* \#FFFFFF 16进制表示法
+
+#### font-style
+
+* 常用只有normal和italic
+* oblique是正常字体的斜体变形，italic是书写体草书
+* bold属于font-weight属性
+
+```css
+font-style: normal;
+font-style: italic;
+font-style: oblique;
+```
+
+#### font-weight
+
+* 一般只使用normal和bold两种取值
+* 数值取值范围1-1000
+* normal=400
+* bold=700
+
+```css
+font-weight: normal;
+font-weight: bold;
+font-weight: 1;
+font-weight: 1000;
+```
+
+### 文本属性
+
+#### text-decoration
+
+* none
+* line-through 删除线
+* underline 下划线
+* overline 上划线
+
+#### text-indent 缩进
+
+* 在每个p元素包裹内容的首行缩进
+* 一般使用em，相对字体大小
+* 也可以使用px
+
+#### line-height 行高
+
+* 文本正常在中间显示
+* 行高不会合并
+* 一般使用em，相对字体大小
+
+#### letter-spacing 文字间距，只对文字起作用
 
 
 
-## 常见CSS属性
+#### word-spacing 单词间距
 
 
 
-## HTML元素分类
+#### text-align 文本对齐方式
+
+* left，默认，水平方向左对齐
+* center，水平方向居中对齐
+* right，水平方向右对齐
 
 
 
-## 布局示例
 
 
+
+
+##
 
 ## 盒模型
 
-* `padding`（内边距）：是指内容周围的空间。在下面的例子中，它是段落文本周围的空间。
-* `border`（边框）：是紧接着内边距的线。
-* `margin`（外边距）：是围绕元素边界外侧的空间。
+* `contant box`（内容）：设置width和height实际上是设置内容的宽高，整个占用的宽高还要加上padding、border、margin
+* `padding box`（内边距）：是指内容周围的空间。在下面的例子中，它是段落文本周围的空间。
+* `border box`（边框）：是紧接着内边距的线。
+* `margin box`（外边距）：是围绕元素边界外侧的空间。
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/image (9).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
-## 浮动
+### 外边距折叠
+
+* 相邻两个块元素display:block的上下margin会合并取最大值
+* 左右margin不会合并
+
+## 布局,排版
+
+### 默认流布局
+
+* 浏览器默认布局
+* 块元素垂直方向从上到下依次分布
+* 行内元素（块内）水平方向从左到右依次分布
+* 使用css修改布局的过程就是逐步改变浏览器默认布局的过程，没有被改变的部分还会按默认布局
+* 嵌套在块内的内容，也按照块元素、行内元素的特性进行排版，如块\<ul>中的块\<li>
+
+#### 默认的html元素的布局分类
+
+* display:block，块元素
+  * 常见\<div>、\<ul>、\<ol>、\<li>、\<p>、\<h>、\<table>、\<form>默认是块元素
+  * 特点：
+    * 独占一行
+    * 可以设置宽高
+    * 不设置宽高时，默认是父元素100%宽度
+* display:inline，行内
+  * 常见\<a>、\<span>、\<em>、\<strong>、\<label>默认是行内元素
+  * 特点：
+    * 在一行内依次显示，父容器宽度不够时会显示在下一行
+    * 不能设置宽高
+    * 宽高为文本内容占据的宽高
+* display:inline-block，行内块
+  * 常见\<input>、\<image>默认是行内块
+  * 特点：
+    * 在一行内显示，父容器宽度不够时会显示在下一行
+    * 可以设置宽高
+* display: none，不显示
+
+#### 修改默认display的用途——排版，为默认inline的元素设置宽高
+
+```css
+display: inline-block;
+
+/* 一般inline转为inline-block后，还想让内容居中 */
+
+/* 水平方向居中 */
+text-align: center;
+
+/* 垂直方向居中 */
+line-height: 与content的height相同;
+```
+
+#### 修改默认display的用途——隐藏元素
+
+```css
+display: none;
+```
 
 
 
-## 定位
+### 弹性盒子，Flexbox，display:flex
+
+* 给父元素设置flex布局、排列方式、拉伸，给子元素设置是否伸展
+
+### 网格，Grid，display:grid
+
+* 给父元素设置行列，子元素自动布局
+* 也可以给子元素设置在父元素中占据的行列
+
+### 表格布局，display:table
+
+
+
+### 多列布局
+
+
+
+## 辅助布局
+
+### 浮动，float
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+* 浮动的组件脱离了标准文档流，但是会占据标准文档流的空间
+* 浮动的组件可以使用margin占用标准文档流的空间，但是标准文档流的组件不能使用margin占用浮动组件的空间
+
+
+
+* `float:left`，将元素浮动到左侧。
+* `float:right`，将元素浮动到右侧。
+* `float:none`，默认值，不浮动。
+* `float:inherit`，继承父元素的浮动属性。
+
+### 定位，position
+
+* **静态定位**（Static positioning）是每个元素默认的属性——它表示“将元素放在文档布局流的默认位置——没有什么特殊的地方”。
+* **相对定位**（Relative positioning）允许我们相对于元素在正常的文档流中的位置移动它——包括将两个元素叠放在页面上。这对于微调和精准设计（design pinpointing）非常有用。
+* **绝对定位**（Absolute positioning）将元素完全从页面的正常布局流（normal layout flow）中移出，类似将它单独放在一个图层中。我们可以将元素相对于页面的 `<html>` 元素边缘固定，或者相对于该元素的_最近被定位祖先元素_（nearest positioned ancestor element）。绝对定位在创建复杂布局效果时非常有用，例如通过标签显示和隐藏的内容面板或者通过按钮控制滑动到屏幕中的信息面板。
+* **固定定位**（Fixed positioning）与绝对定位非常类似，但是它是将一个元素相对浏览器视口固定，而不是相对另外一个元素。这在创建类似在整个页面滚动过程中总是处于屏幕的某个位置的导航菜单时非常有用。
+* **粘性定位**（Sticky positioning）是一种新的定位方式，它会让元素先保持和 `position: static` 一样的定位，当它的相对视口位置（offset from the viewport）达到某一个预设值时，它就会像 `position: fixed` 一样定位。
 
 
 
