@@ -298,9 +298,10 @@ a:hover {
   * :last-child
   * :only-child
   * :invalid
-* 用户行为伪类
+* 连接伪类
   * `a:link` 没有被访问过时
   * `a:visited` 访问过时
+* 用户行为伪类
   * `a:hover` 鼠标悬浮时
   * `a:active` 鼠标按住时
   * `a:focus`&#x20;
@@ -396,7 +397,7 @@ p#pid{
 // Some code
 ```
 
-## CSS生效优先级
+## CSS继承、层叠、优先级
 
 ### 继承
 
@@ -517,7 +518,7 @@ p {
 * 选择器中有一个类选择器，记10分
 * 选择器中有一个元素选择器，记1分
 * 内联样式记1000分
-* 计分不进位
+* 选择器计分累加，但是不进位
 * 继承优先级低于所有选择器
 
 HTML：
@@ -562,6 +563,61 @@ p {
 }
 p {
   color: blue;
+}
+```
+
+### 清除浏览器默认样式
+
+[https://meyerweb.com/eric/tools/css/reset/](https://meyerweb.com/eric/tools/css/reset/)
+
+```
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 ```
 
@@ -656,18 +712,14 @@ font-weight: 1000;
 
 
 
-
-
-
-
-##
-
 ## 盒模型
 
-* `contant box`（内容）：设置width和height实际上是设置内容的宽高，整个占用的宽高还要加上padding、border、margin
-* `padding box`（内边距）：是指内容周围的空间。在下面的例子中，它是段落文本周围的空间。
-* `border box`（边框）：是紧接着内边距的线。
-* `margin box`（外边距）：是围绕元素边界外侧的空间。
+* `contant box`，内容，设置width和height实际上是设置内容的宽高
+* `padding box`，内边距，盒子边框到内容盒子的距离
+* `border box`，边框，内边距和外边距之间的线，边框也会占用空间
+* `margin box`，外边距，元素边界外侧的空间。
+* 元素占用的宽高还要加上padding、border、margin，background
+* background填充的是contant、padding、border的部分
 
 <div align="left">
 
@@ -675,10 +727,110 @@ font-weight: 1000;
 
 </div>
 
-### 外边距折叠
+### padding、margin
+
+* 以padding为例
+* margin，bolder-width，border-style，border-color类似
+
+### 外边距折叠，外边距塌陷
 
 * 相邻两个块元素display:block的上下margin会合并取最大值
 * 左右margin不会合并
+
+```css
+/* 上下左右分别设置 */
+padding-top: 1px;
+padding-left: 1px;
+padding-bottom: 1px;
+padding-right: 1px;
+
+/* 
+    上下左右：1px 
+*/
+padding: 1px;
+
+/* 
+    上下：1px
+    左右：2px
+*/
+padding: 1px 2px;
+
+/*
+    上：1px
+    所有：2px
+    下：3px
+*/
+padding: 1px 2px 3px;
+
+/*
+    上：1px
+    右：2px
+    下：3px
+    左：4px
+*/
+padding: 1px 2px 3px 4px;
+```
+
+### 盒子居中
+
+* 子盒子宽度不足以填充父盒子时，右填充margin
+* 子盒子设置margin-left: auto，左填充margin，右边紧贴父盒子
+* 子盒子同时设置margin-left: auto; margin-right: auto; 子盒子水平居中父盒子
+
+```css
+margin-left: auto;
+margin-right: auto;
+
+/*
+    上下margin：0
+    左右margin：auto
+*/
+margin: 0 auto;
+```
+
+###
+
+### border，边框
+
+* border-style
+  * solid
+  * dotted
+  * double
+  * dashed
+
+```css
+border-width: 4px;
+border-style: solid;
+border-color: green;
+
+/* 合并写法 */
+border: 4px solid green;
+
+/* 分别设置四个方向边框 */
+border-width: 1px 2px 3px 4px;
+border-top-width: 1px;
+border-right-width: 2px;
+border-bottom-width: 3px;
+border-left-width: 4px;
+
+/* border-style, border-color */
+border-top-style: solid;
+border-top-color: green;
+
+/* 清除边框 */
+border: none;
+border: 0;
+```
+
+### outline，外线
+
+* input 除边框外还有外线
+* 外线不占用盒子空间
+* 属性与border类似
+
+```css
+outline: none;
+```
 
 ## 布局,排版
 
@@ -744,7 +896,13 @@ display: none;
 
 ### 表格布局，display:table
 
-
+* display:table，table
+* display:table-caption，caption
+* display:table-row，tr
+* display:table-cell，th 或 td
+* display:table-row-group，tbody
+* display:table-header-group，thead
+* display:table-footer-group，tfoot
 
 ### 多列布局
 
