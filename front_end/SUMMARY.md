@@ -8,4 +8,4 @@
 * [vue.js.v2](vue.js.v2.md)
 * [vue.js.v3](vue.js.v3.md)
 * [jquery](jquery.md)
-* [react](react.md)
+* [bootstrap](bootstrap.md)
