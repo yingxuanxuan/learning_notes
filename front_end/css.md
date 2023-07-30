@@ -434,7 +434,7 @@ p#pid{
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -723,7 +723,7 @@ font-weight: 1000;
 
 <div align="left">
 
-<figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
@@ -912,21 +912,264 @@ display: none;
 
 ### 浮动，float
 
+####
+
 <div align="left">
 
 <figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
 
 </div>
 
-* 浮动的组件脱离了标准文档流，但是会占据标准文档流的空间
+#### 浮动的文字环绕特性（原始需求）
+
+* 浮动的组件脱离了标准文档流，但是会排开标准文档流中的内容，但是不会排开盒子
 * 浮动的组件可以使用margin占用标准文档流的空间，但是标准文档流的组件不能使用margin占用浮动组件的空间
 
+#### 浮动的特性
 
-
-* `float:left`，将元素浮动到左侧。
-* `float:right`，将元素浮动到右侧。
+* 浮动后，盒子不再占用整行，会收缩成内容宽度
+* 多个浮动盒子会紧挨着显示
+* `float:left`，盒子向左靠拢
+* `float:right`，盒子向右靠拢
 * `float:none`，默认值，不浮动。
 * `float:inherit`，继承父元素的浮动属性。
+
+#### 清除浮动（解决浮动盒子造成父盒子塌陷）
+
+盒子塌陷问题：
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>CSS</title>
+        <style>
+            .child1 {
+                background-color: gray;
+                height: 200px;
+                width: 200px;
+                /* float: left; */
+            }
+            .child2 {
+                background-color: aliceblue;
+                height: 300px;
+                width: 300px;
+                /* float: right; */
+            }
+            .parent {
+                background-color: yellow;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="parent">
+            <div class="child1">
+                child1
+            </div>
+            <div class="child2">
+                child2
+            </div>
+        </div>
+    </body>
+</html>
+```
+
+不浮动时父盒子高度被子盒子1+子盒子2撑开
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (17).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+child1浮动时，child1脱离标准文档流，父盒子高度=child2高度
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+child1、child2都浮动时，child1、child2都脱离标准文档流，父盒子塌陷高度为0
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (19).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+方法一：固定高度
+
+* 给父盒子设置固定高度为子盒子高度
+* 缺点：不能被子盒子撑开高度，父子元素耦合，不易维护
+
+方法二：内墙法
+
+* 在所有浮动元素之后加一个空的块元素，设置清除浮动的css属性`clear: both;`
+* 缺点：结构冗余
+
+代码：
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>CSS</title>
+        <style>
+            .child1 {
+                background-color: gray;
+                height: 200px;
+                width: 200px;
+                float: left;
+            }
+            .child2 {
+                background-color: aliceblue;
+                height: 300px;
+                width: 300px;
+                float: right;
+            }
+            .parent {
+                background-color: yellow;
+            }
+            .clearfix {
+                clear: both;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="parent">
+            <div class="child1">
+                child1
+            </div>
+            <div class="child2">
+                child2
+            </div>
+            <div class="clearfix">
+            </div>
+        </div>
+    </body>
+</html>
+```
+
+效果：父盒子高度自动撑开到最大的子元素高度
+
+<div align="left">
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
+
+</div>
+
+方法三：伪元素内墙
+
+* 使用伪元素给父盒子后面添加文本
+* 将文本转换成block
+* 设置clear:both;属性
+
+代码：
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>CSS</title>
+        <style>
+            .child1 {
+                background-color: gray;
+                height: 200px;
+                width: 200px;
+                float: left;
+            }
+            .child2 {
+                background-color: aliceblue;
+                height: 300px;
+                width: 300px;
+                float: right;
+            }
+            .parent {
+                background-color: yellow;
+            }
+            .clearfix::after{
+                content: '';
+                display: block;
+                clear: both;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="parent clearfix">
+            <div class="child1">
+                child1
+            </div>
+            <div class="child2">
+                child2
+            </div>
+        </div>
+    </body>
+</html>
+```
+
+方法四：overflow:hidden;
+
+* overflow的特性：
+  * overflow默认值是visible，含义为内容超出盒子大小后的行为为可见
+  * overflow:hidden; 含义为超出盒子大小后内容隐藏
+  * overflow:scroll; 含义为超出盒子大小后滚动
+  * 除overflow:visible;之外，其余overflow属性值均能形成BFC区域
+* 利用overflow实现修复父盒子塌陷：
+  * 父盒子设置overflow:hidden;属性后，父盒子及其子盒子形成独立BFC区域
+  * 计算BFC高度时，浮动子元素也参与计算
+
+代码：
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>CSS</title>
+        <style>
+            .child1 {
+                background-color: gray;
+                height: 200px;
+                width: 200px;
+                float: left;
+            }
+            .child2 {
+                background-color: aliceblue;
+                height: 300px;
+                width: 300px;
+                float: right;
+            }
+            .parent {
+                background-color: yellow;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="parent">
+            <div class="child1">
+                child1
+            </div>
+            <div class="child2">
+                child2
+            </div>
+        </div>
+    </body>
+</html>
+```
+
+#### 为什么不能用div.display = inline-block实现多列布局
+
+* \<div>标签换行会导致inline-block中间出现空格，无法准确计算布局数值
+* \<div>连续书写可以解决这个问题，但是代码难以阅读
+
+#### 使用浮动进行列布局
+
+传统布局方式利用浮动实现多栏布局，用于布局的一行盒子会一起浮动
 
 ### 定位，position
 
