@@ -147,10 +147,46 @@ git commit -m '合并'
 ### 删除分支
 
 ```bash
-
+git branch -d 分支名称
 ```
 
+### fast-ford
 
+* 默认分支合并都会使用fast-forward模式
+* 当要合并的分支超前于当前分支并且没有冲突时，当前分支直接指向合并分支的记录节点
+* 使用 -no-ff 参数可以关闭 fast-forward模式
+* 关闭fast-forward模式时，一定会创建新的节点，所以需要配合使用 -m 关键字
+
+### 暂存工作区（git stash）
+
+* **当checkout时，工作区和暂存区都会被覆盖**
+* 如果想保留，应使用`git stash`
+
+```bash
+# 保存工作区
+git stash
+
+# 查看工作区
+git stash list
+
+# 恢复工作区
+git stash apply
+
+# 删除工作区
+git stash drop
+
+# 恢复并删除工作区（apply + drop）
+git stash pop
+
+# 恢复特定工作区
+git stash pop stash@{0}
+```
+
+### 合并特定提交（bug修复）
+
+```bash
+git cherry-pick sha1
+```
 
 ## 代码托管使用方法
 
@@ -173,6 +209,17 @@ git push -u origin master
 git pull
 git push
 ```
+
+### 查看当前添加的远程库
+
+```bash
+git remote
+
+git remote -v
+
+```
+
+
 
 ### 从托管下载
 
@@ -285,6 +332,29 @@ git mergetool
 
 
 ## tag推送
+
+```bash
+# 在当前分支当前提交打标签
+git tag v1
+
+# 给特定提交打标签
+git tag v2 提交sha1
+
+# 删除本地标签
+git tag -d v2
+
+# 查看所有标签
+git tag
+
+# 查看标签详细信息
+git show v1
+
+# 推送所有标签到远程仓库
+git push origin --tag
+
+# 推送特定标签到远程仓库
+git push origin v1
+```
 
 
 
