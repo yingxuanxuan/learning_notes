@@ -57,7 +57,17 @@ git init
 
 ### 查看提交记录
 
-`git log`
+```bash
+git log
+
+# 带分支图的提交记录
+git log --graph
+
+# 简化分支图的提交记录
+# %h 哈希值
+# %s 提交说明
+git log --graph --pretty=format:"%h %s"
+```
 
 ### 回滚到之前版本
 
@@ -70,21 +80,33 @@ git reset --hard 之前版本号
 
 ```bash
 git reflog
-git reset --hear
+git reset --head
 
 ```
 
-### 其他
+### 撤销工作区的修改
 
 ```bash
-# 将所有文件恢复到暂存区状态
+
 git checkout
 git checkout -- file
+
+# 自修改后还没有被放到暂存区，撤销修改就回到和版本
+# 已经添加到暂存区后，又作了修改，撤销修改就回到添加到暂存区后的状态。
 
 # 将暂存区恢复到未追踪
 git reset HEAD
 
 ```
+
+### 删除文件
+
+```bash
+git rm file
+
+```
+
+
 
 
 
@@ -122,11 +144,206 @@ git add .
 git commit -m '合并'
 ```
 
+### 删除分支
+
+```bash
+
+```
+
+
+
+## 代码托管使用方法
+
+### 上传到托管
+
+```bash
+# 在托管新建仓库后
+
+# 在本地执行
+
+# 如果代码不是从托管下载的，是在本地新建的，则需要先关联远程仓库
+git remote add origin 远程仓库地址
+
+# 如果远程仓库比本地新，则需要先同步远程仓库，先进行merge
+git pull origin master
+
+git push -u origin master
+# -u 为保存记录提交到 origin  master
+# 下次仅需使用
+git pull
+git push
+```
+
+### 从托管下载
+
+```bash
+git clone https://github.com/yingxuanxuan/learning_notes.git
+# 下载后只显示master分支
+# 虽然看不到，但是可以直接进行切换
+```
+
+### 将dev分支更新到master最新
+
+```bash
+git merge master
+```
+
+### 拉取代码冲突
+
+```bash
+# 拉取代码时，本地和远程可能同时修改了dev分支
+git pull origin dev
+# 拉取时会自动合并
+# 无法合并的会merge confilict
+
+git pull origin dev
+# 命令等同于
+git fetch origin dev # +
+git merge origin/dev
+
+```
+
+## 变基（rebase）
+
+* 可以使提交记录变得简洁
+
+### 合并一个分支的多条记录
+
+* 只合并本地记录，尽量不要合并已经提交到远程的记录
+
+```bash
+# 合并三条记录
+
+git rebase Head~3
+# 在交互界面中，编辑合并过程，修改为s
+# 在交互界面中，编辑合并记录
+```
+
+### 合并开发分支避免master分叉
+
+* 可能丢失提交过程的细节
+
+```bash
+# 在branch rebase
+git checkout dev
+
+# 将dev变基到master
+git rebase master
+
+# 在master merge
+git checkout master
+
+# 将dev merge 到master
+git merge dev
+```
+
+### 合并一个分支的同一记录产生的两个记录（拉取代码冲突）
+
+```bash
+git pull 
+
+git fetch origin dev
+git rebase origin/dev
+```
 
 
 
 
 
+### rebase冲突
+
+```bash
+git rebase
+
+# 手动解决冲突
+git status # 可以看到 rebase 进行中
+
+# 解决冲突后继续rebase
+git add .
+git rebase --continue
+
+```
+
+
+
+## 配置beyond compare
+
+```bash
+# 设置冲突软件名称为bc3
+git config --global merge.tool bc3
+
+# 设置冲突软件路径
+git config --global mergetool.path 'C:\Program Files (x86)\Beyond Compare 3\BCompare.exe'
+
+# 关闭保存原始文件
+git config --global mergetool.keepBackup false
+
+# 打开软件
+git mergetool
+```
+
+
+
+## tag推送
+
+
+
+## 个人仓库协同开发
+
+
+
+
+
+## 组织仓库协同开发
+
+* 邀请
+
+* 修改权限
+
+
+
+## 分支规则设置（review）
+
+
+
+## 分支间提交pull request
+
+
+
+## 仓库间提交pull request
+
+* fork
+* 修改
+* pull request
+
+## 配置文件
+
+三个配置文件
+
+## git免密
+
+### 方法一：url
+
+```bash
+
+git remote add origin https://用户名:密码@github.com/xxx/xx.git
+```
+
+### 方法二：私钥
+
+```bash
+ssh-keygen
+
+# 生成
+# 公钥：id_rsa.pub
+# 私钥：id_rsa
+
+# 将公钥保存至github
+git remote add origin git@github.com
+
+```
+
+### 方法三：自动管理凭证
 
 
 
