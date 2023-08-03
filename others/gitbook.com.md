@@ -42,3 +42,14 @@
     折叠的内容
 </details>
 ```
+
+## gitbook中使用图片左对齐，添加标题
+
+```html
+<div align="left">
+
+<figure><img src=".gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
+
+</div>
+```
+
