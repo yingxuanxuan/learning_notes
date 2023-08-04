@@ -1,7 +1,7 @@
 # Table of contents
 
 * [README.md](README.md)
-* [Python](python.md)
+* [Python3](python3.md)
 * [MySQL](mysql.md)
 * [PostgreSQL](postgresql.md)
 * [Redis](redis.md)
