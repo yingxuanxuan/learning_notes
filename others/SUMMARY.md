@@ -5,3 +5,7 @@
 * [gitbook.com](gitbook.com.md)
 * [gitlib](github.com.md)
 * [git](git.md)
+* [virtualbox](virtualbox.md)
+* [mingw](mingw.md)
+* [notepad++](notepad++.md)
+* [chrome](chrome.md)
