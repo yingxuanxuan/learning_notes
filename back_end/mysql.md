@@ -1,24 +1,32 @@
 # MySQL
 
-[toc]
 
-概述
-----------
+## 入门
+
 ### 概念
 * 数据持久化
 * 易于管理、结构化查询
 * DB, database数据库
 * DBMS，Database Management System，数据库软件
 * SQL, Structure Query Language, 结构化查询语言
+* DCL，Data Control Language，权限控制
+* DDL，Data Define Language，数据定义语言
+* DML，Data Manipaulation Language，数据操纵语言
 
-### 面试题
-<https://blog.csdn.net/qq_22222499/article/details/79060495>
-<https://blog.csdn.net/ThinkWon/article/details/104778621>
+### 版本
 
-### mysql
+* 主流：Mysql5.7
+* 推广：Mysql8.0.34
+* 版本选择:  <https://zhuanlan.zhihu.com/p/144457223>
 
-#### 安装
+### docker安装
+
+```bash
+docker run --name mysql8 -e MYSQL_ROOT_PASSWORD=123456 -d mysql
 ```
+
+### Linux rpm安装
+```bash
 # 下载yum源配置
 wget http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
 # 安装yum源
@@ -27,8 +35,8 @@ rpm -Uvh *.rpm
 sudo yum install mysql-community-server
 ```
 
-#### 本地配置
-```
+### 本地配置
+```bash
 # 设置密码
 /user/bin/mysqladmin -u root password 'new-password'
 # 安全设置
@@ -107,8 +115,8 @@ MyISAM不支持事务，InnoDB支持事务。
 alter table person type=INNODB;
 ```
 
-#### 启动
-```
+### 启动
+```bash
 # centos6
 service mysqld start
 service mysqld status
@@ -120,18 +128,18 @@ systemctl status mysqld
 systemctl stop mysqld 
 ```
 
-#### 连接
-```
+### 连接
+```bash
 # -p密码不能有空格
 mysql -h host -P 3306 -u root -ppasswd
 
 # 退出
 exit
-ctrl + c
+# ctrl + c
 ```
 
-#### 远程连接
-```
+### 远程连接
+```mysql
 # < mysql 8.0 允许远程连接
 GRANT ALL PRIVILEGES ON *.* TO `root`@`%` IDENTIFIED BY `passwd` with grant option;
 
@@ -143,8 +151,8 @@ FLUSH PRIVILEGES;
 
 ```
 
-#### 常见命令
-```
+### 常见命令
+```mysql
 # 查看所有数据库
 show databases;
 
@@ -171,18 +179,23 @@ desc table;
 * 不区分大小写，建议关键字大写
 * 命令用分号结尾
 * 可以换行
-* #开头单行注释 -- 单行注释
+* `#`开头单行注释
+* `--`开头单行注释
 * /* 多行注释 */
 * 字符和日期必须使用单引号
+* 字符串必须使用单引号
+* 数字可以使用单引号
 
-DQL, Data Query Language 
-----------
+## 数据查询语言，DQL
+* DQL, Data Query Language 
+
 ### 基础查询 select
-```
-# 查询所有
+
+```mysql
+# 查询所有列
 select * from departments;
 
-# 查询列
+# 查询指定列（按指定顺序显示）
 select department_id,department_name from departments;
 
 # 查询常量值
@@ -221,7 +234,7 @@ ifnull(var, 'str') # 返回str，原值
 ```
 
 ### 条件查询 where
-```
+```mysql
 # 简单条件运算符
 < # 小于
 > # 大于
@@ -278,7 +291,7 @@ select last_name from employees where last_name like '_$_%' escape '$';
 ## like 新版本可以匹配数值型
 select * from department_id like '1__';
 
-## between and, 包含临界值，值不能颠倒
+## between and, 包含临界值，大于等于且小于等于，值不能颠倒
 select * from employees where employee_id between 100 and 120;
 select * from employees where employee_id not between 100 and 120;
 
@@ -292,15 +305,15 @@ select last_name, commission_pct from employees where commission_pct is null;
 select last_name, commission_pct from employees where commission_pct <=> null;
 ```
 
-### 排序查询
-```
+### 排序查询，order by
+```mysql
 # 语法
 select col
 from table
 [where condition]
 order by col [asc|desc]
 
-* 默认asc升序，可以省略不写
+# 默认asc升序，可以省略不写
 
 ## 降序
 select * from employees order by salary desc;
@@ -324,11 +337,10 @@ select * from employees order by lenght(last_name);
 select * from employees order by salary asc, employee_id desc;
 ```
 
-### 常见函数
+### 常见单行函数
 * 格式：select func(var) [from table]; # select是否用到table中的字段
 
-#### 单行函数
-```
+```mysql
 # 字符函数
 
 ## length() # 字符串长度
@@ -471,40 +483,72 @@ from employees;
 
 ```
 
-#### 分组函数, 统计函数、聚合函数、组函数，与group by合用才有意义
-```
+### 聚合函数
+
+* 一般结合group by分组后使用
+* 又称分组函数，统计函数，组函数
+
+#### 求和，sum
+
+```mysql
 # sum，支持数值类型，null不参与运算
 select sum(salary) from employees;
+```
 
+#### 平均值，agv
+
+```mysql
 # avg，支持数值类型，null忽略，平均除数也忽略
 select avg(salary) from employees;
+```
 
+#### 最大值，max
+
+```mysql
 # max，支持字符型和日期型，可以比较大小就支持，忽略null值
 select max(salary) from employees;
+```
 
+#### 最小值，min
+
+```mysql
 # min
 select min(salary) from employees;
+```
 
-# count，忽略null值
-select count(*) from employees;
-select sum(salary), avg(salary), max(salary), min(salary), count(salary) 
-from employees;
+#### 计数，count
 
+```mysql
+# 不指定列计数
+select count(*) from employees; # MYISAN 效率最高
+select count(1) from employees; # MYISAN INNODB 效率相同
+
+# 指定列，忽略null值计数
+select count(salary) from employees; # 判断是否为NULL
+```
+
+#### 结合去重，distinct
+
+```mysql
 # distinct
 select count(distinct salary) from employees;
 select sum(distinct salary) from employees;
-
-# count
-select count(salary) from employees; # 判断是否为NULL
-select count(*) from employees; # MYISAN 效率最高
-select count(1) from employees; # MYISAN INNODB 效率相同
 ```
 
+#### 一次查询多次使用
 
-### 分组查询
+```mysql
+select sum(salary), avg(salary), max(salary), min(salary), count(salary) 
+from employees;
+```
+
+### 分组查询，group by
+
+* 一般结合聚合函数使用
 
 #### 按分组函数分组
-```
+
+```mysql
 # 格式
 select group_function()
 from table
@@ -532,9 +576,24 @@ select max(salary), manager_id
 from employees 
 where commission_pct is not null 
 group by manager_id;
+```
+
+select的字段必须在group by字段之内，否则没有意义
+
+```mysql
+# 错误语句，一个分组内无法选出一个有意义的id值
+# select id from tt group by name, age;
+
+# 正确语句
+select min(id) from tt group by name, age;
+```
 
 
-# 哪个部门的员工个数大于2
+
+#### 过滤分组后的信息，having
+
+```mysql
+## 哪个部门的员工个数大于2
 
 ## 临时表
 select count(*), department_id 
@@ -545,22 +604,23 @@ group by department_id;
 select count(*), department_id 
 from employees 
 group by department_id
-HAVING count(*) > 2;
+having count(*) > 2;
 
-# 查询每个工种有奖金的员工的最高工资大于12000的工种编号和最高工资
+## 查询每个工种有奖金的员工的最高工资大于12000的工种编号和最高工资
 select max(salary) as max_salary , job_id 
 from employees 
 where commission_pct is not null 
 group by job_id 
 having max_salary > 12000;
 
-# having子句
+## having子句
 从原始表中筛选放在where里
 从生成表中筛选放在having里
 ```
 
 #### 按表达式或函数分组
-```
+
+```mysql
 # 查询名字长度分组，查询员工的个数，筛选个数大于5的组
 select count(*), length(last_name) 
 from employees 
@@ -569,7 +629,7 @@ having count(*) > 5;
 ```
 
 #### 按多个字段分组
-```
+```mysql
 # 查询每个部门每个工种的员工的平均工资
 select avg(salary), department_id, job_id 
 from employees 
@@ -594,7 +654,7 @@ group by job_id, department_id;
 * 交叉连接
 
 #### 等值连接
-```
+```mysql
 select beauty.id, beauty.name, boys.boyName 
 from beauty, boys 
 where beauty.boyfriend_id = boys.id;
@@ -647,7 +707,7 @@ and city like 's%';
 ```
 
 #### 非等值连接
-```
+```mysql
 # 员工的工资和工资级别
 select salary, grade_level
 from employees as e, job_grades as g
@@ -655,7 +715,7 @@ where salary between g.lowest_sal and g.highest_sal;
 ```
 
 #### 自连接
-```
+```mysql
 # 员工和领导名称，领导本身在员工表中
 
 select e.employee_id, e.last_name, e.manager_id, m.last_name as manager_last_name
@@ -670,7 +730,7 @@ where e.manager_id = m.employee_id;
 * 右外连接 right [outer] join，right左边是辅表，主表全显示
 * 全外连接 full [outer] join
 * 交叉连接 cross
-```
+```mysql
 # 格式
 select 查询列表
 from 表1 别名 
@@ -683,7 +743,7 @@ on 连接条件
 ```
 
 #### 内连接-等值连接
-```
+```mysql
 select last_name, department_name
 from employees as e
 inner join departments d
@@ -717,7 +777,7 @@ order by department_name desc;
 ```
 
 #### 内连接-非等值连接
-```
+```mysql
 select salary, grade_level
 from employees as e
 inner join job_grades as g
@@ -733,7 +793,7 @@ order by grade_level desc;
 ```
 
 #### 内连接-自连接
-```
+```mysql
 select e.last_name, m.last_name
 from employees as e
 inner join employees as m
@@ -747,7 +807,7 @@ where e.last_name like '%k%';
 ```
 
 #### 外连接
-```
+```mysql
 select *
 from beauty as b
 left outer join boys as bo
@@ -773,7 +833,7 @@ where e.employee_id is null;
 ```
 
 #### 全外连接 - 不支持
-```
+```mysql
 select b.*, bo.*
 from beauty as b
 full outer join boys as bo
@@ -781,7 +841,7 @@ on b.boyfriend_id = bo.id;
 ```
 
 #### 交叉连接 - 笛卡尔乘积
-```
+```mysql
 select b.*, bo.*
 from beauty as b
 cross join boys as bo;
@@ -804,7 +864,7 @@ cross join boys as bo;
     * 表子查询（结果集多行多列）
 
 #### 标量子查询
-```
+```mysql
 select *
 from employees as e
 where salary > (
@@ -845,7 +905,7 @@ having min(salary) > (
 ```
 
 #### 列子查询（多行子查询）
-```
+```mysql
 select last_name
 from employees
 where department_id in (
@@ -866,7 +926,7 @@ where salary < any (
 
 #### 行子查询（一行多列，或者多行多列）
 * 一般不用，有其他等价形式
-```
+```mysql
 select *
 from employees
 where (employee_id, salary) = (
@@ -887,7 +947,7 @@ where employee_id = (
 ```
 
 #### select子查询，子查询必须一行一列
-```
+```mysql
 select d.*,(
   select count(*)
   from employees as e
@@ -905,7 +965,7 @@ select (
 ```
 
 #### from子查询
-```
+```mysql
 select avg_dep.*, g.grade_level
 from (
   select avg(salary) as avg_sal, department_id
@@ -918,7 +978,7 @@ on avg_dep.avg_sal between lowest_sal and highest_sal;
 ```
 
 #### exists子查询，相关子查询
-```
+```mysql
 # 有值则显示1
 select exists (
   select employee_id from employees
@@ -949,8 +1009,9 @@ where d.department_id in (
 
 ### 分页查询
 
-#### 语法
-```
+语法
+
+```mysql
 select 查询列表
 from 表
 join type 表 on 条件
@@ -964,8 +1025,9 @@ limit offset, size # 索引从0开始
 执行顺序 from -> where -> group -> having -> select -> order by -> limit
 ```
 
-#### 示例
-```
+示例
+
+```mysql
 select * from employees limit 0, 5;
 select * from employees limit 5; # offset省略
 
@@ -978,13 +1040,16 @@ order by salary desc
 limit 10;
 ```
 
-### 联合查询, 合并查询，union，多条处查询结果合并
-* 可以查询来自与多个表的信息
+### 联合查询，合并查询，union
+
+* 多条处查询结果合并
+
+* 合并不同表
 * 可以拆分
 * 列数必须相同
 * union # 去重联合
 * union all # 不去重联合
-```
+```mysql
 # 拆分前
 select * from employees where email like '%a%' or department_id > 90;
 
@@ -993,54 +1058,58 @@ select * from employees where email like '%a%' or department_id > 90;
 (select * from employees where department_id > 90);
 ```
 
-DML, Data Manipaulation Language 
-----------
-* 数据操纵语言
-* 插入：insert
-* 修改：update
-* 删除：delete
-* 清空：truncate
+## 数据操纵语言，DML
 
-### 插入语句 insert
+* Data Manipaulation Language 
+
+### 插入，insert
 * 可以为空的字段可以不写
 * 有默认值的字段可以不写
 * 列的顺序可以颠倒
 
-```
+```mysql
 # 格式1
-insert into 表名(列1，列1) 
-values(值1, 值2);
+insert into 表名(列1，列1) values(值1, 值2);
 
+# 格式1，省略字段（按定义顺序）
+insert into 表名 values (值1, 值2)
+
+# 单行插入示例
 insert into beauty(id, name, sex, borndate, phone, photo, boyfriend_id)
 value(13, 'tangyixing', 'f', '1990-4-23', '18999999999', null, 2);
 
-## 支持插入多行
+# 多行插入示例
 insert into beauty(id, name, sex, borndate, phone, photo, boyfriend_id)
 value(14, 'tangyixing', 'f', '1990-4-23', '18999999999', null, 2),
 value(15, 'tangyixing', 'f', '1990-4-23', '18999999999', null, 2),
 value(16, 'tangyixing', 'f', '1990-4-23', '18999999999', null, 2);
 
+# 插入结合子查询
+insert into beauty(id, NAME, phone)
+select 26, 'songqian', '188';
+
+# 插入多行结合子查询
 insert into beauty
 select 14, 'tangyixing', 'f', '1990-4-23', '18999999999', null, 2 union
 select 15, 'tangyixing', 'f', '1990-4-23', '18999999999', null, 2 union
 select 16, 'tangyixing', 'f', '1990-4-23', '18999999999', null, 2;
 
-## 支持子查询
-insert into beauty(id, NAME, phone)
-select 26, 'songqian', '188';
-
-
 # 格式2
 insert into 表名
 set 列1=值, 列2=值, ...
 
+# 插入示例
 insert into beauty
 set id=19, name='liutao', phone = '999';
 
 ```
 
-### 修改 update
-```
+### 修改，update
+
+* 不加条件是全表修改
+* 加上条件是匹配的修改
+
+```mysql
 # 修改单表
 update 表名
 set 列=值, 列=值, ...
@@ -1077,13 +1146,10 @@ set b.boyfriend_id=2
 where bo.id is null;
 ```
 
-### 删除 delete
-* truncate 清空数据表，不能加条件
-* truncate效率高
-* truncate可以置零自增长的值
-* truncate删除没有返回值
-* truncate删除不能回滚，delete可以回滚
-```
+### 删除，delete
+* 不加条件是全表删除
+* 加上条件是匹配的删除
+```mysql
 # 方法1
 delete from 表名
 where 条件;
@@ -1115,54 +1181,85 @@ inner | left | right | join 表2
 on 连接条件
 where 筛选条件;
 
-# 方法2 truncate
+```
+
+### 清空，truncate
+
+* truncate和delete的区别
+  * truncate 清空数据表，不能加条件
+  * truncate效率高
+  * truncate可以置零自增长的值
+  * truncate删除没有返回值
+  * truncate删除不能回滚，delete可以回滚
+
+```
 truncate table 表名；
 ```
 
+### 删除、修改表时，不允许从表内查询数据
 
-DDL, Data Define Language, 数据定义语言
-----------
-* 数据库的管理
-    * 创建 create datebase
-    * 修改 
-    * 删除 drop database
-* 表的管理
-    * 创建 create table
-    * 修改 alter table
-    * 删除 drop table
-    * 复制表
+```mysql
+# 错误
+# delete from tt where id not in (select min(id) from tt group by name, age);
 
-### 库的管理
+# 正确，先将子查询保存成临时表t
+delete from tt where id not in (select id from (select min(id) as id from tt group by name, age) as t)
 ```
-# 创建数据库
-create database name;
-create database if not exists name;
 
-# 修改数据库
-rename database old to new; （废弃）
-直接修改文件夹名称
+## 数据定义语言，DDL
 
-# 修改数据库字符集
-alter database name character set utf8mb4;
+* DDL, Data Define Language
 
-# 删除数据库
+### 数据库管理
+
+#### 创建数据库
+
+```mysql
+create database 数据库名称;
+create database if not exists 数据库名称;
+```
+
+#### 删除数据库
+
+```mysql
 drop database name;
 drop database if exists name;
 ```
 
-### 表的管理
+#### 修改数据库
+
+```mysql
+# 修改数据库字符集
+alter database name character set utf8mb4;
+
+# 修改数据库（可能造成问题）
+# rename database old to new; 
+# 直接修改文件夹名称
 ```
-# 创建表
+
+### 数据表管理
+
+#### 创建表
+
+```mysql
+# 创建表前检查表是否存在
 create table if not exists ...;
 
+# 创建表格式
 create table 表名
 (
-    列名 类型 (长度）   约束,
-    列名 类型（长度）   约束,
-    列名 类型（长度）   约束,
+    列名 类型(长度) 约束,
+    列名 类型(长度) 约束,
+    列名 类型(长度) 约束
 );
 
-create table book (
+# 示例
+
+# 注意：创建表前创建数据库
+create database test;
+# 注意：创建表前切换到数据库
+use test;
+create table if not exists book (
   id int,
   bname varchar(20),
   price double,
@@ -1170,6 +1267,7 @@ create table book (
   publishdate datetime
 );
 
+# 查看表定义
 desc book;
 
 create table author (
@@ -1179,42 +1277,62 @@ create table author (
 );
 
 desc author;
+```
 
+#### 查看表定义
+
+```mysql
+desc 表名;
+```
+
+<div align="left">
+<figure><img src=".gitbook/assets/image-20230808173523452.png" alt=""><figcaption></figcaption></figure>
+</div>
+
+#### 修改表
+
+```mysql
 # 修改表
 alter talbe 表名 add | drop | modify | change column 列名 类型 约束;
 
-## 修改列名
+# 修改列名
 alter table book change column old_col new_col [new_type];
 
-* 修改列的类型或约束
+# 修改列的类型或约束
 alter talbe book modify column pubdate timestamp;
 
-* 添加新列，默认末尾
+# 添加新列，默认末尾
 alter talbe table_name add column new_col_name double;
-* 添加新列到指定位置
+
+# 添加新列到指定位置
 alter talbe table_name add column new_col_name double [first|after 列名];
 
-* 删除列
+# 删除列
 alter table author drop column annual;
 
-* 修改表名
+# 修改表名
 alter table old_table_name rename [to] new_table_name;
+```
 
+#### 删除表
 
-# 删除表
+```mysql
 drop table book_author;
 drop table if exists table_name;
+```
 
-# 复制表
-## 只复制表结构
+#### 复制表
+
+```mysql
+# 只复制表结构
 create table copy_table like raw_table;
 
-## 复制表结构+内容
+# 复制表结构+部分内容
 create table copy_table
 select * from author
-where 条件；
+where 条件;
 
-## 只复制部分列
+# 只复制部分列
 create table copy_table
 select 列1, 列2
 from raw_table;
@@ -1222,6 +1340,7 @@ where 0;
 ```
 
 ### 常见数据类型
+
 * 数值型
     * 整形
     * 小数
@@ -1233,7 +1352,7 @@ where 0;
 * 日期型
 
 #### 整形 
-```
+```mysql
 Tinyint # 1字节
 Smallint # 2字节
 Mediumint # 3字节
@@ -1250,7 +1369,7 @@ create table tab_int(
 
 
 #### 浮点型
-```
+```mysql
 float(M, D) # 4字节
 double(M, D) # 8字节
 DEC(M, D) # M+2字节， 默认精度是 DEC(10, 0)
@@ -1272,7 +1391,7 @@ DECIMAL(M, D)
 
 
 #### 枚举类型
-```
+```mysql
 create table tab_char (
     c1 enum('a', 'b', 'c')
 );
@@ -1283,7 +1402,7 @@ insert into tab_char values('m'); # 超出
 ```
 
 #### set类型
-```
+```mysql
 create table tab_set (
     c1 set('a', 'b', 'c', 'd');
 );
@@ -1302,7 +1421,7 @@ insert into tab_set values('a,c,d');
 | timestamp | 4字节           | 19700101080001      | 2038（受时区影响）  |
 | year      | 1字节           | 1901                | 2155                |
 
-```
+```mysql
 CREATE TABLE tab_data(
 	t1 DATETIME,
 	t2 TIMESTAMP
@@ -1330,7 +1449,7 @@ SET time_zone = '+9:00';
 
 #### 列级约束
 * foreign key references约束无效
-```
+```mysql
 CREATE TABLE stuinfo(
 	id INT PRIMARY KEY,
 	stuName VARCHAR(20) NOT NULL,
@@ -1353,7 +1472,7 @@ CREATE TABLE major(
 * 先建立主表，再建立从表
 * 先插入主表，再建立从表
 * 先删除从表，在删除主表
-```
+```mysql
 # 命名
 CREATE TABLE stuinfo(
 	id INT,
@@ -1384,7 +1503,7 @@ CREATE TABLE stuinfo(
 ```
 
 #### 修改表时添加约束
-```
+```mysql
 CREATE TABLE stuinfo(
 	id INT,
 	stuname VARCHAR(20),
@@ -1416,7 +1535,7 @@ ALTER TABLE stuinfo DROP FOREIGN KEY;
 * 自增长列必须是key
 * 类型只能是数值型，int，float，double
 
-```
+```mysql
 # 创建表时设置
 CREATE TABLE tab_identity(
 	id INT PRIMARY KEY AUTO_INCREMENT;
@@ -1432,14 +1551,13 @@ SHOW VARIABLES LIKE '%auto_increment%';
 SET auto_increment_increment=3;
 ```
 
-TCL, Transaction Contral Language
-----------
+## TCL, Transaction Contral Language
 ### 存储引擎
 * innodb
 * myisam # 5.5之前，不支持事务
 * memory
 
-```
+```mysql
 # 显示所有支持存储引擎
 SHOW ENGINES;
 ```
@@ -1460,7 +1578,7 @@ SHOW ENGINES;
 * `rollback;` # 回滚
 * `savepoint;` # 设置保存点
 
-```
+```mysql
 SET autocommit=0;
 START TRANSACTION;
 UPDATE account SET balance = 500 WHERE username='A';
@@ -1491,7 +1609,7 @@ rollback to a; # 回滚到保存点
 * mysql默认repeatedable read
 * oracle支持read commited和serializable，默认为read commited
 
-```
+```mysql
 # 查看隔离级别
 select @@tx_isolation;
 
@@ -1506,8 +1624,8 @@ set global transaction isolation level read commited;
 * delete可以回滚
 * trancate不能回滚
 
-视图，虚拟表
-----------
+## 视图，虚拟表
+
 * mysql5.1版本新增  
 * 重用sql语句
 * 简化sql查询
@@ -1515,7 +1633,7 @@ set global transaction isolation level read commited;
 
 
 * 功能示例
-```
+```mysql
 # 原版查询
 select stuname, majorname
 from stuinfo as s
@@ -1559,8 +1677,7 @@ show create view v1;
 4. 字段不含原表必选项等不能更新
 5. 一般不使用
 
-变量
-----------
+## 变量
 * 系统变量
     * 全局变量，数据库全局
     * 会话变量，当前连接
@@ -1569,7 +1686,7 @@ show create view v1;
     * 局部变量，begin end中有效
 
 ### 系统变量
-```
+```mysql
 show variables; # 默认session变量
 show global variables;  # 全局变量
 show session variables; # 会话变量
@@ -1585,7 +1702,7 @@ set @@global.系统变量名 = 值;
 ```
 
 ### 自定义变量-用户变量
-```
+```mysql
 # 声明并初始化
 set @var=val;
 set @var:=val;
@@ -1604,7 +1721,7 @@ select @sum;
 ```
 
 ### 自定义变量-局部变量
-```
+```mysql
 # 声明
 declare var value;
 
@@ -1618,8 +1735,7 @@ select col into var from table;
 select var
 ```
 
-存储过程
------------
+## 存储过程
 * 提高重用性
 * 简化操作
 * 提高性能，预编译
@@ -1632,7 +1748,7 @@ select var
 * DELIMITER $ 设置结束标记
 * CALL调用
 
-```
+```mysql
 CREATE PROCEDURE pro_name(var) 
 BEGIN
 	expression;
@@ -1640,7 +1756,7 @@ END
 ```
 
 #### 空参列表
-```
+```mysql
 DELIMITER $
 
 CREATE PROCEDURE mypl1()
@@ -1652,7 +1768,7 @@ CALL myp1()$
 ```
 
 #### IN模式参数
-```
+```mysql
 DELIMITER $
 
 CREATE PROCEDURE myp2(IN beautyName VARCHAR(20))
@@ -1683,7 +1799,7 @@ CALL myp3('name', 'passwd') $
 ```
 
 #### out模式参数
-```
+```mysql
 CREATE PROCEDURE myp4(IN beautyName VARCHAR(20), OUT boyname VARCHAR(20))
 BEGIN
 	SELECT bo.boyName INTO boyName
@@ -1700,7 +1816,7 @@ SELECT  @bname$
 
 
 #### inout模式参数
-```
+```mysql
 a,b翻倍并返回
 
 CREATE PROCEDURE myp8(INOUT a INT, INOUT b INT)
@@ -1715,24 +1831,23 @@ CALL myp8(@m, @n)$
 ```
 
 ### 删除，一次只能删除一个
-```
+```mysql
 drop procedcure mypname;
 ```
 
 ### 查看存储过程
-```
+```mysql
 show create procedure mypname;
 ```
 
-函数
------------
+## 函数
 * 存储过程可以不返回值
 * 函数只能有一个返回值
 * 函数必须有return语句
 * 函数参数不需要IN/OUT/INOUT
 
 ### 创建
-```
+```mysql
 create function 函数名(参数列表) returns 返回类型
 begin
     函数体
@@ -1740,22 +1855,22 @@ end
 ```
 
 ### 调用
-```
+```mysql
 select 函数名(参数列表)
 ```
 
 ### 查看
-```
+```mysql
 show create function myf3;
 ```
 
 ### 删除
-```
+```mysql
 drop function myf3;
 ```
 
 ### 示例
-```
+```mysql
 CREATE FUNCTION myf1() RETURNS INT
 BEGIN
 	DECLARE c INT DEFAULT 0;
@@ -1769,10 +1884,9 @@ SELECT myf1()$
 ```
 
 
-流程控制结构
------------
+## 流程控制结构
 ### if函数
-```
+```mysql
 if (表达式1， 表达式2， 表达式3)
 如果表达式1城里，返回表达式2的值，否则返回表达式3的值
 ```
@@ -1780,7 +1894,7 @@ if (表达式1， 表达式2， 表达式3)
 ### case
 
 #### 值判断
-```
+```mysql
 case 变量|表达式|字段
 when 要判断的值 then 返回的值
 when 要判断的值 then 返回的值
@@ -1789,7 +1903,7 @@ else 返回值n
 end
 ```
 
-```
+```mysql
 case 变量|表达式|字段
 when 要判断的值 then 语句;
 when 要判断的值 then 语句;
@@ -1799,7 +1913,7 @@ end case;
 ```
 
 #### 条件判断
-```
+```mysql
 case
 when 条件 then 返回
 when 条件 then 返回
@@ -1808,7 +1922,7 @@ else 返回值n
 end
 ```
 
-```
+```mysql
 case
 when 条件 then 语句;
 when 条件 then 语句;
@@ -1818,7 +1932,7 @@ end case;w
 ```
 
 ### if结构（只能用在BEGIN END中）
-```
+```mysql
 if 条件1 then 语句1;
 elseif 条件2 then 语句2;
 else 语句n
@@ -1830,7 +1944,7 @@ end if;
 * iterate类似于continue
 * leave类似于break
 
-```
+```mysql
 while 循环条件 do
     语句;
 end while;
@@ -1840,21 +1954,20 @@ end while;
 end while 标签;
 ```
 
-```
+```mysql
 标签:loop
     语句
 end loop 标签;
 ```
 
-```
+```mysql
 标签:repeat
 
 until 结束循环的条件
 end repeat 标签;
 ```
 
-mysql架构介绍
-----------
+## mysql架构介绍
 ### mysql介绍
 * mysql内核
 * sql优化工程师
@@ -1867,7 +1980,7 @@ mysql架构介绍
 * sql编程
 
 ### mysql linux安装
-```
+```mysql
 # 检查是否安装
 rpm -qa | grep mysql
 
@@ -1909,7 +2022,7 @@ alter user 'root'@'localhost' identified by 'passwd';
 ```
 
 ### mysql配置
-```
+```mysql
 # 默认路径
 /var/lib/mysql # 数据库文件存放路径
 /usr/share/mysql # 默认配置文件目录
@@ -1942,7 +2055,7 @@ default-character-set=utf8
 * myi文件 # 索引文件
 
 ### mysql逻辑架构
-```
+```mysql
 Connectors -> Connection pool -> SQL Interface -> Storage Engines-> Files&Logs
                               -> Parser
                               -> Optimizer
@@ -1950,7 +2063,7 @@ Connectors -> Connection pool -> SQL Interface -> Storage Engines-> Files&Logs
 ```
 
 ### mysql存储引擎
-```
+```mysql
 show engines;
 show variables like '%storage_engine%';
 ```
@@ -1969,8 +2082,7 @@ show variables like '%storage_engine%';
 * MariaDB扩展提供XtraDB存储引擎
 * AliSql、AliRedis
 
-索引优化分析
-----------
+## 索引优化分析
 ### 性能问题，执行时间，等待时间
 1. 查询语句问题
 2. 索引失效问题（单值索引，复合索引）
@@ -2006,7 +2118,7 @@ show variables like '%storage_engine%';
     * 唯一索引，列值必须唯一，但允许有空值
     * 复合索引，一个索引包含多个列
 * 基本语法
-```
+```mysql
 # 创建索引
 create [unique] index indexName on mytable(columnname(length))
 alter mytable add [unique] index [indexName] on (columname(length))
@@ -2129,8 +2241,7 @@ alter table tbl_name add fulltext index_name(column_list);
 11. 总结：
 
 
-查询截取分析
-----------
+## 查询截取分析
 1. 慢查询的开启和捕获
 2. explain+慢SQL分析
 3. show profile查询SQL在Mysql服务器里面的执行细节和生命周期
@@ -2156,13 +2267,13 @@ alter table tbl_name add fulltext index_name(column_list);
 2. 日志位置：`show variables like '%show_query_log%'`
 3. 临时开启：`set global show_query_log = 1`
 4. 配置开启：
-    ```
-    [mysqld]
-    slow_query_log=1
-    slow_query_log_file=path
-    log_query_time=3
-    log_output=FILE
-    ```
+```mysql
+[mysqld]
+slow_query_log=1
+slow_query_log_file=path
+log_query_time=3
+log_output=FILE
+```
 5. 慢时间阈值（默认10秒）：`show global variables like 'long_query_time%'`
 6. 设置阈值：`set global long_query_time=3; `
 7. 模拟慢查询：`select sleep(4)`
@@ -2191,8 +2302,7 @@ alter table tbl_name add fulltext index_name(column_list);
 
 ### 全局查询日志
 
-mysql锁机制
-----------
+## mysql锁机制
 
 
 ### 行锁
@@ -2200,13 +2310,12 @@ mysql锁机制
 ### 页锁
 
 ### 优化
-```
+```mysql
 show open tables
 
 ```
 
-主从复制
-----------
+## 主从复制
 1. slave会从master读取binlog
 * 每个slave只有一个master
 * 每个slave只能有一个唯一的服务器ID
@@ -2222,3 +2331,12 @@ show open tables
 
 ### 
 ### 
+
+
+
+
+
+## 面试题
+
+<https://blog.csdn.net/qq_22222499/article/details/79060495>
+<https://blog.csdn.net/ThinkWon/article/details/104778621>
