@@ -10,3 +10,4 @@
 * [Django](django.md)
 * [DRF](drf.md)
 * [Python third-party modules](python-third-party-modules.md)
+* [ipython](ipython.md)
