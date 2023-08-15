@@ -3,7 +3,14 @@
 
 ## 入门
 
+### 导图
+
+![MySQL高级特性篇技术图谱_尚硅谷-宋红康](C:/Users/%E8%8B%B1%E6%97%8B/AppData/Local/Temp/360zip$Pic/360$0/MySQL%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E7%AF%87%E6%8A%80%E6%9C%AF%E5%9B%BE%E8%B0%B1_%E5%B0%9A%E7%A1%85%E8%B0%B7-%E5%AE%8B%E7%BA%A2%E5%BA%B7.png)
+
+
+
 ### 概念
+
 * 数据持久化
 * 易于管理、结构化查询
 * DB, database数据库
