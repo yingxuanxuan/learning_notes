@@ -5,6 +5,7 @@
 * [CSS](css.md)
 * [JavaScript](javascript.md)
 * [ES6](es6.md)
+* [Strict Mode](strict-mode.md)
 * [webpack](webpack.md)
 * [node.js](node.js.md)
 * [vue.js.v2](vue.js.v2.md)
