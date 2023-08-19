@@ -200,6 +200,12 @@ git cherry-pick sha1
 # 如果代码不是从托管下载的，是在本地新建的，则需要先关联远程仓库
 git remote add origin 远程仓库地址
 
+# 重设远程地址
+git remote set-url origin [url]
+
+# 删除远程仓库
+git remote rm origin
+
 # 如果远程仓库比本地新，则需要先同步远程仓库，先进行merge
 git pull origin master
 
