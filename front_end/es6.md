@@ -355,7 +355,60 @@ let p = new Person();
 * 一般针对数组和对象操作
 
 ```js
+// ES5拆对象
+let node = {
+    type: 'type',
+    name: 'name'
+};
+let type = node.type;
+let name = node.name;
 
+// ES6完全拆对象
+// 注意不能重命名
+let {type, name} = node;
+
+// ES6部分拆对象
+let {type} = node;
+
+// ES6使用其余运算符拆对象
+// ...res是其他属性的数组
+let {type, ...res} = node;
+
+// ES6拆对象，属性不存在时使用默认值
+// other不存在，为默认值10
+let {type, name, other = 10} = node;
+
+// ES6拆数组
+let arr = [1, 2, 3];
+let [a, b] = arr;
+
+// ES6嵌套拆数组
+let [a, [b], c] = [1, [2], 3];
+```
+
+## 对象扩展
+
+* ES6中简化了ES5定义对象的操作，可以直接写入变量和函数作为对象属性
+
+```js
+let name = 'name';
+let age = 10;
+
+// ES5
+var p = {
+    name = name,
+    age = age,
+    function print() {}
+}
+
+// ES6
+let p = {
+    name,
+    age,
+    print() {
+        
+    }
+}
 
 ```
 
