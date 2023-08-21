@@ -207,21 +207,41 @@ git remote set-url origin [url]
 git remote rm origin
 
 # 如果远程仓库比本地新，则需要先同步远程仓库，先进行merge
-git pull origin master
-
-git push -u origin master
 # -u 为保存记录提交到 origin  master
+# -u 等同于 --set-upstream
+git pull -u origin master
+git pull --set-upstream origin master
+git push -u origin master
+git push --set-upstream origin master
+
 # 下次仅需使用
 git pull
 git push
+
+# 不保存upstream，每次执行需要
+git pull origin master
+git push origin master
+
+# 设置代理
+git config --global http.proxy http://127.0.0.1:10809
 ```
 
-### 查看当前添加的远程库
+### 管理远程库
 
 ```bash
+# 查看当前添加的远程库
 git remote
 
 git remote -v
+
+# 添加远程库
+git remote add origin 远程仓库地址
+
+# 重设远程地址
+git remote set-url origin [url]
+
+# 删除远程仓库
+git remote rm origin
 
 ```
 
