@@ -192,23 +192,11 @@ pip config --user list
 pip config --site list
 ```
 
-### 使用notepad++运行python
-```powershell
-# 运行 /K 保持窗口 -u unbuffered
-cmd /K py -3 -u $(FULL_CURRENT_PATH)
-
-# pdb -m module
-cmd /K py -3 -u -m pdb $(FULL_CURRENT_PATH)
-
-# 交互运行 -i interactive 
-cmd /K py -3 -u -i $(FULL_CURRENT_PATH)
-```
-
 ### 预编译
 * python不支持预编译
 * 使用`__debug__`标记，在调用`python -O -OO` 时，`__debug__`为`False`，解释器会忽略`if __debug__`的表达式
 
-#### 编译
+### 编译
 
 ```sh
 import py_compile # 编译文件
@@ -216,36 +204,41 @@ import compileall # 编译目录
 python -O -m py_compile file.py
 ```
 
-### virtualenv
-* 将python安装到其他目录
-```bash
-# 下载python源码，重新编译python到指定目录
-wget https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
-wget https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz
-tar zxvf Python-3.4.3.tgz 
-cd Python-3.4.3 
-./configure --prefix=/usr/local 
-make && make altinstall
-```
+### virtualenv和venv
 
-* 使用virtualenv
+* virtualenv和venv用来创建独立的 Python 虚拟环境的工具，可以将每个项目与其他项目独立开来，互不影响，解决了依赖包版本冲突的问题
+* venv 不是 virtualenv 发展而来的，而是 Python 3.3 之后标准库内置的一个新模块，用来替代 virtualenv。venv 的设计参考了 virtualenv 的用法，但是简化了一些功能，比如不支持指定 Python 版本和继承父环境的包
+* virtualenv支持Python2和Python3，而 venv 只支持 Python 3.3 以上版本
+* venv 是 Python 标准库内置的模块，而 virtualenv 需要额外安装
+
+#### virtualenv
+
 ```bash
-#### 安装vitualenv
+# 安装vitualenv
 yum install python-pip
 pip install virtualenv
 
-#### 创建虚拟环境
+# 创建虚拟环境
 virtualenv -p /usr/local/bin/python3.4 py34env
 
-#### 从默认python创建虚拟环境（不复制已经安装的第三方库）
+# 从默认python创建虚拟环境（不复制已经安装的第三方库）
 virtualenv --no-site-packages venv
 
-#### 激活虚拟环境
+# 激活虚拟环境
 source py34env/bin/activate
 
-#### 退出虚拟环境
+# 退出虚拟环境
 deactivate
 ```
+
+#### venv
+
+```sj
+```
+
+
+
+
 
 ### nginx+supervisord多进程部署
 
@@ -7897,7 +7890,35 @@ httpd = make_server('', 8000, application)
 httpd.serve_forever()
 ```
 
-## MessageBox 弹出消息窗口
+## ctypes
+
+* python与c代码直接交互有两种方式
+  * 通过ctypes调用编译好的动态链接库
+  * 使用Python/C API，按Python规定的接口编写c代码，这种方式可以在C中调用Python
+
+### ctypes介绍
+
+* ctypes是Python的一个内置模块
+* ctypes可以让Python代码与C语言的动态链接库（DLL）或共享库交互
+* 它提供了一些与C兼容的数据类型，并可以自动将Python类型转换为C类型，或者反过来
+* 使用ctypes模块，可以在Python中调用C语言编写的函数，或者在C语言中调用Python编写的函数
+
+### windows系统提供了哪些动态链接库
+
+- Kernel32.dll：提供内核级的功能，如内存管理、进程和线程操作、同步等。
+- User32.dll：提供用户界面的功能，如窗口管理、消息处理、菜单、对话框等。
+- GDI32.dll：提供图形设备接口的功能，如绘图、字体、颜色、位图等。
+- 其他
+
+### linux系统提供了哪些动态链接库
+
+- libc.so：提供C标准库的功能，如字符串处理、内存分配、数学函数等。
+- libm.so：提供数学库的功能，如三角函数、对数函数、随机数生成等。
+- libpthread.so：提供线程库的功能，如线程创建、同步、调度等。
+- 其他
+
+### 示例：MessageBox 弹出消息窗口
+
 ```python
 # Styles取值
 0 # OK

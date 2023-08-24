@@ -1,5 +1,9 @@
 # JavaScript
 
+## 教程
+
+* <https://wangdoc.com/javascript/>
+
 ## 基础
 
 ### 简介
@@ -143,29 +147,52 @@ var Answer = true;
 var t = null; // null
 ```
 
-#### 变量的strict模式 
+### 检测数据类型，typeof运算符
 
-* 非严格模式下，没有通过var申明的变量会被声明成全局变量
-* 使用var声明的变量在作用域内
-* 使用强制模式，没有用var定义则不是变量，抛出ReferenceError错误
+* 由于历史原因
 
-``` js
-i = 10; // i为全局变量
+  * 函数，function在JS中也看做一种数据类型
 
-'use strict';
-i = 10; // i为作用域内变量
+  * 未定义，undefined的类型是undefined
+
+  * 空值，null类型是object
+
+  * 数组，array、函数，function的类型也是object
+
+```js
+typeof NaN // number
+typeof(NaN) // number
+typeof(Number(1)) // number
+typeof(1) // number
 ```
 
 ### 基本数据类型
 
+* ES5有六种基本数据类型，又称原始类型
+  * 数值，number，包括整数和小数，例如1、1.0
+  * 字符串，string，”abc“
+  * 布尔值，boolean，true和false
+  * 未定义，undefined
+  * 空值，null
+  * 对象，object
+* ES6新增两种数据类型
+  * Symbol
+  * BigInt
+* 其中Object较为复杂，包含三个子类型
+  * 对象，object，在JS中也当做字典使用
+  * 数组，array
+  * 函数，function
+
 #### 数值，Number 
 
-* Javascript不区分整数和浮点数，只有Number类型
+* Javascript不区分整数和浮点数，只有Number类型，底层均使用浮点数保存
 * NaN和Infinity都是Number类型
-
-Number示例
+* Number能表示的最大值，`Number.MAX_VALUE`
+* Number能标识的最小值，`Number.MIN_VALUE`
 
 ``` js
+// Number示例
+
 123; // 整数123
 0.456; // 浮点数0.456
 1.2345e3; // 科学计数法表示1.2345x1000，等同于1234.5
@@ -173,14 +200,18 @@ Number示例
 NaN; // NaN表示Not a Number，当无法计算结果时用NaN表示
 Infinity; // Infinity表示无限大，当数值超过了JavaScript的Number所能表示的最大值时，就表示为Infinity
 
-0xff000; // 十六进制，0x开头
-0110000; // 八进制，0开头
-0b11010; // 二进制，0b开头
+0xff000; // 十六进制，0x或0X开头
+0o11000; // 八进制，0o或0O开头
+0b11010; // 二进制，0b或0B开头
+
+// 0开头也可以表示八进制，但是在严格模式下被禁用
 ```
 
-Number运算示例：
+
 
 ``` js
+// Number运算示例
+
 1 + 2; // 3
 (1 + 2) * 5 / 2; // 7.5
 2 / 0; // Infinity
@@ -194,6 +225,20 @@ Number运算示例：
 #### 布尔值 ，Boolean
 
 * 布尔值只有`true`和`false`
+* 会返回布尔值的运算符
+  * 前值逻辑运算符，`!`
+  * 相等运算符，`===`、`!==`、`==`、`!=`
+  * 比较运算符，`>`，`>=`，`<`，`<=`
+
+* 数据被用于判断时，会被自动转为布尔值中`false`的值
+  * undefined
+  * null
+  * false
+  * 0
+  * NaN
+  * 空字符串
+
+* 与Python不同，空数组，空对象，自动转为布尔值时，为`true`
 
 ``` js
 true;
@@ -237,11 +282,17 @@ false || true || false; // true
 
 * 斜杠转义
 
-* ES6新增反点\`\`，可以解释变量，可以表示多行字符串
-
 * 解释变量就是模板字符串
 
-* 字符串不可变，对索引项赋值，但不会改变也不会出现错误。
+* 字符串不可变，对索引项赋值，但不会改变也不会出现错误
+
+* ES6新增反点\`\`，可以解释变量
+
+* ES5只能通过转义字符表示多行文本的换行，ES6通过反点可以直接表示多行字符串
+
+* JavaScript引擎使用Unicode保存字符串
+
+* 由于历史原因，JavaScript只支持两字节的Unicode，不支持后来继续发展的四字节Unicode
 
 ```js
 // 字符串表达式
@@ -251,13 +302,6 @@ false || true || false; // true
 
 // 单双引号混用
 "I'm OK"
-
-// 转义字符
-'\n' // 换行
-'\t' // 制表符
-'\\' // 一个斜杠
-'\x41' // ASCII字符
-'\u4ed' // Unicode字符
 
 // 多行字符串
 `a
@@ -282,6 +326,29 @@ s[5]; // undefined
 // 字符串不可变，对索引项赋值，但不会改变也不会出现错误。
 s[0] = 'Y';
 s; // 'Hello'
+```
+
+##### 转义字符
+
+* 除通常的特殊字符转译外，JavaScript提供三种Unicode值转译
+  * \HHH，HHH是000-377的八进制数，能表示256以内的Unicode字符
+  * \xHH，HH是00-FF的十六进制数，能标识256以内的Unicode字符
+  * \uXXXX，XXXX是0000-FFFF的十六进制数，能标识65535以内的Unicode字符
+* 在非特殊字符前使用反斜杠，反斜杠会被忽略
+
+```js
+// 转义字符
+'\n' // 换行
+'\t' // 制表符
+'\r' // 回车
+
+'\'' // 单引号
+'\"' // 双引号
+'\\' // 一个斜杠
+
+'\000' // ASCII字符
+'\x41' // ASCII字符
+'\u4ed0' // Unicode字符
 ```
 
 ##### 转大小写
@@ -344,10 +411,6 @@ console.log('a'.concat('b', 'c')); // abc
 console.log(' a \n\t'.trim())
 ```
 
-
-
-
-
 #### null 和 undefined
 
 * null表示一个“空”的值
@@ -360,7 +423,7 @@ console.log(' a \n\t'.trim())
 '' === null // false
 ```
 
-#### 基本数据类型的比较
+### 基本数据类型的比较
 
 * `==`，自动转换数据类型再比较，
 
@@ -392,16 +455,7 @@ isNaN(NaN); // true
 Math.abs(1 / 3 - (1 - 2 / 3)) < 0.0000001; //true
 ```
 
-#### 检测数据类型
-
-```js
-typeof NaN // number
-typeof(NaN) // number
-typeof(Number(1)) // number
-typeof(1) // number
-```
-
-#### 类型转换
+### 类型转换
 
 ```js
 // 数值会自动转换为字符串
@@ -423,8 +477,6 @@ String(a); // '1'
 Number('1'); // 1
 Number('a'); // NaN
 ```
-
-
 
 ### 引用数据类型
 
@@ -1045,6 +1097,7 @@ function abs(x) {}
 // 匿名函数（语句、表达式，要带分号）
 var abs = function (x) { };
 
+
 // 参数过多可以正常调用
 abs(10, 'xxx', 'dddd');
 
@@ -1076,8 +1129,6 @@ function foo(a, b, ...rest) {
 }
 foo(1, 2, 3, 4, 5);
 ```
-
-#### return换行问题
 
 * return后换行可能导致自动添加分号（语言糟粕）
 
@@ -1508,7 +1559,7 @@ function count() {
 使用(function(x){return x*x;})(i);函数参数固定循环变量
 ```
 
-### 箭头函数 # ES6新增
+### 箭头函数（ES6新增）
 
 #### 定义
 
@@ -1569,7 +1620,7 @@ x => ({foo:x}) # 正确写法
 
 总是指向词法作用域，即外层调用obj call和apply绑定this无效
 
-### 生成器 generator # ES6
+### 生成器 generator（ES6新增）
 
 #### 定义
 
@@ -1849,8 +1900,6 @@ var a = ['a', 'b', 'c', 'd']
 console.log(choice(a))
 
 ```
-
-
 
 
 
@@ -2361,6 +2410,20 @@ history.go(1)
 
 
 
+## 事件
+
+### 事件发展
+
+
+
+### 事件传播
+
+
+
+### 
+
+
+
 ## 其他Web API
 
 
@@ -2395,4 +2458,283 @@ serve -l 1234
 # 指定地址端口
 serve -l tcp://hostname:1234
 ```
+
+
+
+## 专题
+
+### 前端向后端发起异步请求
+
+* ajax即XMLHttpRequest对象，
+* jQuery Ajax，由于原生ajax参数过于复杂，回调不方便，产生了jQuery封装
+* axios，第三方异步封装的请求库，基于promise
+* fetch，官方在ES6 promise之后，推出的ajax替代品
+
+#### Web API - XMLHttpRequest
+
+* XMLHttpRequest是浏览器Web API，node中无法使用
+
+```js
+var r = new XMLHttpRequest();
+// method支持GET、PUT、OPTION、HEAD、DELETE等
+r.open('GET', 'http://192.168.4.101:5555/get', true);
+r.setRequestHeader("Content-Type", "application/json");
+r.onreadystatechange = function() {
+    // 判断响应状态
+    if (r.readyState === 4 && r.status === 200) {
+        // 将响应文本转换为 JSON 对象
+        var data = JSON.parse(r.responseText);
+        // 处理 JSON 对象
+        console.log(data);
+    }
+};
+r.send();
+```
+
+#### jQuery库
+
+```html
+<!-- 创建一个按钮元素 -->
+<div>
+  <button id="btn">发送请求</button>
+</div>
+
+<!-- 创建一个 div 元素 -->
+<div>
+  <h2>响应如下：</h2>
+
+  <!-- 使用pre标签保留文本中的换行 -->
+  <pre id="resp"></pre>
+</div>
+
+<!-- 引入 jQuery 库 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.js">
+</script>
+
+<script>
+  // 页面加载完成后运行js脚本
+  $(document).ready(function () {
+    // 绑定按钮的点击事件
+    $("#btn").click(function () {
+      // 发起 ajax 请求
+      $.ajax({
+        // 设置请求的 URL
+        url: "http://192.168.4.101:5555/get",
+        // 设置请求的方式
+        method: "GET",
+        // 设置contentType
+        contentType: "application/json"
+      }).done(function (data) {
+        // 设置请求成功后的回调函数，将响应文本显示在 div 中
+        // json解析为字符串，换行缩进4个空格
+        $("#resp").text(JSON.stringify(data, null, 4));
+      }).fail(function (error) {
+        // 设置请求失败后的回调函数，显示错误信息
+        console.log(error);
+      });
+    });
+  });
+</script>
+```
+
+#### axio库
+
+* promise写法
+
+```html
+<!-- 创建一个按钮元素 -->
+<div>
+  <button id="btn">发送请求</button>
+</div>
+
+<!-- 创建一个 div 元素 -->
+<div>
+  <h2>响应如下：</h2>
+
+  <!-- 使用pre标签保留文本中的换行 -->
+  <pre id="resp"></pre>
+</div>
+
+<!-- 引入 jQuery 库 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.js"></script>
+
+<!-- 引入 axio 库 -->
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
+<script>
+  // 页面加载完成后运行js脚本
+  $(document).ready(function () {
+    // 绑定按钮的点击事件
+    $("#btn").click(function () {
+      // 发起axios promis请求
+      axios
+        .get("http://192.168.4.101:5555/get")
+        .then(function (response) {
+          // 设置请求成功后的回调函数，将响应文本显示在 div 中
+          // json解析为字符串，换行缩进4个空格
+          $("#resp").text(JSON.stringify(response.data, null, 4));
+        })
+        .catch(function (error) {
+          // 设置请求失败后的回调函数，显示错误信息
+          console.log(error);
+        })
+        .finally(function () {
+          console.log("finally");
+        });
+    });
+  });
+</script>
+```
+
+* async写法
+
+```html
+<!-- 创建一个按钮元素 -->
+<div>
+  <button id="btn">发送请求</button>
+</div>
+
+<!-- 创建一个 div 元素 -->
+<div>
+  <h2>响应如下：</h2>
+
+  <!-- 使用pre标签保留文本中的换行 -->
+  <pre id="resp"></pre>
+</div>
+
+<!-- 引入 jQuery 库 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.js"></script>
+
+<!-- 引入 axio 库 -->
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
+<script>
+  // 页面加载完成后运行js脚本
+  $(document).ready(function () {
+    // 绑定按钮的点击事件
+    $("#btn").click(async function () {
+      try {
+        // 发起异步async异步请求
+        const response = await axios.get("http://192.168.4.101:5555/get");
+        // 设置请求成功后的回调函数，将响应文本显示在 div 中
+        // json解析为字符串，换行缩进4个空格
+        $("#resp").text(JSON.stringify(response.data, null, 4));
+      } catch (error) {
+        // 设置请求失败后的回调函数，显示错误信息
+        console.log(error);
+      } finally {
+        console.log("finally");
+      }
+    });
+  });
+</script>
+```
+
+#### Web API - fetch
+
+* promise写法
+* fetch库类似aiohttp，需要二次异步读取body部分
+
+```html
+<!-- 创建一个按钮元素 -->
+<div>
+  <button id="btn">发送请求</button>
+</div>
+
+<!-- 创建一个 div 元素 -->
+<div>
+  <h2>响应如下：</h2>
+
+  <!-- 使用pre标签保留文本中的换行 -->
+  <pre id="resp"></pre>
+</div>
+
+<!-- 引入 jQuery 库 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.js"></script>
+
+<!-- 引入 axio 库 -->
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
+<script>
+  // 页面加载完成后运行js脚本
+  $(document).ready(function () {
+    // 绑定按钮的点击事件
+    $("#btn").click(async function () {
+      // 发起异步async异步请求
+      fetch("http://192.168.4.101:5555/get", {
+        method: "GET",
+        headers: new Headers({
+          "Content-Type": "application/json",
+        }),
+      })
+        .then(function (response) {
+          // 二次读取body
+          return response.json();
+        })
+        .then(function (data) {
+          // 设置请求成功后的回调函数，将响应文本显示在 div 中
+          // json解析为字符串，换行缩进4个空格
+          $("#resp").text(JSON.stringify(data, null, 4));
+        })
+        .catch(function (error) {
+          console.log(error);
+        })
+        .finally(function () {
+          console.log("finally");
+        });
+    });
+  });
+</script>
+```
+
+* async写法
+* 类似aiohttp，body部分需要二次await读取
+
+```js
+<!-- 创建一个按钮元素 -->
+<div>
+  <button id="btn">发送请求</button>
+</div>
+
+<!-- 创建一个 div 元素 -->
+<div>
+  <h2>响应如下：</h2>
+
+  <!-- 使用pre标签保留文本中的换行 -->
+  <pre id="resp"></pre>
+</div>
+
+<!-- 引入 jQuery 库 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.js"></script>
+
+<!-- 引入 axio 库 -->
+<script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+
+<script>
+  // 页面加载完成后运行js脚本
+  $(document).ready(function () {
+    // 绑定按钮的点击事件
+    $("#btn").click(async function () {
+      // 发起异步async异步请求
+      const response = await fetch("http://192.168.4.101:5555/get", {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      });
+
+      if (response.ok) {
+        // 设置请求成功后的回调函数，将响应文本显示在 div 中
+        // json解析为字符串，换行缩进4个空格
+        $("#resp").text(JSON.stringify(await response.json(), null, 4));
+      } else {
+        // 设置请求失败后的回调函数，显示错误信息
+        console.log(error);
+      }
+    });
+  });
+</script>
+```
+
+
 

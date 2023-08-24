@@ -20,7 +20,13 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 ```
 
-### 基础结构
+#### NPM导入
+
+```bash
+npm i vue
+```
+
+### 完整基础结构
 
 ```html
 <!doctype html>
@@ -62,59 +68,53 @@
         <figcaption></figcaption>
     </figure>
 </div>
-### 文本渲染
+### 文本渲染、模板、插值
 
 ```html
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-    </head>
-    <body>
-        <div id="app">
-            <!-- 插入vm绑定的数据 -->
-            <h2>{{ msg }}</h2>
+<div id="app">
+    <!-- 插入vm绑定的数据 -->
+    <h2>{{ msg }}</h2>
 
-            <!-- 插入vm绑定的方法 -->
-            <h2>{{ getContent() }}</h2>
+    <!-- 插入vm绑定的方法 -->
+    <h2>{{ getContent() }}</h2>
 
-            <!-- 插入js表达式 -->
-            <h2>{{ 1 + 1 }}</h2>
-            <h2>{{ 1 > 0 ? 'Y': 'N' }}</h2>
-            <h2>{{ '123'.split('').reverse().join('')  }}</h2>
+    <!-- 插入js表达式 -->
+    <h2>{{ 1 + 1 }}</h2>
+    <h2>{{ 1 > 0 ? 'Y': 'N' }}</h2>
+    <h2>{{ '123'.split('').reverse().join('')  }}</h2>
 
-            <!-- 插入对象（表达式的一种） -->
-            <!-- 注意三个大括号不能连着写 -->
-            <h2>{{ {a: 1} }}</h2>
+    <!-- 插入对象（表达式的一种） -->
+    <!-- 注意三个大括号不能连着写 -->
+    <h2>{{ {a: 1} }}</h2>
 
-            <!-- 不能插入HTML，不会解释html -->
-            <div>{{ <h2>不会解释html</h2> }}</div>
-            
-            <!-- 这是语句，不是表达式 -->
-            <!-- {{ var a = 1 }} -->
+    <!-- 不能插入HTML，不会解释html -->
+    <div>{{ <h2>不会解释html</h2> }}</div>
 
-            <!-- 流控制也不会生效，请使用三元表达式 -->
-            <!-- {{ if (ok) { return message } }} -->
-        </div>
+    <!-- 这是语句，不是表达式 -->
+    <!-- {{ var a = 1 }} -->
 
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-        <script>
-            const vm = new Vue({
-                    el: '#app',
-                    data: {
-                        msg: "Hello World !",
-                        content: 'C O N T E N T'
-                    },
-                    methods: {
-                        getContent() {
-                            return this.content
-                        }
-                    }
+    <!-- 流控制也不会生效，请使用三元表达式 -->
+    <!-- {{ if (ok) { return message } }} -->
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js">
+</script>
+
+<script>
+    const vm = new Vue({
+            el: '#app',
+            data: {
+                msg: "Hello World !",
+                content: 'C O N T E N T'
+            },
+            methods: {
+                getContent() {
+                    return this.content
                 }
-            )
-        </script>
-    </body>
-</html>
+            }
+        }
+    )
+</script>
 ```
 
 效果：
@@ -124,10 +124,11 @@
         <figcaption></figcaption>
     </figure>
 </div>
-### v-text指令
+### v-text，绑定文本
 
 * 文本渲染的指令形式
 * 不会渲染html标签
+* 相当于修改innerText
 
 ```html
 <div id='app'>
@@ -143,10 +144,11 @@
 </script>
 ```
 
-### v-html指令
+### v-html，绑定HTML
 
 * 插入html
 * 会渲染html标签
+* 相当于修改innerHTML
 
 ```html
 <div id='app'>
@@ -162,7 +164,7 @@
 </script>
 ```
 
-### v-bind指令
+### v-bind，绑定属性
 
 * 属性不能使用双大括号绑定
 * 用于绑定属性
@@ -294,36 +296,28 @@ data: {
 #### v-if，v-else-if，v-else
 
 ```html
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-    </head>
-    <body>
-        <div id="app">
-            <h1 v-if = "getRandom() < 0.3">小于0.3</h1>
-            <h1 v-else-if = "0.6 > getRandom() > 0.3">大于0.3小于0.6</h1>
-            <h1 v-else>大于0.6</h1>
-        </div>
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
-        <script>
-            const vm = new Vue({
-                el: '#app',
-                methods: {
-                    getRandom() {
-                        return Math.random()
-                    }
-                }
-            })
-        </script>
-    </body>
-</html>
+<div id="app">
+    <h1 v-if = "getRandom() < 0.3">小于0.3</h1>
+    <h1 v-else-if = "0.6 > getRandom() > 0.3">大于0.3小于0.6</h1>
+    <h1 v-else>大于0.6</h1>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: '#app',
+        methods: {
+            getRandom() {
+                return Math.random()
+            }
+        }
+    })
+</script>
 ```
 
 #### v-show
 
 * 控制是否显示标签
-* `style="display: none"`
+* 相当于`style="display: none"`
 * v-if 则标签不存在
 * 开销较小，性能更好
 
@@ -876,13 +870,79 @@ Vue.use(ElementUI);
 
 
 
-## 专题示例
+## Demo
 
 ### 音乐播放器
 
+* 功能
+  * audio下5个mp3文件
+  * 后端提供一个歌曲列表，保存每个歌曲的信息
+  * 打开页面后自动播放第一首歌曲
+  * 鼠标点击播放列表能切换歌曲
+  * 歌曲列表中能看到当前播放的歌曲被特殊标记
 
+### 轮播图
 
-### 急急急
+* 功能
+
+  * images目录下5个jpg文件
+
+  * 初始化显示第一张图片
+
+  * 点击按钮可以切换上一张，下一张
+
+```html
+<!-- vue绑定的目标根元素 -->
+<div id="app">
+  <!-- 绑定事件click和处理methods -->
+  <button @click="toPrevImg()">上一张</button>
+  <button @click="toNextImg()">下一张</button>
+  <!-- 绑定img.src属性 -->
+  <div>
+    <img :src="curImgSrc" />
+  </div>
+</div>
+<!-- 导入vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+  const vm = new Vue({
+    // 绑定目标根元素app
+    el: "#app",
+
+    // 数据模型
+    data: () => {
+      return {
+        cur_idx: 1,
+      };
+    },
+
+    // 计算属性根据当前id值计算图片相对路径
+    computed: {
+      curImgSrc() {
+        return `./images/${this.cur_idx}.jpg`;
+      },
+    },
+
+    // 点击时触发改变id值，越界复位
+    methods: {
+      toPrevImg() {
+        if (this.cur_idx >= 5) {
+          this.cur_idx = 1;
+        } else {
+          this.cur_idx++;
+        }
+      },
+      toNextImg() {
+        if (this.cur_idx <= 1) {
+          this.cur_idx = 5;
+        } else {
+          this.cur_idx--;
+        }
+      },
+    },
+  });
+</script>
+```
 
 
 
