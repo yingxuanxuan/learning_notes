@@ -2213,8 +2213,9 @@ history.go(1)
 ## JS操纵DOM示例
 
 ### 图片切换
-
-![test](.gitbook/assets/test-1692075961934-1.gif)
+<div align="left">
+<figure><img src=".gitbook/assets/test-1692075961934-1.gif" alt=""><figcaption></figcaption></figure>
+</div>
 
 ```html
 <style>
@@ -2296,8 +2297,10 @@ history.go(1)
 ```
 
 ### 图片列表切换
+<div align="left">
+<figure><img src=".gitbook/assets/test-1692077080478-3.gif" alt=""><figcaption></figcaption></figure>
+</div>
 
-![test](.gitbook/assets/test-1692077080478-3.gif)
 
 ```html
 <style>
@@ -2348,8 +2351,10 @@ history.go(1)
 ```
 
 ### 关闭小广告
+<div align="left">
+<figure><img src=".gitbook/assets/test-1692077815773-5.gif" alt=""><figcaption></figcaption></figure>
+</div>
 
-![test](.gitbook/assets/test-1692077815773-5.gif)
 
 ```html
 <style>
@@ -2412,15 +2417,311 @@ history.go(1)
 
 ## 事件
 
-### 事件发展
+### 事件流和事件传播阶段
+
+* 由于DOM元素的嵌套关系，从屏幕坐标定位事件元素有两种方法
+  * IE事件流，冒泡流，IE9、Firefox、Chrome
+  * Netscape，捕获流
+
+* 冒泡流，事件由最具体的元素接收，逐级向上传播，直到document
+* 捕获流，事件由最外层的元素接收，逐步向内查找，直到具体元素
+
+* 目前DOM事件触发过程有，捕获阶段、目标阶段、冒泡阶段，可以通过addEventListener的第三个参数设置在哪个阶段捕获
+
+<div align="left">
+<figure>
+<img src=".gitbook/assets/01dc81ba0a8f4757911f01c45095410c.png" alt="">
+<figcaption></figcaption>
+</figure>
+</div>
+
+```html
+<style>
+  #box {
+    height: 200px;
+    width: 200px;
+    background-color: yellowgreen;
+  }
+</style>
+
+<div id="box"></div>
+
+<script>
+  // onclick回调
+  document.getElementById("box").onclick = function () {
+    console.log("onclick.div");
+  };
+  document.body.onclick = function () {
+    console.log("onclick.body");
+  };
+  document.documentElement.onclick = function () {
+    console.log("onclick.html");
+  };
+  document.onclick = function () {
+    console.log("onclick.document");
+  };
+  window.onclick = function() {
+    console.log("onclick.window");
+  }
+
+  // 捕获阶段
+  document.getElementById("box").addEventListener('click', function() {
+    console.log("capture.div");
+  }, true);
+  document.body.addEventListener('click', function () {
+    console.log("capture.body");
+  }, true);
+  document.documentElement.addEventListener('click', function () {
+    console.log("capture.html");
+  }, true);
+  document.addEventListener('click', function () {
+    console.log("capture.document");
+  }, true);
+  window.addEventListener('click', function() {
+    console.log("capture.window");
+  }, true);
+
+  // 冒泡阶段
+  document.getElementById("box").addEventListener('click', function() {
+    console.log("bubbling.div");
+  }, false);
+  document.body.addEventListener('click', function () {
+    console.log("bubbling.body");
+  }, false);
+  document.documentElement.addEventListener('click', function () {
+    console.log("bubbling.html");
+  }, false);
+  document.addEventListener('click', function () {
+    console.log("bubbling.document");
+  }, false);
+  window.addEventListener('click', function() {
+    console.log("bubbling.window");
+  }, false);
+</script>
+```
+
+<div align="left">
+<figure>
+<img src=".gitbook/assets/image-20230826115848455.png" alt="">
+<figcaption></figcaption>
+</figure>
+</div>
+### 事件处理程序
+
+* HTML事件处理程序
+
+  * 在HTML标签的事件属性中直接执行JS表达式
+  * 缺点
+    * html和js代码混在一起，不易维护
+  * 示例
+    * 直接执行表达式，`<div onclick="this.innerHTML += 1"></div>`
+    * 调用函数，`<div onclick="onclick()"></div>`
+
+* DOM0级事件处理程序
+
+  * 给DOM对象的回调属性赋值
+  * 缺点
+    * 一个元素事件只能绑定一个回调函数
+  * 示例
+    * 绑定事件，`Element.onclick = function() { console.log(1) };`
+    * 删除事件，`Element.onclick=null`
+
+* DOM2级事件处理程序
+
+  * 给DOM对象添加EventListener
+
+  * 缺点
+
+    * IE8及以下不支持
+
+  * 优点
+
+    * 可以添加多个事件处理程序（回调函数）
+
+  * 示例
+
+    * `Element.addEventListener(事件名称, 回调函数, 捕获阶段=false)`
+
+    * `Element.removeEventListener(回调函数名)`
+
+* IE事件处理程序
+
+  * 示例
+    * `Element.attachEvent('onclick', 回调函数)`
+    * `Element.detachEvent()`
+
+* 总结
+  * DOM0级事件处理程序会覆盖HTML事件处理程序
+
+### 事件对象，Event
+
+#### 获取事件对象
+
+* 事件回调函数的第一个参数是时间对象
+
+```html
+<script>
+Element.onclick = function (event) {
+    console.log(event);
+}
+</script>
+```
+
+* 可以直接使用event变量，类似this关键字
+* event即window.event
+
+```html
+<script>
+Element.onclick = function () {
+    console.log(event);
+    console.log(window.event);
+}
+</script>
+```
+
+#### 获取事件目标（触发源）
+
+* `Event.currentTarget`，回调函数绑定的HTML元素DOM节点，同`this`
+* `Event.target`，实际的事件触发的HTML元素DOM节点
+* `Event.srcElement`，同target，但是兼容IE8，不兼容低版本Firefox
+
+#### 代理子节点事件
+
+* 事件代理或事件委托，是在DOM父节点上统一处理DOM子节点的事件
+* 事件代理利用事件冒泡阶段延迟捕获事件实现的
+* 优点或作用
+  * 事件代理可以提高程序性能，降低代码复杂度（循环绑定子元素事件）
+  * 可以处理后来动态添加的元素的事件，无需再次考虑事件绑定
+
+<div align="left">
+<figure><img src=".gitbook/assets/test-1693023177124-3.gif" alt=""><figcaption></figcaption></figure>
+</div>
+不使用事件代理
+
+```html
+<style>
+  #parent {
+    margin-top: 100px;
+  }
+
+  .child {
+    height: 100px;
+    width: 100px;
+    background-color: yellowgreen;
+    margin-left: 50px;
+    float: left;
+  }
+</style>
+
+<div id="parent">
+  <div class="child"></div>
+  <div class="child"></div>
+  <div class="child"></div>
+  <div class="child"></div>
+  <div class="child"></div>
+</div>
+
+<script>
+  let element_list = document.getElementsByClassName("child");
+  for (element of element_list) {
+    element.onmouseover = function (event) {
+      event.target.style.backgroundColor = "yellow";
+    };
+    element.onmouseout = function (event) {
+      event.target.style.backgroundColor = "yellowgreen";
+    };
+  }
+</script>
+```
+
+使用事件代理
+
+```html
+<style>
+  #parent {
+    margin-top: 100px;
+  }
+
+  .child {
+    height: 100px;
+    width: 100px;
+    background-color: yellowgreen;
+    margin-left: 50px;
+    float: left;
+  }
+</style>
+
+<div id="parent">
+  <div class="child"></div>
+  <div class="child"></div>
+  <div class="child"></div>
+  <div class="child"></div>
+  <div class="child"></div>
+</div>
+
+<script>
+  let parent = document.getElementById("parent");
+  parent.onmouseover = function (event) {
+    if (event.target != parent) {
+      event.target.style.backgroundColor = "yellow";
+    }
+  };
+  parent.onmouseout = function (event) {
+    if (event.target != parent) {
+      event.target.style.backgroundColor = "yellowgreen";
+    }
+  };
+</script>
+```
+
+#### 阻止事件冒泡
+
+* `Event.bubbles`，标识当前事件是否会冒泡，只读。focus、blur、scroll事件不会冒泡。
+* `Event.stopPropagation()`，停止事件冒泡，但是无法阻止DOM2同一事件的其他EventListener
+* `Event.stopImmediatePropagation()`，停止事件冒泡，同时阻止DOM2同一事件的其他EventListener
+* `Event.cancelBubble`，设置为true可以阻止事件冒泡，可读可写，默认false
+
+#### 检测事件流阶段
+
+* `Event.eventPhase`
+  * 0，表示时间没有发生
+  * 1，表示捕获阶段
+  * 2，目标阶段
+  * 3，冒泡阶段
+
+#### 取消默认事件
+
+* `Event.preventDefault()`
+
+* 阻止超链接跳转，实现例如提交表单行为
+
+```html
+<!-- 方法一 -->
+<a href="javascript:void(0);"></a>
+
+<!-- 方法二 -->
+<a href="#" id='a'></a>
+<script>
+	document.getElementById('a').onclick = function (e) {
+        e.preventDefault();
+    };
+</script>
+```
+
+#### 鼠标相关事件的坐标位置
+
+* `Event.clientX`、`Event.clientY`、`Event.x`，`Event.y`
+  * 相对浏览器有效区域
+* `Event.screenX`、`Event.screenY`
+  * 相对于显示器屏幕
+* `Event.pageX`、`Event.pageY`
+  * 相对于页面的
+* `Event.offsetX`、`Event.offsetY`
+  * 相对事件源
 
 
 
-### 事件传播
 
-
-
-### 
 
 
 
