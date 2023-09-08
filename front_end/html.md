@@ -6,14 +6,14 @@
 * 1995年11月，HTML2.0
 * 1997年01月14日，HTML3.2，W3C推荐版本
 * 1999年12月24日，HTML4.01，相对前一版本微小更改
-* **2000年05月，HTML4.01严格版（主要流行版本）**
+* **2000年05月，HTML4.01严格版（长时间流行版本）**
 * **2014年10月28日，HTML5（当前标准）**
 
 ## HTML是什么
 
-* HyperText Markup Language的缩写，超文本标记语言
-* 超文本指的是可以存放、展示图片、音频、视频、链接等
-* 标记指的是可以利用标签包裹文本，给文本添加额外属性
+* HTML是HyperText Markup Language的缩写，超文本标记语言
+* 超文本指的是可以存放、展示图片、音频、视频、超链接等
+* 标记指的是`<>`包裹的标签，用于描述文档的功能和结构
 
 ## HTML结构规范
 
@@ -49,8 +49,6 @@ Transitional//EN" "http://www.w3.org/TR/
 xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
-
-
 ## HTML常用标签
 
 ### h标签，heading，标题标签
@@ -84,11 +82,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### p标签，paragraph，段落标签
@@ -123,14 +118,12 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
+### strong标签，强调，
 
-### strong标签，强调，em标签，emphasis，着重标签
+### em标签，emphasis，着重标签
 
 * strong比em标签更加强调
 * strong默认使用粗体显示
@@ -158,17 +151,15 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### br标签，换行
 
-* 文本换行存在空白折叠，多个空格、换行会替换为一个空格，达不到换行效果
+* 文本换行存在空白折叠，达不到换行效果，即多个空格和换行会替换为一个空格
 * xhtml中规范协作`<br/>`，html5中写作`<br>`
+* 编程规范习惯使用`<br/>`，容易分辨出单闭合标签
 
 #### br示例
 
@@ -200,11 +191,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### hr标签，horizontal，水平分割线
@@ -244,9 +232,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 效果：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### ul标签，unordered list，无序列表
@@ -277,11 +263,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### ol标签，ordered list，有序列表
@@ -308,11 +291,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### dl标签，description list，描述列表
@@ -351,11 +331,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (2) (2).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### table标签，表格
@@ -418,11 +395,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 #### 最简表格示例
@@ -454,11 +428,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 #### 跨行跨列示例
@@ -533,11 +504,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 #### 简单单线边框，分割线为2像素
@@ -554,7 +522,7 @@ table{
 }
 ```
 
-#### 边框合并属性，border-collaps
+#### 边框合并属性，border-collapse
 
 ```css
 table, td{
@@ -605,7 +573,7 @@ tr:last-child td{
 
 #### 相对路径
 
-```markup
+```html
 <a href="//example.com">相对于协议的 URL</a>
 <a href="/zh-CN/docs/Web/HTML">相对于源的 URL</a>
 <a href="./p">相对于路径的 URL</a>
@@ -621,7 +589,7 @@ tr:last-child td{
 <h2 id="Section_further_down">id所在位置</h2>
 ```
 
-#### a标签示例
+#### a标签实例
 
 代码：
 
@@ -646,12 +614,28 @@ tr:last-child td{
 ```
 
 效果：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
-
 </div>
+#### 屏蔽默认跳转行为
+
+* 方法一，onclick函数返回false
+
+```html
+<a href="#" onclick="return false;">Link</a>
+```
+
+* 方法二，onclick函数阻止事件传播
+
+```html
+<a href="#" onclick="event.preventDefault(); event.stopPropagation();">Link</a>
+```
+
+* 方法三
+
+```html
+<a href="javascript:void(0);">Link</a>
+```
 
 ### img标签，image，图片
 
@@ -678,9 +662,7 @@ tr:last-child td{
 效果：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (9) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### form标签，表单
@@ -738,16 +720,13 @@ tr:last-child td{
 ```
 
 界面：
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 url:
 
-```url
+```
 http://192.168.4.101:5555/anything?username=yx&password=123456
 ```
 
@@ -755,7 +734,7 @@ http://192.168.4.101:5555/anything?username=yx&password=123456
 
 代码：
 
-```markup
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -775,17 +754,13 @@ http://192.168.4.101:5555/anything?username=yx&password=123456
 界面：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 http post内容：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 #### label关联input
@@ -830,9 +805,7 @@ http post内容：
 效果：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/test.gif" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### \<input type="radio"> 单选
@@ -873,9 +846,7 @@ http post内容：
 效果：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/test (1).gif" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### \<input type="checkbox"> 多选
@@ -910,9 +881,7 @@ http post内容：
 效果1：无选择时无payload
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 
@@ -920,17 +889,13 @@ http post内容：
 效果2：单选
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 效果3：多选
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### \<input type="file"> 文件选择
@@ -964,15 +929,11 @@ http post内容：
 效果：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### select标签，下拉列表
@@ -980,6 +941,7 @@ http post内容：
 * select默认是单选，下拉列表
 * 给select标签添加multiple即可变成多选，样式变为选择框，按住ctrl键即可多选
 * 多选情况下可以添加多个selected作为默认选项
+* 用户选择的取值是select的value属性，如果没有value属性会使用text
 
 代码：
 
@@ -1010,25 +972,19 @@ http post内容：
 效果：单选下拉列表
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 效果：多选框
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (15).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 效果：payload
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (14) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### textarea标签，文本区域
@@ -1064,9 +1020,7 @@ http post内容：
 样式：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### \<input type="reset"> 复位
@@ -1132,9 +1086,7 @@ http post内容：
 效果：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 ### div标签，division，内容划分
@@ -1147,36 +1099,4 @@ http post内容：
 * 版权，`&copy;`，copyright
 * 标准文档：[https://html.spec.whatwg.org/multipage/named-characters.html#named-character-references](https://html.spec.whatwg.org/multipage/named-characters.html#named-character-references)
 * 简化文档：[https://tool.chinaz.com/tools/htmlchar.aspx](https://tool.chinaz.com/tools/htmlchar.aspx)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -604,7 +604,8 @@ npm uninstall 包名称
 npm install 包名 --save-dev
 
 # 简写
-npm i 包名 -D
+npm i 包名 -D # 旧版
+npm i 包名 -S # 新版
 
 # 例如官网会给出提示
 npm install --save-dev webpack

@@ -1,17 +1,14 @@
 # Python third-party modules
 
-[toc]
+## 程序打包
 
-程序打包
-----------
 ### 打包工具推荐
 * windows: PyInstaller、py2exe
 * linux: Freeze - works the same way like py2exe but targets Linux platform
 * mac: py2app - again, works like py2exe but targets Mac OS
 
-pyinstaller
-----------
-### 安装
+### pyinstaller
+#### 安装
 ```
 pip3 install wheel
 pip3 install pyinstaller
@@ -19,7 +16,7 @@ pip3 install pyinstaller
 * 将PyQt加入PATH
 * 手动安装uxp：https://upx.github.io/
 
-### 简单示例
+#### 简单示例
 
 ```powershell
 # 打包为单文件.exe
@@ -41,7 +38,7 @@ pyinstaller -F --clean -n io  ../main.py
 pause       # 按下pause再消失窗口
 ```
 
-### 参数解释
+#### 参数解释
 ```python
 # 编译参数
 --distpath DIR       # 指定输出目录，默认'.\dist'
@@ -64,13 +61,13 @@ pause       # 按下pause再消失窗口
 --noupx # 不使用UPX
 ```
 
-### 代码混淆
+#### 代码混淆
 * pyinstaller将文件编译为pyc文件，pyc是未经过优化的字节码，很容易被反编译
 * pyinstaller可以将发布文件使用AES256加密，但是很容易从exe中找到密钥并解密发布文件，
 * py文件可以编译为pyo文件，pyo文件是经过优化的字节码、并且删除了文档和注释，但是pyo也很容 易被反编译，而且影响pyinstaller定位import文件
 * 可以将文件编译为pyo为pyinstaller手动添加import？？？？？？？？？？？？？？？？？？？？
 
-### 可复用脚本、配置
+#### 可复用脚本、配置
 ```
 # 生成配置文件（与pyinstaller打包时生成 app.scpc相同）
 pyi-makespec options script.py [other scripts ...] 
@@ -79,7 +76,7 @@ pyi-makespec options script.py [other scripts ...]
 pyinstaller options script.spec  
 ```
 
-### linux下使用pyinstaller
+#### linux下使用pyinstaller
 ```bash
 # 0 编译python，打开共享库编译配置，生产.so文件：
 # libpython3.8m.so.1.0
@@ -111,7 +108,7 @@ cp /home/yingxuanxuan/python/Python-3.8.5/libpython3.* .
 /usr/python38/bin/pyinstaller --distpath linux --workpath tmp_linux --clean -F ./io_linux.spec
 ```
 
-### windows下添加version_file
+#### windows下添加version_file
 
 - version-file是windows操作系统可以识别的版本信息文件
 
@@ -173,7 +170,7 @@ VSVersionInfo(
 )
 ```
 
-### spec file中添加版本号及图标
+#### spec file中添加版本号及图标
 - **如果使用spec file，命令行中添加版本号及图标的参数将无效，文档中没有说明**
 - **图标在操作系统中有缓存，使用q-Dir等会看不到图标更改，可以使用资源管理器，修改文件名等手段更新缓存**
 - 在spec file中修改如下
@@ -184,10 +181,9 @@ exe = EXE(
 )
 ```
 
-apscheduler
-----------
+### apscheduler
 
-### AsyncIOScheduler
+#### AsyncIOScheduler
 ```
 import asyncio
 import os
@@ -213,8 +209,7 @@ if __name__ == '__main__':
 
 ```
 
-Sqlalchemy
-----------
+### Sqlalchemy
 ``` py
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -246,32 +241,30 @@ for i in query:
     print dir(i)
 ```
 
-Pillow
-----------
+### Pillow
 * PIL（Python Imaging Library）是Python事实上的图像处理标准库，但是仅支持到Python2.7，无法维护。
 * Pillow是第三方志愿者在PIL基础上维护的兼容版本。
 
-### 安装
+#### 安装
 ```
 pip install pillow
 ```
 
-### 操作图像
+#### 操作图像
 
-requests
-----------
+### requests
 * urllib用起来比较麻烦，缺少高级功能
 * requests用起来更简单，可以自动检测编码
 
-### 安装
+#### 安装
 ```
 pip install requests
 ```
 
-### 文档
+#### 文档
 <https://requests.readthedocs.io/en/master/>
 
-### requests 
+#### requests 
 ```
 import requests
 
@@ -320,18 +313,17 @@ r = request.get(url, cookies=cs)
 r = requests.get(url, timeout=2.5) # 单位：秒
 ```
 
-chardet
-----------
+### chardet
 * 不规范的网页无法获取编码类型
 * 对位置编码bytes解码，需要收集各种编码特征字符，进行判断猜测
 * chardet就是用来检测编码
 
-### 安装
+#### 安装
 ```
 pip install chardet
 ```
 
-### chardet
+#### chardet
 ```
 # 自动监测编码类型
 chardet.detect(b'Hello, world!') # {'encoding': 'ascii', 'confidence': 1.0, 'language': ''}
@@ -348,23 +340,22 @@ chardet.detect(data) # {'encoding': 'GB2312', 'confidence': 0.740740740, 'langua
 
 ```
 
-### 支持的编码类型
+#### 支持的编码类型
 <https://chardet.readthedocs.io/en/latest/supported-encodings.html>
 
-psutil
-----------
+### psutil
 * Linux下有ps、top、free等系统监控命令，python可以通过subprocess模块调用并获取结果，但需要解析文本
 * psutil（process and system utilities）提供支持跨平台的系统运维工具
 
-### 安装
+#### 安装
 ```
 pip install psutil
 ```
 
-### 文档
+#### 文档
 <https://github.com/giampaolo/psutil>
 
-### 获取CPU信息
+#### 获取CPU信息
 ```python
 import psutil
 
@@ -396,7 +387,7 @@ psutil.cpu_stats()
 psutil.getloadagv()
 ```
 
-### 内存信息
+#### 内存信息
 ```python
 # 查询虚拟内存
 psutil.virtual_memory() 
@@ -412,7 +403,7 @@ sswap(total=1073741824, used=150732800, free=923009024, percent=14.0, sin=107059
 ```
 
 
-### 获取磁盘信息
+#### 获取磁盘信息
 ```python
 # 磁盘分区信息
 psutil.disk_partitions(all=False)
@@ -437,7 +428,7 @@ sdiskio(read_count=886693, write_count=421645, read_bytes=20292710400, write_byt
 # windows下可能需要先执行 `diskperf -y`
 ```
 
-### 获取网络信息
+#### 获取网络信息
 ```python
 # 获取网络读写字节／包的个数
 psutil.net_io_counters(pernic=False, nowrap=True)
@@ -486,7 +477,7 @@ psutil.net_connections(kind='inet')
 "all"
 ```
 
-### 其他系统信息
+#### 其他系统信息
 
 ```python
 # 启动时间
@@ -503,7 +494,7 @@ psutil.users()
  suser(name='giampaolo', terminal='pts/3', host='localhost', started=1340737792.0, pid=1788)]
 ```
 
-### 进程信息
+#### 进程信息
 ```python
 # 当前所有pid
 psutil.pids()
@@ -596,9 +587,9 @@ pmem(rss=8310784, vms=2481725440, pfaults=3207, pageins=18)
 Terminated: 15 <-- 自己把自己结束了
 ```
 
-### 编程示例
+#### 编程示例
 
-#### 完全匹配查找进程，进程名、程序路径、启动命令
+##### 完全匹配查找进程，进程名、程序路径、启动命令
 
 ```python
 import psutil
@@ -614,7 +605,7 @@ def find_procs_by_name(name):
 	return ls
 ```
 
-#### 按pid杀进程树
+##### 按pid杀进程树
 
 ```python
 import os
@@ -635,7 +626,7 @@ def kill_proc_tree(pid, sig=signal.SIGTERM, include_parent=True, timeout=None, o
     gone, alive = psutil.wait_procs(children, timeout=timeout, callback=on_terminate)
 ```
 
-#### 进程筛选、排序
+##### 进程筛选、排序
 
 ```python
 # 获取当前用户的进程
@@ -660,7 +651,7 @@ for p in psutil.process_iter(['name', 'open_files']):
 [(p.pid, p.info['name'], sum(p.info['cpu_times'])) for p in sorted(psutil.process_iter(['name', 'cpu_times']), key=lambda p: sum(p.info['cpu_times'][:2]))][-3:]
 ```
 
-#### 人易读的动态数据单位
+##### 人易读的动态数据单位
 
 ```python
 def bytes2human(n):
@@ -678,27 +669,24 @@ usage_bytes = psutil.disk_usage('/').total
 usage_human = bytes2human(usage_bytes)
 ```
 
-python GUI库
-----------
-
+### python GUI库
 PyQt # GPL协议必须开源，商业版本350欧元/开发者  
 QtSide # 只兼容python3.4, Qt 4.8  
 QtSide2 # 未完成开发，只兼容Qt 5.6  
 wxWidget, 各平台本地接口封装  
 
-aiohttp
-----------
-### doc
+### aiohttp
+#### doc
 doc: <http://aiohttp.readthedocs.io/en/stable/>
 
-### 安装
+#### 安装
 ``` sh
 pip install aiohttp
 pip install aiodns
 pip install cchardet (optional)
 ```
 
-#### 客户端示例
+##### 客户端示例
 ``` py
 import asyncio
 import aiohttp
@@ -717,7 +705,7 @@ with aiohttp.ClientSession(loop=loop) as session:
     print(content)
 ```
 
-#### 服务器示例
+##### 服务器示例
 ``` py
 from aiohttp import web
 import asyncio
@@ -739,18 +727,17 @@ loop.run_until_complete(init(loop))
 loop.run_forever()
 ```
 
-fabric
-----------
-### 安装
+### fabric
+#### 安装
 ```
 pip install fabric
 pip3 install fabric3（不支持windows）
 ```
 
-### 默认读取指令文件
+#### 默认读取指令文件
 fabfile.py
 
-### 示例
+#### 示例
 ```
 from fabric.api import run
 def host_type():
@@ -758,7 +745,7 @@ def host_type():
 $fab -H host1, host2 host_type
 ```
 
-### 带参数任务
+#### 带参数任务
 ```
 def hello(name):
     print("Hello %s!" % name)
@@ -766,10 +753,10 @@ $fab hello:name=world
 $fab hello:world
 ```
 
-### 交互
+#### 交互
 默认允许交互
 
-### 基本命令
+#### 基本命令
 ```
 cd #远程cd
 lcd #本地cd
@@ -778,14 +765,14 @@ local #本地执行
 put #上传文件
 ```
 
-### 全局环境变量
-#### 引用
+#### 全局环境变量
+##### 引用
 ```
 fabric.state.env
 fabric.api.env
 ```
 
-#### 重要env
+##### 重要env
 ```
 env.hosts #主机列表
 env.user #默认使用本地用户名，统一指定用户名
@@ -802,23 +789,23 @@ env.connection_attempt = 1 #连接尝试次数
 env.skip_bad_hosts = False #坏的连接中断任务
 ```
 
-#### 临时设置env
+##### 临时设置env
 ```
 with settings(env.key=value):
     command
 ```
 
-#### 任务间数据共享
+##### 任务间数据共享
 ```
 env.key = value
 ```
 
-#### Execution strategy 执行策略
+##### Execution strategy 执行策略
 通过fab的参数顺序执行任务
 每个任务按host列表顺序执行
 没有给出host的任务在本地执行
 
-#### Roles 角色
+##### Roles 角色
 ```
 env.roledefs['webservers'] = ['www1', 'www2', 'www3']
 env.roledefs = {'web'：['www1','www2','www3'], 'dns':['ns1', 'ns2']}
@@ -834,7 +821,7 @@ env.roledefs = {
 }
 ```
 
-#### 全局Hosts
+##### 全局Hosts
 ```
 方法一：覆盖方法三
 env.hosts=['host1', 'host2']
@@ -852,7 +839,7 @@ fab --roles role task
 env.hosts.extend(['host3','host4'])
 ```
 
-#### 任务特定hosts：
+##### 任务特定hosts：
 ```
 方法一：
 fab mytask:hosts="host1;host2"
@@ -863,15 +850,15 @@ from fabric.api import hosts
 @roles('role1')
 ```
 
-#### 排除特定hosts：
+##### 排除特定hosts：
 fab -x/--exclude-hosts
 
-#### python执行任务
+##### python执行任务
 from fabric.api import execute
 execute(task)
 execute(task, hosts=hostlist)
 
-#### 错误处理
+##### 错误处理
 from fabric.api import local, settings, abort
 from fabric.crontrib.console import confirm
 def test():
@@ -880,17 +867,16 @@ def test():
     if result.failed and not confirm('continue?'):
         abort('abort')
 
-sqlalchemy
-----------
-### 安装
+### sqlalchemy
+#### 安装
 pip install sqlalchemy
 
-### 驱动
-#### pymysql
+#### 驱动
+##### pymysql
 pip install pymysql
 'mysql+pymysql://'
 
-#### mysql-python 封装c接口（sqlalchemy默认）
+##### mysql-python 封装c接口（sqlalchemy默认）
 ``` sh
 # 需要编译
 pip install MySQL-python
@@ -906,27 +892,22 @@ pip install mysqlclient-1.3.8-cp27-cp27m-win_amd64.whl
 'mysql://' # 默认
 'mysql+mysqldb://'
 
-#### mysql-connector （mysql官方）
+##### mysql-connector （mysql官方）
 https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.1.3-py2.7-winx64.msi
 'mysql+mysqlconnector'
 
 
-aiomysql
-----------
+### aiomysql
 
-aiopg
-----------
+### aiopg
 
-watchdoc 文件消息监控
-----------
+### watchdoc 文件消息监控
 
 
-创建windows服务
-----------
+### 创建windows服务
 
-python-pptx
-----------
-### 简介
+### python-pptx
+#### 简介
 * 安装：`pip3 install python-pptx`
 * 文档：<https://python-pptx.readthedocs.io/en/latest/index.html>
 * 示例：<https://python-pptx.readthedocs.org/en/latest/user/quickstart.html>
@@ -950,7 +931,7 @@ python-pptx
     * `length.pt # 72.0`
 
 
-### pptx文档结构、概念：
+#### pptx文档结构、概念：
 * Presentation，根，ppt对象
 * prs.slide_layouts，页面模板列表，必须使用slide layout创建slide
     * 常用6号模板，空白，由于该值
@@ -1014,7 +995,7 @@ python-pptx
         * `run.font`
         * `run.hyperlink`
 
-### 示例
+#### 示例
 
 ```
 from pptx import Presentation
@@ -1137,4 +1118,57 @@ def run():
 
 if __name__ == "__main__":
     run()
+```
+
+### nginx+supervisord多进程部署
+
+#### Supervisord 四进程配置（端口14001 - 14004）
+
+```ini
+[program:myprogram] 
+process_name=MYPROGRAM%(process_num)s
+directory=/var/www/apps/myapp 
+command=/var/www/apps/myapp/virtualenv/bin/python index.py --PORT=%(process_num)s
+startsecs=2
+user=youruser
+stdout_logfile=/var/log/myapp/out-%(process_num)s.log
+stderr_logfile=/var/log/myapp/err-%(process_num)s.log
+numprocs=4
+numprocs_start=14000
+
+# 说明：
+# numproces # 进程数（一般为内核数的2倍）
+# numprocs_start # 起始进程号
+# --PORT=%(process_num)s # 程序参数
+```
+
+#### Nginx多后端进程配置
+
+```ini
+upstream myappbackend {
+    server 127.0.0.1:14001 max_fails=3 fail_timeout=1s;
+    server 127.0.0.1:14002 max_fails=3 fail_timeout=1s;
+    server 127.0.0.1:14003 max_fails=3 fail_timeout=1s;
+    server 127.0.0.1:14004 max_fails=3 fail_timeout=1s;
+}
+
+server {
+    listen 4.5.6.7:80;
+    server_name example.com;
+    access_log /var/log/nginx/myapp.log main;
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-Ip $remote_addr;
+        proxy_pass http://myappbackend/;
+    }
+}      
+```
+
+#### supervisor virtualenv配置
+
+```ini
+[program:diasporamas]
+command=/var/www/django/bin/gunicorn_django
+directory=/var/www/django/django_test
+environment=PATH="/var/www/django/bin"
 ```

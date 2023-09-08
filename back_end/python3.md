@@ -155,7 +155,6 @@ pip freeze > requirements.txt
 pip install numpy -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pypi.tuna.tsinghua.edu.cn
 
 pip install --upgrade package_name==version
-
 ```
 
 #### setuptools
@@ -215,7 +214,7 @@ python -O -m py_compile file.py
 
 ```bash
 # 安装vitualenv
-yum install python-pip
+# yum install python-pip
 pip install virtualenv
 
 # 创建虚拟环境
@@ -233,63 +232,31 @@ deactivate
 
 #### venv
 
-```sj
-```
+```sh
+# 创建虚拟环境
+python3 -m venv 项目目录
 
+# 带系统包创建虚拟环境
+python3 -m venv --system-site-packages 项目目录
 
+# 激活虚拟环境
+source 项目目录/bin/activate
 
+# bat版本
+./项目目录/bin/activate.bat
+# powershell版本
+./项目目录/Activate.ps1
 
+# 进入虚拟环境后，提示符前面会有一个（项目目录）
 
-### nginx+supervisord多进程部署
+# 退出虚拟环境
+deactivate
 
-#### Supervisord 四进程配置（端口14001 - 14004）
-```ini
-[program:myprogram] 
-process_name=MYPROGRAM%(process_num)s
-directory=/var/www/apps/myapp 
-command=/var/www/apps/myapp/virtualenv/bin/python index.py --PORT=%(process_num)s
-startsecs=2
-user=youruser
-stdout_logfile=/var/log/myapp/out-%(process_num)s.log
-stderr_logfile=/var/log/myapp/err-%(process_num)s.log
-numprocs=4
-numprocs_start=14000
+# 导出依赖
+pip freeze > requirements.txt
 
-# 说明：
-# numproces # 进程数（一般为内核数的2倍）
-# numprocs_start # 起始进程号
-# --PORT=%(process_num)s # 程序参数
-```
-
-#### Nginx多后端进程配置
-
-```ini
-upstream myappbackend {
-    server 127.0.0.1:14001 max_fails=3 fail_timeout=1s;
-    server 127.0.0.1:14002 max_fails=3 fail_timeout=1s;
-    server 127.0.0.1:14003 max_fails=3 fail_timeout=1s;
-    server 127.0.0.1:14004 max_fails=3 fail_timeout=1s;
-}
-
-server {
-    listen 4.5.6.7:80;
-    server_name example.com;
-    access_log /var/log/nginx/myapp.log main;
-    location / {
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-Ip $remote_addr;
-        proxy_pass http://myappbackend/;
-    }
-}      
-```
-
-#### supervisor virtualenv配置
-
-```ini
-[program:diasporamas]
-command=/var/www/django/bin/gunicorn_django
-directory=/var/www/django/django_test
-environment=PATH="/var/www/django/bin"
+# 安装依赖
+pip install -r requirements.txt
 ```
 
 ### 脚本标识
@@ -322,42 +289,168 @@ environment=PATH="/var/www/django/bin"
 
 ### 输入输出
 ```python
-# print(value, ..., sep=' ', end='\n', file=sys.stdout, flush=False)
+# 输出原型
+# print(*objects, sep=' ', end='\n', file=None, flush=False)
+# file=None 时输出到 sys.stdout
+
+# 输出示例
 print('a')
 print('a', 'b') # 每个逗号会输出一个空格
 print('a', 'b', sep=';') # a;b （默认为空格）
 print('a', 'b', end=';') # a b;（默认为\n，替换后不换行）
 
+# 输入原型
 x = input()
-x = input("please input：") # 显示提示信息
+x = input("提示信息")
 
-# 使用os.system("pause")暂停  
+# 暂停屏幕，避免cmd关闭
+os.system("pause")
 ```
 
 ### 注释
 ```python
 # 行尾注释
 
-'单行注释'
+'单行注释（单引号）'
+"单行注释（双引号）"
 
 '''
-三个单引号多行注释
+多行注释（三个单引号）
 '''
 
 """
-三个双引号多行注释
+多行注释（三个双引号）
 """
 
 ```
 
-### help()、dir()、pydoc文档生成
-```python
-https://blog.csdn.net/mouday/article/details/83540541
+### 获取帮助，help(obj)，dir(obj)
+
+* help显示帮助信息
+* dir列出对象的属性和方法
+
+### 导出文档、pydoc
+
+* pydoc可以自动提取python程序中的注释
+* pydoc内置web server可以展示python所有文档注释
+
+* pydoc可以导出py注释为纯文本
+* pydoc可以导出py注释为html
+
+#### pydoc服务器
+
+* 在自建工程目录下启动pydoc就可以看到该工程的文档
+* 不在工程目录下会看到python内置模块的文档
+
+```sh
+# 启动pydoc服务器
+python3 -m pydoc -p 端口号
+
+# 自动选择端口
+python3 -m pydoc -p 端口号
 ```
+
+#### pydoc导出文档
+
+* func或class==下方有多行注释==则展示多行注释，没有多行注释才会展示==上方井号注释==
+* func或class==下方使用井号注释不会被提取==
+* 模块顶部有多行注释则展示多行注释，没有多行注释才会展示井号注释
+
+```sh
+# 导出为纯文本 > 管道
+python3 -m pydoc doc.txt
+
+# 导出为html格式 -w
+python3 -m pydoc -w pythondir
+python3 -m pydoc -w pythonfile
+```
+
+#### pydoc导出文档示例
+
+示例代码
+
+```py
+# -*- coding: utf-8 -*-
+
+# @Date    : 2018-10-30
+# @Author  : Peng Shiyu
+
+"""
+这个文档注释pydoc的示例
+"""
+
+# 函数名上方的文字
+def func():
+    """
+    函数名下方的注释
+    @return: None
+    """
+    print("hello")
+
+
+# 类名上方的文字
+class Demo():
+    """
+    类名下方的文字
+    """
+
+    # 类中方法上方的文字
+    def hello(self):
+        """
+        类中方法下方的文字
+        @return: None
+        """
+        print("hello")
+```
+
+纯文本
+
+```
+Help on module pydoc_demo:
+
+NAME
+    pydoc_demo - 这个文档注释pydoc的示例
+
+CLASSES
+    builtins.object
+        Demo
+    
+    class Demo(builtins.object)
+     |  类名下方的文字
+     |  
+     |  Methods defined here:
+     |  
+     |  hello(self)
+     |      类中方法下方的文字
+     |      @return: None
+     |  
+     |  ----------------------------------------------------------------------
+     |  Data descriptors defined here:
+     |  
+     |  __dict__
+     |      dictionary for instance variables (if defined)
+     |  
+     |  __weakref__
+     |      list of weak references to the object (if defined)
+
+FUNCTIONS
+    func()
+        函数名下方的注释
+        @return: None
+
+FILE
+   /demo/pydoc_demo.py
+```
+
+html
+
+![在这里插入图片描述](.gitbook/assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vdWRheQ==,size_16,color_FFFFFF,t_70.png)
 
 ### 传值传址引用
-* python传递不可变对象时，传递值 （其实，python中的不可变对象指向相同地址）
+
+* python传递不可变对象时，传递值
 * python传递可变对象时，传递引用
+* ==其实，python所有参数都是传递值，只不过python中的不可变对象指向相同地址，改变不可变对象会指向新值的地址，而改变可变对象不会改变对象地址==
 
 ### 数据类型
 
