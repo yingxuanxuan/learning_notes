@@ -11,3 +11,5 @@
 * [DRF](drf.md)
 * [Python third-party modules](python-third-party-modules.md)
 * [ipython](ipython.md)
+* [RabbitMQ](rabbitmq.md)
+* [Kafka](kafka.md)
