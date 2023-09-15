@@ -586,7 +586,7 @@ exists key1 key2 key3
 (integer) 1
 ```
 
-### 判断键对应值的数据类型，type
+### 查看键对应值的数据类型，type
 
 ```sh
 # 查看值的数据类型
@@ -596,6 +596,19 @@ type key
 > type count
 "string"
 ```
+
+### 查看键对应值的底层存储类型，object encoding
+
+```sh
+object encoding key
+
+> object encoding num
+"int"
+```
+
+
+
+
 
 ### 删除键，del
 
@@ -2038,10 +2051,12 @@ return 0"  1 lock_name lock_id
     * 无法避免消息丢失，崩溃时未处理完的数据无法再次处理
     * 一个消息只能消费一次，出队后无法被其他消费者处理
 * PubSub
-  * 解决方案
+  * 基本命令
     * 订阅一个或者多个频道，subscribe 频道1 频道2 。。。
     * 订阅字符匹配的频道，psubscribe 频* 
     * 向一个频道发送消息，publish 频道 消息
+  * 原理
+    * 简单的发布订阅中转站，收到生产者消息，转发给所有在线的消费者
   * 优点
     * 支持多生产者、多消费者
   * 缺点
@@ -2057,54 +2072,249 @@ return 0"  1 lock_name lock_id
 
 ### Streams消息队列
 
+#### 基本命令
+
 ![image-20230908104919607](.gitbook/assets/image-20230908104919607.png)
 
 ![image-20230908105342538](.gitbook/assets/image-20230908105342538.png)
 
-### 社交关注
+
+
+* 基本命令
+  * 发布消息，xadd
+  * 读取消息，xread
+  * 创建消费者组，xgroup create
+  * 删除消费者组，xgroup destory
+  * 添加消费者，xgroup createconsumer
+  * 删除消费者，xgroup delconsumer
+  * 消费者组读取消息，xreadgroup group group_name consumer 
+  * 消费者组确认消息，xack
+  * 消费者组未确认消息，xpending
+* 消费者组功能
+  * xreadgroup消费者不存在会自动创建消费者
+  * xreadgroup设置noack参数，无需手动ack
+  * id符号
+    * 大于号，下一个未消费的消息
+    * 0，pending-list中所有未ack的消息
 
 
 
-### 位置附近
+
+
+#### 单消费者，xread
+
+* 原理
+
+  * 类似PubSub，转发生产者的消息给所有在线的消费者
+  * 区别是保存在队列中，供非xread方式进一步处理
+
+* 优点
+
+  * 消息可回溯，永久保存在队列中
+  * 一个消息可以被多个消费者读取
+  * 可以阻塞读取
+
+* 缺点
+
+  * 有消息漏读的风险，只能收到监听时的消息，处理时和不监听时的消息会略过
+
+    
+
+#### 消费者组，Consumer Group
+
+* 原理
+  * 同一组内的消费者是竞争关系，只有一个消费者会收到消息
+  * 不同组的消费者是平等订阅关系，所有消费者都会收到消息
+  * 消费者组有已处理消息的标记，可以从标记之后处理消息，保证每一条消息都被消费
+  * 已接收的消息会变成pending状态，存入pending-list中，处理完成消费者标记为xack从pending-list移除
+* 优点
+  * 支持消费者组，可避免消息漏读
+  * 有消费标记，可以保证每个消息至少被处理一次
+
+
+
+### 点赞，Like
+
+* 需求
+  * 一个用户只能给一个文章点赞一次
+  * 再次点赞支持取消
+  * 用户浏览已经点赞过的文章时，要高亮显示（用户阅读文章信息需要包含是否点赞字段）
+* 解决方案
+  * 使用数据库表保存点赞信息
+  * 使用Redis Set保存点赞用户，避免重复点赞
+  * 使用Redis String保存点赞数量，避免重复统计
+
+
+
+### 最早点赞
+
+* 需求
+  * 按点赞次序，显示前5个点赞
+  * 支持简单点赞需求
+* 解决方案
+  * 使用数据库保存点赞信息
+  * 使用Redis Zset保存点赞用户，点赞时间作为score
+* 为解决问题
+  * 用户信息并未保存在Redis 库中，还需要在数据库中查询
+  * SQL IN语句无法保证次序，需要`ORDER BY FIELD('id', 1, 2, 3)`
+
+
+
+### 最多排行榜
+
+
+
+### 用户关注
+
+* 需求
+  * 关注、取关接口
+  * 判断关注、取关接口
+  * 用户的关注列表
+* 解决方案
+  * 在数据库中实现一张关注关系表
+  * 每个用户的关注信息保存在一个set中
+
+
+
+### 共同关注
+
+* 需求
+  * 显示当前登录用户与当前浏览用户的共同关注
+* 解决方案
+  * 求两个用户关注列表set的交集
+
+
+
+### 推送，Feed流
+
+* 获取信息的方式
+  * 传统模式，用户查找信息
+  * Feed模式，系统将信息推送给用户
+    * 主动给用户提供内容，占用用户注意力
+* Feed模式
+  * 时间线模式，timeline
+    * 按内容发布时间顺序展示关注账号的内容，常用于好友、关注
+    * 优点
+      * 信息全面
+      * 实现简单
+    * 缺点
+      * 获取信息效率低
+      * 用户粘度低
+  * 智能排序模式
+    * 对内容做过滤，优先用户感兴趣的内容，剔除或劣后低质量、不感兴趣的内容
+    * 优点
+      * 获取信息效率高
+      * 用户粘度高
+      * 容易沉迷
+    * 缺点
+      * 对算法要求高
+* Feed实现方案
+  * 拉模式，也叫读扩散
+    * 方案
+      * 每个用户都有一个发件箱、一个收件箱
+      * 每个用户发出的消息，放在自己的发件箱中
+      * 需要阅读消息的客户，从所有关注的发件箱中拉取到自己的收件箱中
+    * 优点
+      * 用户读取时才扩展数据，是惰性的，有效时才动作的，节省内存
+    * 缺点
+      * 延迟高
+      * 实现复杂
+  * 推模式，也叫写扩散
+    * 方案
+      * 每个用户只设一个收件箱
+      * 用户发送一个消息时，推送到所有粉丝的收件箱
+    * 优点
+      * 延迟低，发送者发出消息之后，所有接受者立刻就能获取到
+      * 实现简单
+    * 缺点
+      * 大V有较多粉丝的情况下，可能会推送大量无效数据给僵尸粉
+  * 推拉混合模式，也叫读写混合模式
+    * 方案
+      * 将发送者分为大V和普通两种
+      * 将粉丝分为普通粉丝和活跃粉丝两种
+      * 一般用户对所有粉丝使用推模式
+      * 大V对普通粉丝使用拉模式
+      * 大V对活跃粉丝使用推模式
+    * 优点
+      * 一般用户获取信息延迟低
+      * 大V对僵尸粉使用拉模式，避免推送大量无效数据给僵尸粉
+    * 缺点
+      * 实现特别复杂
+  * 建议
+    * 一般用户量使用推送模式
+    * 千万用户或存在热点用户，使用推拉集合模式
+
+
+
+### 滚动分页
+
+* 需求
+  * 首次访问获取第一页内容
+  * 上划内容到底部获取下一页内容
+  * 刷新或者下拉，从最新内容开始获取
+* 问题
+  * 获取到的推送内容被不断更新，按传统分页模式，新插入的数据会造成分页位移
+* 解决方案
+  * 使用Redis Sorted Set保存数据，使用时间戳作为score
+  * 用户获取时，记录当前获取到的时间戳，逐步向早前消息位移
+  * Sorted Set 有 LIMIT参数
+
+
+
+### 位置附近，GEO
+
+* 介绍
+  * Geolocation
+  * Redis 3.2
+  * 每个地理空间信息包含经度（longitude）、纬度（latitude）、值（member）
+* 基础命令
+  * geoadd，添加一个地理空间信息
+  * geodist，计算两点之间距离
+  * geohash，将指定member的坐标转为hash字符串形式返回
+  * geopos，返回指定member的坐标
+  * georadius，6.2版本及之前，指定圆心、半径，找到圆内包含的所有member，并按照与圆心距离排序
+  * geosearch，6.2版本及之后，指定圆或者矩形内搜索所有member，并按照与指定点之间距离排序
+  * geosearchstore，将geosearch搜索的结果存储到一个指定key中
 
 
 
 ### 签到
 
+* 需求
+  * 每次签到，一条表记录，可以实现记录每次签到详细时间时间点
+  * 每个月的签到，一条表记录，每天是否签到占用一个bit，可以大量缩减数据量
+  * 需要统计连续签到天数
+* Bitmap
+  * 在redis中，使用字符串类型存储Bitmap
+* Bitmap基本操作
+  * setbit，向指定offset存入0或1
+  * getbit，从指定offset读取bit
+  * bitcount，统计bitmap中值为1的bit数量
+  * bitfield，查询、修改、自增，offset的比特位
+  * bitfield_ro，获取bit数据，并以十进制形式返回
+  * bitop，将多个bitmap的结果做位运算
+  * bitpos，查找bitmap中范围内0或者1出现的位置
+* 解决方案
+  * 
 
 
-### UV统计
 
+### UV统计，HyperLogLog用法
 
+* 概念
+  * UV，Unique Visitor，也叫独立访客量，1天内多次访问只记录一次
+  * PV，Page View，页面访问量或者点击量，用户多次访问记录多次
+* Hyperloglog
+  * Hyperloglog，HLL，是从Loglog算法派生的概率算法，用于确定非常大的集合的基数，而不用存储其所有值
+  * Hyperloglog，是基于string结构实现的，单个HLL内存永远小于16kb，测量概率有0.81%的误差
+  * 向HLL中插入重复元素，只记录一次
+* Hyperloglog基本操作
+  * pfadd
+  * pfcount
+
+​	
 
 ### KV缓存
-
-
-
-
-
-### 分布式锁
-
-```
-# 原子性，在一条指令中设置nx、ex
-redis.set('key', '', nx=True, ex=10)
-```
-
-
-
-
-
-### 延迟队列，生产消费
-
-
-
-
-
-### 订阅发布
-
-
-
-
 
 
 
@@ -2112,5 +2322,1009 @@ redis.set('key', '', nx=True, ex=10)
 
 
 
+## 分布式缓存
+
+* 单点Redis存在的问题
+  * 内存数据可能丢失
+    * Redis数据持久化
+  * 并发能力有限
+    * 主从集群，读写分离
+  * 存储空间有限
+    * 分片集群，利用插槽机制实现动态扩容
+  * 故障无法自动恢复
+    * 哨兵自动检测、自动恢复
 
 
+
+### 持久化
+
+* 持久化机制有两种
+  * RDB，Redis Database Backup file，Redis数据备份文件，也叫做Redis数据快照
+  * AOF，Append Only File，追加文件
+  * 实际使用时，往往会结合两者一起使用
+
+
+
+![image-20230911105057964](.gitbook/assets/image-20230911105057964.png)
+
+
+
+#### RDB
+
+* 原理
+
+  * 定时将内存中所有数据都记录到磁盘中，Redis实例故障重启后，从磁盘读取恢复到内存
+  * redis-server在关闭时会自动保存rdb
+  * 后台rdb，底层使用fork机制，共享主进程的内存
+
+* copy-on-write技术
+
+  * 当主进程执行读操作时，访问共享内存
+  * 当主进程执行写操作时，会拷贝一份数据，执行写操作
+  * 极端情况下，可能会导致rdb期间内存翻倍，所以要预留一些内存资源
+
+* 指令
+
+  * 在redis-cli中执行save命令，会阻塞主进程，影响数据读写
+  * 在redis-cli中执行bgsave命令，会在后台进程存储数据，不会阻塞主进程
+
+* 缺点
+
+  rdb在redis.conf相关配置：
+
+```sh
+# 保存时机
+
+# 900秒内，至少有1个key被修改，则执行bgsave
+save 900 1
+
+# 300秒内，至少有10个key被修改，则执行bgsave
+save 300 10
+
+# 60秒内，至少有10000个key被修改，则执行bgsave
+save 60 10000
+
+# 禁用rdb
+save ""
+
+
+# 是否压缩，建议不开启
+rdbcompression no
+
+# rdb文件名称
+dbfilename dump.rdb
+
+# rdb保存路径，默认在redis-server运行目录
+dir ./
+
+```
+
+
+
+#### AOF
+
+* 原理
+  * Redis处理的每一个==写==命令都会记录在AOF文件，可以看做是命令的日志文件
+  * `appendfsync always`由主进程完成写磁盘，安全性高性能差
+  * `appendfsync everysec`主进程只放入缓冲区，其他线程写如磁盘
+* AOF重写机制
+  * 对同一个key的多次操作，只有最后一次有效
+  * 执行命令`bgrewriteaof`可以在后台重写AOF
+  * 有效降低AOF文件的大小
+
+* 配置
+
+```sh
+# 开启AOF，默认no
+appendonly yes
+
+# AOF文件名
+appendfilename "appendonly.aof"
+
+
+# 保存时机
+
+# 每一个写命令执行
+appendfsync always
+
+# 先放入缓冲区，每秒执行一次（默认）
+appendfsync everysec
+
+# 先放入缓冲区，由操作系统决定
+appendfsync no
+```
+
+
+
+### 主从
+
+* 概念
+  * 单节点Redis并发能力有上限，搭建主从集群，实现读写分离，可以扩展Redis的并发能力
+  * master / slave，slave也叫做replica
+  * 从节点不能写入数据
+
+![image-20230911112213293](.gitbook/assets/image-20230911112213293.png)
+
+* 配置
+  * 打开RDB、关闭AOF
+  * 复制三份配置
+  * 三份配置设置不同端口
+  * 三份配置设置不同RDB文件保存位置
+  * 三份配置添加`replica-announce-ip 当前IP地址`配置
+  * 从节点配置`slaveof 主节点IP 主节点端口`
+  * 或在从节点执行 `slaveof 主节点IP 主节点端口`
+* 查看主从配置信息
+  * 执行`info replication`
+  * role，角色
+* 数据同步原理
+  * 做全量同步
+    * 从节点请求同步，主节点根据repl id判断是第一次同步，则拒绝增量同步，执行全量同步
+    * 主节点生成数据版本号发送给从节点
+    * 主节点会执行bgsave生成rdb发送给从节点
+    * 新命令存储到repl_baklog，发送repl_baklog给从节点
+  * 增量同步
+    * 仓节点请求同步，主节点根据repl id判断不是第一次同步，则执行增量同步
+    * 主节点发送repl_baklog中从节点offset之后的数据给从节点
+    * 如果从节点断开时间过久，导致repl_baklog中offset之后的数据已经被覆盖，那么只能再次做全量同步
+* 优化全量同步的性能
+  * 在master配置中开启无磁盘复制，避免磁盘读写，`repl-diskless-sync yes`
+  * 减少单节点Redis内存占用
+  * 提高repl_baklog大小，避免全量同步
+  * 提高故障恢复时间，避免全量同步
+  * 链式主从同步，由部分从节点作为数据源，向其他从节点进行数据同步，`slaveof 从节点IP 从节点端口`
+* 如何解决主从同步延迟造成的数据不一致
+  * ==强一致性读==：强一致性读是指，在从节点读取数据之前，先向主节点发送一个同步命令（SYNC），让主节点将最新的数据发送给从节点，并等待从节点完成数据载入后再返回结果。这样可以保证从节点总是读到最新的数据，但是会增加网络开销和延迟，并降低并发性能。
+  * ==使用读写分离策略==：读写分离策略是指，在设计业务逻辑时，区分哪些数据需要强一致性，哪些数据可以容忍一定的延迟。对于需要强一致性的数据，可以在主节点进行读写操作；对于可以容忍一定延迟的数据，可以在从节点进行只读操作。这样可以减少不必要的同步开销，并提高系统的吞吐量和响应速度。
+
+
+
+### 哨兵
+
+* 简单主从存在的问题
+  * 固定master存在单点故障可能
+  * 哨兵监控（看门狗），也存在单点故障可能
+* 哨兵功能
+  * 哨兵，Sentinel
+  * 哨兵不断检查master和slave是否按预期工作
+  * 哨兵检测到，master故障，会将一个slave提升为master
+  * 哨兵会将故障恢复后的主从信息，主动推送给redis客户端
+* 哨兵原理
+  * 基于心跳机制监测服务
+    * 哨兵节点发现某节点未在规定时间响应，则认为实例主观下线
+    * 超过指定数量（quorum）的sentinel都认为该实例主观下线，则该示例客观下线
+    * quorum最好超过实例数量的一半
+  * 新master选举原理
+    * 排除断开master超过指定值（down-after-milliseconds*10)的slave节点
+    * 选举最小slave-priority值的从节点
+    * slave-priority为0则不参与选举
+    * 如果未选出，则选举offset值最大的节点，越大说明数据越新
+    * 如果未选出，则选举id小的节点
+  * 故障恢复流程
+    * 哨兵给选举的slave发送`slaveof no one`命令，slave会称为master
+    * 哨兵给其余slave发送`slaveof 新masterIP 新master端口`
+    * 哨兵将故障节点标记为slave，当故障节点恢复后，自动成为slave节点
+* 哨兵配置
+  * 哨兵也需要多个实例形成集群
+
+
+
+* 哨兵配置文件
+
+```sh
+# 哨兵端口
+port 27001 
+
+# 哨兵声明ip，避免多个IP引起混乱
+sentinel announce-ip 声明IP
+
+# 集群配置
+sentinel monitor 集群名称 masterIP masterPort quorum数量
+
+# 断开时间
+# 默认为30秒
+# 判断主节点主观下线所需的时间长度
+sentinel down-after-milliseconds 集群名称 毫秒
+
+# 故障转移最大时间
+# 默认为3分钟
+# 如果在这个时间内，Sentinel没有完成故障转移，那么故障转移将会被取消或者重试
+sentinel failover-timeout 集群名称 毫秒
+```
+
+
+
+* python使用哨兵
+
+```py
+# 安装
+# pip install redis
+# pip install redis-py-sentinel
+
+
+# 导入模块
+from redis.sentinel import Sentinel
+
+# 创建哨兵对象，指定哨兵节点的地址和端口
+sentinel = Sentinel([('localhost', 26379), ('localhost', 26380), ('localhost', 26381)])
+
+# 获取主节点的连接对象
+master = sentinel.master_for('mymaster', socket_timeout=0.1)
+
+# 获取从节点的连接对象
+slave = sentinel.slave_for('mymaster', socket_timeout=0.1)
+
+# 在主节点上执行写操作
+master.set('foo', 'bar')
+
+# 在从节点上执行读操作
+slave.get('foo')
+
+
+```
+
+
+
+
+
+### 分片集群
+
+* 概念
+  * 集群中有多个master，每个master保存不同数据
+  * 每个master可以有多个slave，组成主从结构
+  * master之间彼此监测，不需要哨兵
+
+
+
+#### 搭建分片集群
+
+* 分片集群redis-server配置
+
+```sh
+# 集群端口
+port 6379
+
+# 开启集群
+cluster-enabled yes
+
+# 集群配置文件名称（生成地址）
+cluster-config-file /tmp/6379/nodes.conf
+
+# 节点心跳失败的超时时间
+cluster-node-timeout 5000
+
+# 持久化文件存放位置
+dir /tmp/6379
+
+# 绑定地址
+bind 0.0.0.0
+
+# 后台运行
+daemonize yes
+
+# 注册IP
+replica-announce-ip 192.168.150.101
+
+# 保护模式
+protected-mode no
+
+# 数据库数量
+databases 1
+
+# 日志
+logfile /tmp/6379/run.log
+```
+
+
+
+* 启动集群
+
+```sh
+# 启动集群
+
+# 根据单Master对应从节点数量，推算集群结构
+# master配1个从节点，集群内有6个节点，则三主三从
+redis-cli --cluser create --cluster-replicas 单Master对应从节点数量 节点IP:节点Port 节点IP:节点Port
+
+# 查看集群信息
+redis-cli -p 7001 cluster nodes
+
+
+```
+
+
+
+#### 散列插槽（hash slot）
+
+* 介绍
+  * Redis自动将master节点映射到0~16383工16384个插槽上
+  * 集群信息中可以看到分配结果
+* 原理
+  * redis根据数据key的CRC16算法得到一个hash值，然后对16384取余，余数为所属slot
+  * 如果key中包含`{}`且当中有一个有效字符，则使用`{}`中的内容计算哈希值
+  * 连接其中一个节点存入数据，集群内部会对数据进行路由
+
+
+
+#### 集群伸缩
+
+* 添加节点
+  * 新增配置并启动redis-server
+  * `redis-cli add-node 新IP:新Port 旧IP:旧Port`，旧IP、Port是为了找到集群
+* 重新分片
+  * `redis-cli --cluster reshard 任意节点IP:任意节点Port`，任意节点IP、Port是为了找到集群
+* 删除节点
+  * 
+
+
+
+#### 故障转移
+
+* 介绍
+  * 集群虽然没有哨兵，但是有故障转移
+* 手动故障转移
+  * 在需要维护的节点执行 `cluster failover`
+* 原理
+  * 默认按下图流程执行
+  * 使用force参数，可以忽略offset校验
+  * 使用takeover参数，可以忽略全部流程
+
+​	
+
+![image-20230912100037998](.gitbook/assets/image-20230912100037998.png)
+
+
+
+#### python使用分片集群
+
+```python
+# 安装
+# pip install redis-py-cluster
+
+
+# 导入模块
+from rediscluster import RedisCluster
+
+# 创建分片集群对象，指定启动节点的地址和端口
+startup_nodes = [
+    {'host': '127.0.0.1', 'port': 7000},
+    {'host': '127.0.0.1', 'port': 7001},
+    {'host': '127.0.0.1', 'port': 7002},
+]
+
+rc = RedisCluster(startup_nodes=startup_nodes, decode_responses=True)
+
+# 在分片集群上执行操作
+rc.set('foo', 'bar') # 写入数据
+print(rc.get('foo')) # 读取数据
+
+```
+
+
+
+### 多级缓存
+
+* NGINX负载均衡
+  * NGINX集群部署，并使用一个NGINX作为反向代理分发请求
+* NGINX本地缓存
+  * 在NGINX中实现本地缓存功能
+  * OpenResty提供shard dict，在nginx多个worker之间共享数据，实现缓存功能
+* OpenResty分发和Redis缓存前置
+  * 使用OpenResty工具，Lua编写业务逻辑，访问Redis，未命中才访问进程
+  * ==OpenResty可以根据url中的字段对tomcat做一次逻辑分发，使缓存均匀分布在进程中==
+* 进程缓存
+  * 各种语言的缓存库
+
+* 缓存预热
+  * 冷启动是Redis并没有缓存，需要做一次缓存预热
+  * 缓存预热需要根据统计信息，只预热热点数据
+* 缓存同步策略
+  * 设置有效期：到期自动删除，再次查询时更新
+    * 优点：简单，方便
+    * 缺点：时效性差，缓存过期之前可能不一致
+    * 场景：更新频率较低，时效性要求低的业务
+  * 同步双写：在修改数据库的同时，直接修改缓存
+    * 优势：时效性强，缓存与数据库强一致
+    * 缺点：有代码侵入，耦合度高
+    * 场景：对一致性、时效性要求较高的缓存数据
+  * 异步通知：修改数据库时发送事件通知，相关服务监听到通知后，修改缓存数据
+    * 优势：低耦合，可以同时通知多个缓存服务
+    * 缺点：时效性一般，可能存在中间不一致状态
+    * 场景：时效性要求一般，有多个服务需要同步
+* 监听mysql binlog，发送异步通知
+  * Cancal会在数据表中记录当前读取的offset
+  * cancal进程、集群监听数据库或表
+  * 使用cancal-client连接cancal，当监听表，insert、update、delete时，cancal-client自动回调处理函数
+
+
+
+![image-20230912101341822](.gitbook/assets/image-20230912101341822.png)
+
+
+
+#### binlog监听
+
+* MySQL的binlog是什么
+
+> MySQL的binlog是一种用于记录数据库表结构变更以及表数据修改的二进制日志，它只会记录表的变更操作，但不会记录select和show这种查询操作
+>
+> * 作用
+>
+>   - **数据恢复**：可以通过binlog来恢复被误删或者损坏的数据，或者回滚到某个时间点的数据状态
+>
+>   - **主从复制**：可以通过binlog来实现主从复制，即主节点将binlog传给从节点，从节点接收后执行binlog中的事件，从而保持与主节点的数据一致性
+>
+>   - **审计**：可以通过binlog来进行审计，判断是否对数据库进行了注入攻击或者非法操作
+>
+> * 特点
+>
+>   - **二进制格式**：binlog是以二进制格式存储的，不易于人类阅读，需要使用mysqlbinlog工具来查看或者转换为文本格式
+>
+>   - **事件形式**：binlog中记录的是对数据库的各种修改操作，用来记录修改操作的数据结构是Log event。不同的修改操作对应不同的Log event类型，如Query event、Row event、Xid event等
+>
+>   - **异步模式**：binlog是异步写入的，即主节点在执行写操作后，并不会等待从节点完成数据同步，而是直接返回给客户端。这样可以提高性能，但也可能导致主从数据不一致或者丢失
+>
+>   - **可配置性**：binlog可以通过一些参数来配置，如binlog_format、expire_logs_days、max_binlog_size等。这些参数可以影响binlog的记录模式、清理时间、文件大小等
+
+* 触发器和binlog的区别和联系
+
+> 触发器和binlog都是MySQL中的一种功能，但它们的作用和实现方式不同。
+>
+> 触发器是一种在数据库中定义的特殊的存储过程，它可以在某个表上的某个事件（如插入、更新或删除）发生时自动执行一些操作1。触发器的目的是为了实现业务逻辑或数据完整性的检查。
+>
+> binlog是一种用于记录数据库表结构变更以及表数据修改的二进制日志，它只会记录表的变更操作，但不会记录select和show这种查询操作2。binlog的目的是为了实现数据恢复或主从复制。
+>
+> * 联系：
+>
+>   * 触发器本身也会产生binlog，因为触发器执行的操作也会修改表的数据。
+>
+>   * 触发器可以根据binlog_format参数的设置来决定使用基于语句（STATEMENT）还是基于行（ROW）的方式来记录binlog。
+>
+> * 区别：
+>
+>   * 触发器是由用户自定义的，可以根据业务需求来编写触发器的逻辑；binlog是由系统自动生成的，用户不能直接修改或控制binlog的内容。
+>
+>   * 触发器是在表级别上定义的，每个表可以有多个触发器，每个触发器可以对应不同的事件和时机；binlog是在数据库级别上记录的，每个数据库只有一个binlog文件，记录所有表的变更操作。
+>
+>   * 触发器可以访问或修改其他表的数据，甚至可以调用其他存储过程或函数；binlog只能记录当前表的数据变化，不能涉及其他表或对象。
+
+* Python监听binlog
+
+> 使用mysql-replication模块：mysql-replication是一个用于Python的MySQL binlog解析和复制模块，它可以通过BinLogStreamReader类来创建一个binlog流对象，并通过指定一些参数来过滤或控制监听的事件
+
+```py
+# 导入模块
+from pymysqlreplication import BinLogStreamReader
+from pymysqlreplication.row_event import DeleteRowsEvent, UpdateRowsEvent, WriteRowsEvent
+
+# 创建binlog流对象，指定连接信息和过滤条件
+stream = BinLogStreamReader(
+    connection_settings = {"host": "127.0.0.1", "port": 3306, "user": "root", "passwd": "123456"},
+    server_id = 1, # 伪装成从节点的ID，必须唯一
+    blocking = True, # 是否阻塞等待后续事件
+    resume_stream = True, # 是否从最新位置开始读取
+    only_events = [DeleteRowsEvent, UpdateRowsEvent, WriteRowsEvent], # 只监听增删改操作
+    only_schemas = ["test"], # 只监听test数据库
+    ignored_tables = ["log"] # 忽略log表
+)
+
+# 遍历binlog流中的事件
+for event in stream:
+    # 打印事件类型和时间戳
+    print(event.event_type, event.timestamp)
+    # 遍历事件中的行数据
+    for row in event.rows:
+        # 打印行数据的变化情况
+        if isinstance(event, DeleteRowsEvent):
+            print("删除了一行数据：", row["values"])
+        elif isinstance(event, UpdateRowsEvent):
+            print("更新了一行数据：", row["before_values"], "->", row["after_values"])
+        elif isinstance(event, WriteRowsEvent):
+            print("插入了一行数据：", row["values"])
+
+# 关闭binlog流对象
+stream.close()
+
+```
+
+* MySQL提供的监听binlog的接口
+
+> * MySQL Replication Listener Library：这是一个用于C/C++的库，它可以让开发者通过编程的方式来访问和解析binlog，从而实现数据同步、分析或恢复等功能。这个库提供了一些类和函数来创建和管理binlog监听器（listener），并处理binlog事件（event）。
+> * mysqlbinlog：这是一个用于命令行的工具，它可以让用户通过指定参数来读取和解析binlog，从而实现数据恢复或审计等功能3。这个工具提供了一些选项来控制输出格式、过滤条件、起止位置等。
+> * mysqlbinlogapi：这是一个用于Python的模块，它可以让用户通过调用API来读取和解析binlog，从而实现数据同步、分析或恢复等功能。这个模块提供了一些类和方法来创建和管理binlog连接（connection），并处理binlog事件（event）。
+
+
+
+## 最佳实践
+
+### Redis键值设计
+
+
+
+#### 键设计
+
+* 遵循基本格式，`业务名称:数据名称:id`
+  * 可读性强
+  * 避免key冲突
+  * 方便管理
+* 长度不超过44字节
+  * 底层存储方式包括int、embstr、raw三种
+  * 小于44个字节时使用embstr，可以连续存储
+* 不包含特殊字符
+
+
+
+#### 超大数据
+
+* BigKey
+  * 数据量大，例如超过5MB的String
+  * 成员数多，例如ZSET的成员数量为1w
+  * 成员数据量大，例如Hash的成员总大小100MB
+* 建议
+  * 单个key的value小于10KB
+  * 对于集合类型的key，建议元素数量小于1000
+* BigKey危害
+  * 网络阻塞，少量QPS就可能导致带宽使用率被占满，导致Redis实例、物理机变慢
+  * 数据倾斜，数据分片、内存占用不均衡
+  * Redis阻塞，对hash、list、zset等做运算耗时较长
+  * CPU压力， BigKey序列化和反序列化导致CPU使用率飙升
+
+* 分析BigKey
+  * redis-cli --bigkeys
+    * 信息不太完整
+  * 在线scan扫描
+    * 利用strlen、hlen判断key长度
+    * scan可以渐进扫描，不要使用keys*
+  * RDB快照分析
+    * Redis-Rdb-Tools
+  * 监控进出网络数据
+* 处理BigKey
+  * 异步删除
+    * Redis4.0以后支持unlink异步删除，不阻塞主线程
+    * Redis4.0以前，使用hscan、sscan、zscan等扫描删除
+  * 字段打散
+    * 如json存储，user:1 '{"name": "Jack", "age": 21}'
+    * 打散为string，user:1:name   user:1:age
+    * 打散为hash，user:1 {"name": "Jack", "age": 21}
+  * hash
+    * hash的field超过500时，会使用哈希表而不是ZipList，内存占用较多
+    * 可以通过hash-max-ziplist-entries修改上限
+    * hash打散key，如`key:分区ID`存储100个field
+
+
+
+### 批处理
+
+* 批处理优点
+  * 批处理可以更高效的处理，减少网络通信延迟
+* 批处理缺点
+  * 一次性处理过多数据，可能造成redis阻塞
+* 批处理命令
+  * string使用mset
+  * hash使用hmset
+  * set使用sadd
+* pipeline管道
+  * 一次性发送任意命令
+  * 多个命令之间不具备原子性
+* 集群批处理
+  * pipeline的key必须在一个插槽中，如果在不同插槽中会导致执行失败
+  * 先区分slot再分别pipeline
+  * 使用`{}`hash tag，相同hash tag一定在一个slot中
+
+
+
+### 服务端优化
+
+
+
+#### 持久化配置
+
+* 缓存Redis实例尽量不要开持久化功能
+* 建议关闭RDB，使用AOF
+* 利用脚本定期在slave节点做RDB
+* aof的rewrite会使用大量cpu，应避免频繁bgrewrite
+  * `auto-aof-rewrite-percentage 100`
+  * `auto-aof-rewrite-min-size 64mb`
+* 避免aof在rewrite期间做aof
+  * rewrite期间aof会导致阻塞
+  * `no-appendfsync-on-rewrite=yes`
+
+
+
+#### 服务器配置
+
+* 内存配置需要给RDB for和AOF rewrite预留足够控件
+* 单个Redis示例内存不要太大，如4G、8G、加快fork速度，减少主动同步、数据迁移压力
+* 不要与CPU密集型应用部署在一起
+* 不要与高硬盘负载应用部署在一起
+
+
+
+#### 慢查询
+
+* 慢查询配置
+  * `slowlog-log-slower-than`慢查询阈值，单位微妙，默认10000，建议1000
+  * `slowlog-max-len`慢查询日志长度，默认128，建议1000
+* 慢查询命令
+  * `slowlog len`查询慢查询日志长度
+  * `slowlog get n`读取n条慢查询日志
+  * `slowlog reset`清空慢查询列表
+
+
+
+#### 安全配置
+
+* Redis设置密码
+* 使用rename-command禁止线上使用：keys、flushall、flushdb、config set等命令
+* bind限制外网网卡
+* 开启防火墙
+* 禁止root账户启动Redis
+* 不使用默认端口
+
+
+
+#### 内存管理
+
+* info memory
+* memory help，redis自带内存工具
+* memory key
+* memory doctor 
+
+
+
+### 集群优化
+
+* 集群节点不能多于1000，相互通信会占用带宽
+* 单物理机中不能运行太多redis实例
+* cluster-node-timeout要合适
+* 集群下不能跨slot使用lua和事务
+
+
+
+## 底层原理
+
+
+
+### 数据结构
+
+#### 动态字符串SDS
+
+* 概念
+  * 字符串是Redis的基础，Key或者Member都是字符串
+  * 为什么Redis不适用C语言中的字符串
+    * 获取字符串长度需要通过计算
+    * 非二进制安全，不支持在字符串中间存在数值0
+    * 不可修改
+  * SDS
+    * Redis构建的字符串结构
+    * Simple Dynamic String，简单动态字符串
+* SDS内存分配机制
+  * 小于1M时，空间翻倍+1
+  * 大于1M时，增加1M + 1
+  * 内存预分配，减少向内核申请内存的次数
+* SDS优势
+  * 获取字符串长度时间复杂度为1
+  * 支持动态扩容
+  * 减少内存分配次数
+  * 二进制安全
+
+
+
+```c
+// 定义SDS结构体
+struct sdshdr8 {
+    // 记录buf数组中已使用字节的数量
+    // 等于SDS所保存字符串的长度
+    uint8_t len;
+
+    // 记录buf数组中未使用字节的数量
+    uint8_t alloc;
+
+    // 类型标识，用第3-7位来表示类型，其余位未使用
+    unsigned char flags;
+
+    // 字节数组，用于保存字符串
+    char buf[];
+};
+```
+
+
+
+#### IntSet集合
+
+* 概念
+  * IntSet是Set的其中一种实现方式
+  * 基于整数数组实现
+* 优化
+  * 长度可变
+  * 有序
+  * 根据元素的大小自动调整编码方式，以节省内存空间
+  * 利用二分查找算法快速地判断一个元素是否存在于集合中，或者找到一个元素的插入位置
+  * 可以保证集合中不会出现重复的元素
+  * 不满足条件时Redis会使用哈希表（dict）作为Set数据类型的底层实现
+* 失效条件
+  * 元素个数不超过set-max-intset-entries配置项的值，默认为512
+* 元素扩容算法
+  * 倒序讲内部元素一次复制到新位置
+  * 正序会被覆盖
+
+
+
+```c
+typedef struct intset {
+    // 记录集合中元素的编码方式，有三种可能：
+    // INTSET_ENC_INT16（2字节）
+    // INTSET_ENC_INT32（4字节）
+    // INTSET_ENC_INT64（8字节）
+    uint32_t encoding;
+
+    // 记录集合中元素的个数
+    uint32_t length;
+
+    // 一个柔性数组，用于存储集合中的元素，按照从小到大的顺序排列
+    int8_t contents[];
+} intset;
+```
+
+
+
+#### Dict字典
+
+* 概念
+  * 字典、哈希表
+* 组成结构
+  * 哈希表，DictHashTable
+  * 哈希节点，DictEntry
+  * 字典，Dict
+* 优化
+  * 掩码 = 表大小 - 1，使用与运算求哈希值比取余快
+  * 根据负载因子自动扩容收缩，负载因子 = 已用 / 容量
+    * 大于等于1，闲时扩容
+    * 大于5，立即扩容
+    * 小于0.1时，收缩
+  * 为了不阻塞主线程，rehash是渐进式完成的
+* rehash过程
+  * 计算新的大小
+    * 扩容到 第一个大于等于 `已使用 + 1` 的 `2**n`
+    * 收缩到 第一个大于等于 `已使用 + 1` 的 `2**n`
+  * 按照新的大小申请空间
+  * 重新构建哈希表
+
+
+
+#### ZipList压缩链表
+
+* 优化
+  * 省略指针，节约了指针内存
+  * 特殊的双端列表
+  * 内存连续
+  * 环形使用内存
+  * Item或Entry不固定大小，节约内存
+* Entry内部构造
+  * 保存前一个节点的长度
+  * 编码属性
+  * 节点类型
+
+* 问题
+  * 增删数据可能造成连续更新
+
+
+
+#### QuickList
+
+* 超出ZipList最佳上限时，使用QuickList
+* QuickList中的每一个节点都是ZipList
+
+![image-20230913173327809](.gitbook/assets/image-20230913173327809.png)
+
+
+
+#### SkipList跳表
+
+* QuickList问题
+  * QuickList从中间查询效率很低
+* SkipList改进
+  * 元素按照升序排列存储
+  * 节点可能包含多个指针
+  * 指针跨度可以不同，是1到32的随机数
+  * 增删改查效率与红黑树基本一致，实现却更加简单
+
+
+
+![image-20230913174003145](.gitbook/assets/image-20230913174003145.png)
+
+
+
+#### RedisObject
+
+* 封装以上所有数据结构
+
+![image-20230913175211070](.gitbook/assets/image-20230913175211070.png)
+
+* 编码类型
+
+![image-20230913175449325](.gitbook/assets/image-20230913175449325.png)
+
+* 数据类型与编码类型对应关系
+
+![image-20230913175553311](.gitbook/assets/image-20230913175553311.png)
+
+#### 五种数据类型
+
+* string
+  * 基本编码方式是RAW，即SDS
+  * 小于等于44字节时，使用EMBSTR，字符串SDS与RedisObject合为一个整体，一起申请内存
+  * 存储的字符串是整数时，保存为INT，直接存储在RedisObject的指针位
+
+![image-20230913180413658](.gitbook/assets/image-20230913180413658.png)
+
+
+
+* List
+  * LinkedList，普通链表，内存占用高，内存碎片多
+  * ZipList，压缩列表，内存占用地，存储上限低
+  * QuickList，LinkedList + ZipList，可以从双端访问，内存占用较低，包含多个ZipList
+
+
+
+* Set
+  * 所有元素都是整数，且元素数量不超过`set-max-intset-entries`是使用IntSet
+  * 其余采用HashTable Dict，使用key存储member，value为NULL
+
+
+
+* Zset
+  * 默认使用ZipList结构来节省内存
+    * 元素数量小于`zset_max_ziplist_entries`，默认128
+    * 每个元素都小于`zset_max_ziplist_value`，默认64
+  * 结合SkipList和HT（Dict）
+    * SkipList排序，并存储score和element
+    * HT键值存储，快速查找
+    * 内存占用大
+
+
+
+* Hash
+  * 默认采用ZipList节省内存
+    * 元素数量小于`hash-max-ziplist-entries`，默认512
+    * 任意元素超过`hash-max-ziplist-value`，默认64字节
+  * 使用Zset Dict部分的代码
+
+
+
+### 网络模型
+
+* 什么是内核空间和用户空间
+  * 操作系统内核本身也是程序
+  * 操作系统内核本身也需要消耗系统资源
+  * 为了避免用户应用导致冲突和崩溃，进程的寻址空间区分了内核控件和用户空间，程序指令也区分了权限
+* 什么是内核态和用户态
+  * 用户空间只能执行受限的命令（Ring3），而且不能直接调用系统资源，必须通过内核接口访问
+  * 内核空间可以执行特权命令（Ring0），调用一切系统资源
+  * 程序运行在内核空间时，称做内核态
+  * 程序运行在用户空间时，称做用户态
+  * 程序运行时在两个状态间切换
+* IO程序内核态用户态切换示例
+  * 写数据到设备，需要将用户缓冲数据COPY到内核缓冲区，然后写入设备
+  * 从设备读数据，需要从设备读取数据到内核缓冲区，然后COPY到用户缓冲区
+* 以读取数据为例，读取数据分为两阶段
+  * 内核等待数据
+  * 将数据从内核控件copy到用户空间
+
+* 《UNIX网络编程》总结的5中IO模型
+  * 阻塞IO，Blocking IO
+    * 用户进程在两阶段都处于阻塞状态
+  * 非阻塞IO，Nonblocking IO
+    * 等待数据的阶段是非阻塞的
+    * COPY数据的阶段是阻塞的
+  * IO多路复用，IO Multiplexing
+    * 本质上是使用非阻塞IO的一种框架
+    * 类似于收银员让想好的顾客先点餐，没想好的在一边想
+  * 信号驱动IO，Signal Driven IO
+    * 注册信号处理回调给内核
+    * 内核回调，用户读取数据
+    * 缺点
+      * 信号较多时，信号队列可能溢出
+      * 内核与用户空间信号交互性能较低
+  * 异步IO，Asynchronous
+    * 内核完成两阶段读取后，再返回给用户态执行
+    * 缺点
+      * 内核压力过大时，用户态需要主动限流，限流实现较为复杂
+
+* 其中IO多路复用有三种形式
+  * select
+  * poll
+  * epoll
+* epoll改进点
+  * select和poll只会通知用户进程有fd就绪，但是需要用户进程逐个遍历FD来确认
+  * epoll会直接通知用户进程FD就绪，并把FD写入用户空间
+* 操作系统的IO是同步和异步异步
+  * IO操作是同步还是异步，主要看第二阶段，即内核空间与用户空间的COPY过程是同步还是异步
+  * 操作系统的5中IO模型，只有异步IO是异步的
+
+
+
+![5种IO模型](.gitbook/assets/v2-0a418d4da25432f7954139e28cc8b255_b.jpg)
+
+
+
+#### IO多路复用，IO Multiplexing
+
+* select
+  * 最早实现
+  * 将需要监听的fd_set传给内核
+  * 内核将fd_set中可以读取的fd标记为移除，保留未读取的返回给用户空间，并返回可以读取的个数
+  * 用户需要自己根据标记位，查找哪个fd可以读取
+  * 由于fd_set的标记为为1024个比特位，所以只能监听1024个fd
+
+* poll
+  * 将需要监听的监听数组、事件传给内核
+  * 理论上监听数组大小没有限制
+  * 实际性能没有太大提升
+
+* epoll
+
+  * 红黑树保存需要监听的fd
+  * 链表记录就绪的fd
+  * 使用时需要创建一个eventpoll结构体，用户可以进行增删改
+  * 用户调用epoll_wait等待，有就绪事件或超时时，内核将就绪数量和fd返回给用户
+  * 性能巨大提升
+  * 监听数量没有限制
+
+* epoll有两种事件通知方式
+
+  * LT，LevelTriggered，会重复通知多次，直至数据处理完成
+    * LT模式是默认的处理方式
+    * 但是重复通知性能较差
+
+  * ET，EdgeTriggered，只会通知一次，不管数据是否处理完成
+    * 使用相对复杂
+    * 性能好
+
+* 使用ET模式
+
+  * 方法1：如果数据未读完，用户手动将未读完的数据记录在就绪数组中
+  * 方法2：使用非阻塞方法读取fd，直到处理完成
+
+
+
+#### Redis线程
+
+* Redis是单线程还是多线程
+  * 核心命令处理是单线程的
+  * 整个Redis是多线程的
+    * Redis 4.0 引入多线程，异步处理耗时较长的命令，如unlink
+    * Redis 6.0 在核心网络模型（IO多路复用部分）中引入多线程
+    * 注意bgsave是多进程不是多线程
+* 为什么使用单线程
+  * 除持久化外，纯内存操作非常快，性能瓶颈是网络延迟而不是执行速度，因此多线程并不会带来巨大的性能提升
+  * 多线程会导致上下文切换，带来不必要的开销
+  * 多线程需要考虑线程安全，复杂度增高，锁使用不当可能会降低性能
+
+
+
+#### Redis网络模型
+
+
+
+#### RESP协议
+
+
+
+#### 基于Socket自定义Redis客户端
+
+
+
+### 内存回收
+
+#### 过期策略
+
+* 惰性删除，访问时判断是否删除
+* 周期删除，redis事件循环前调用定时任务
+* 慢删除
+* 快删除
+
+
+
+#### 淘汰策略
+
+* 任何命令之前都会检查内存
