@@ -1,14 +1,20 @@
-# Docker
+# docker
 
-[toc]
+## 概念
 
-docker基本信息
-----------
+### 容器对比虚拟机
+
+
+
+
+
+## docker简介
+
 ### 版本
 * 17.03后分为CE版、EE版本
 * CE, Community Edition
 * EE, Enterprise Edition
-```
+```sh
 docker version
 docker info
 docker --help
@@ -21,7 +27,7 @@ docker --help
 * Host, 运行Docker daemon和容器的服务器
 * Client, 命令行
 
-### 安装
+## docker安装
 ```
 # 卸载旧版本
 sudo yum remove docker \
@@ -62,8 +68,8 @@ sudo systemctl status docker # active
 sudo docker run hello-world # 测试运行
 ```
 
-docker基本操作
-----------
+## docker基本操作
+
 ### 命令模式
 ```
 sudo docker run ubuntu:15.10 /bin/echo "Hello World"
@@ -98,8 +104,8 @@ sudo docker logs d35aad423212
 sudo docker stop d35aad423212 
 ```
 
-容器使用
-----------
+## 容器使用
+
 ```
 # 获取镜像
 sudo docker pull ubuntu
@@ -153,8 +159,8 @@ docker inspect container_id
 --privileged=true
 ```
 
-镜像使用
-----------
+## 镜像使用
+
 ```
 # 列出所有本地镜像
 docker images
@@ -199,8 +205,8 @@ docker build -t user/repo:tag [Dockerfile Dir]
 
 ```
 
-容器连接
----------
+## 容器连接
+
 ```
 # 端口映射
 
@@ -254,8 +260,8 @@ sudo systemctl restart docker
 
 ```
 
-仓库管理
-----------
+## 仓库管理
+
 ```
 docker login --username=yingxuanxuan@hotmail.com registry.cn-shanghai.aliyuncs.com
 docker pull registry.cn-shanghai.aliyuncs.com/daniel-hub/nginx-docker:tag
@@ -266,8 +272,8 @@ docker logout
 ```
 
 
-容器数据卷
-----------
+## 容器数据卷
+
 ### 数据复制
 ```
 docker cp container_id:/path/to/file /local/path
@@ -297,8 +303,8 @@ docker run -it --name dc02 --volumes-from dc01 zzyy/centos
 docker run -it --name dc03 --volumes-from dc01 dc02 zzyy/centos
 ```
 
-Dockerfile
-----------
+## Dockerfile
+
 * 指令必须大写
 * 指令后至少一个参数
 * 顺序执行
@@ -358,8 +364,7 @@ docker history image_ID
 
 ```
 
-推送
-----------
+## 推送
 ```
 # 在阿里云创建仓库
 
@@ -376,8 +381,8 @@ sudo docker push registry.cn-shanghai.aliyuncs.com/[namespace]/[repo]:[tag]
 sudo docker pull registry.cn-shanghai.aliyuncs.com/[namespace]/[repo]:[tag]
 ```
 
-mysql
-----------
+## mysql
+
 ### 配置项
 ```
 # 密码环境变量（三选一） 
@@ -427,8 +432,8 @@ sudo docker run --network dock_net -it --rm mysql mysql -hmysql_server -uroot -p
 
 
 
-redis
-----------
+## redis
+
 ```
 docker pull redis
 docker run 
