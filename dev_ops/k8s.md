@@ -108,15 +108,153 @@
 
 
 
-### K8S系统架构特点
+* K8S系统架构特点
 
-* 基于主从架构
-* 从节点只执行任务
-* 主节点负责调度
-* 通过配置主节点也可以执行任务
-* api-server管理所有接口，所有节点都通过api-server管理
+  * 基于主从架构
+
+  * 从节点只执行任务
+
+  * 主节点负责调度
+
+  * 通过配置主节点也可以执行任务
+
+  * api-server管理所有接口，所有节点都通过api-server管理
 
 
 
-## 组件说明
+### K8S组件
+
+
+
+#### 控制面板组件，Master
+
+* etcd，键值类型存储的分布式数据库，提供了基于Raft算法实现自主的集群高可用
+* kube-apiserver，基于REST风格的开放k8s接口服务
+* kube-controller-manager，管理k8s中的各种资源的控制器
+* cloud-controller-manager，第三方云平台控制器
+* kube-scheduler，根据算法将Pod调用到更合适的节点上
+
+
+
+#### 节点组件
+
+* kubelet，负责Pod生命周期、存储、网络
+* kube-proxy，网络代理、Service服务发现、4层负载均衡
+* container runtime，容器运行环境，容器支持Docker、containerd、CRI-O
+* Pod，一个Pod包含多个容器，一个节点包含多个Pod
+
+
+
+#### 附加组件
+
+* kube-dns，为整个集群提供DNS服务
+* Ingress Controller，为外部网络访问接口
+* Prometheus、Heapster，监控，二选一
+* Dashboard，GUI控制台
+* Federation，跨可用区的集群
+* Fluentd-elasticsearch，日志收集、存储
+
+
+
+
+
+### K8S分层架构
+
+![Kubernetes架构分层](.gitbook/assets/1625050769565819835.png)
+
+
+
+* 生态系统
+  * 基于K8S开发的应用，如上一节`附加组件`中的应用
+
+* 接口层
+  * 所有应用都调用接口层
+
+* 管理层
+  * 系统度量
+    * 基础设置
+    * 容器
+    * 网络
+  * 自动化
+    * 自动扩展
+    * 动态Provision等
+  * 策略管理
+    * RBAC
+    * Auota
+    * PSP
+    * NetworkPolicy
+
+* 应用层
+  * 部署
+    * 无状态应用
+    * 有状态应用
+    * 批处理任务
+    * 集群应用等
+  * 路由
+    * 服务发现
+    * DNS解析
+
+* 核心层
+  * 对外
+    * 提供API构建的高层应用
+  * 对内
+    * 提供插件式应用执行环境
+
+
+
+### 服务的分类
+
+
+
+
+
+
+
+## 搭建K8S集群
+
+
+
+## Pod
+
+
+
+## 资源调度
+
+
+
+## 服务发现
+
+
+
+## 配置与存储
+
+
+
+## 高级调度
+
+
+
+## 访问控制
+
+
+
+## Helm包管理
+
+
+
+## K8S集群监控
+
+
+
+## 集群日志管理
+
+
+
+## 运维平台
+
+
+
+## DevOPS实例
+
+
 

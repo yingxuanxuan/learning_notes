@@ -417,8 +417,6 @@ docker build
 
 
 
-
-
 ## 容器
 
 
@@ -432,8 +430,14 @@ docker build
   * `-t`，terminal，为容器重新分配一个伪终端
   * `-p 分配端口:容器内端口`，将容器内的端口映射到外部
   * `-p 分配IP:分配端口:容器内端口`，将容器内的端口映射到外部指定IP
+  * `--restart`，重启模式
+    * `--restart=no`，容器退出时不重启，==默认==
+    * `--restart=on-failure`，容器退出状态非0，则自动重启
+    * `--restart=on-failure:次数`，容器退出状态非0则重启，指定次数未能重启成功则放弃，==最佳实践==
+    * `--restart=always`，总是重启
+    * `--restart=unless-stopped`，总是重启，除非人为停止，==最佳实践==
 
-
+​	
 
 * 伪终端
   * 不分配伪终端，无法接收用户输入，只能查看容器输出
@@ -885,31 +889,43 @@ docker run -it --name dc03 --volumes-from dc01 dc02 zzyy/centos
 
 ### 容器的网络模式
 
-#### bridge
+* bridge
 
-* 为每一个容器分配、设置IP等，并将容器连接到docker0
-* 默认是bridge模式，且IP不固定，每次启动停止后都有可能变化
+  * 为每一个容器分配、设置IP等，并将容器连接到docker0
 
-#### host
+  * 默认是bridge模式，且IP不固定，每次启动停止后都有可能变化
+  * 默认bridge模式下，没有DNS服务，所以不能通过容器名称相互访问
 
-* 容器不虚拟自己的网卡，使用宿主机的IP和端口，端口重复会递增
 
-#### none
+* host
+  * ==只支持Linux，其他系统无效==
+  * 容器不虚拟自己的网卡，使用宿主机的IP和端口，端口重复会递增
 
-* 容器有独立的Network namespace，但没有进行任何设置
+* none
+  * 容器有独立的Network namespace，但没有进行任何设置
 
-#### container
 
-* 容器不虚拟自己的网卡，而是和一个指定的容器共享IP和端口
-* 两个镜像暴露的端口相同，使用这种模式会导致冲突
-* 共享容器关闭后，网络也会消失
+* container
+
+  * 容器不虚拟自己的网卡，而是和一个指定的容器共享IP和端口
+
+  * 两个镜像暴露的端口相同，使用这种模式会导致冲突
+
+  * 共享容器关闭后，网络也会消失
+
 
 ```sh
-docker run --network:container:容器ID
-docker run --network:container:容器名称
+# 使用自定义网桥
+docker run -d --network my_network 镜像
+
+# 使用其他容器的网络
+docker run -d --network:container:容器ID 镜像
+docker run -d --network:container:容器名称 镜像
 ```
 
-#### 自定义网络
+
+
+### 容器使用自定义网络
 
 * 默认网络在同一网段都是通的，但是`ping 容器名`不通
 * 将容器加入同一自建网络后，可以`ping 容器名`
@@ -928,8 +944,6 @@ ping 容器名2
 # 容器2中测试
 ping 容器名1
 ```
-
-
 
 
 
@@ -969,16 +983,77 @@ docker network rm net_name
 
 ### 与宿主机共享网络
 
-* `--net host`参数是用来指定容器使用host模式的网络，即和宿主机共用一个Network Namespace，不会为容器创建独立的网络栈
+* `docker run --net host`参数是用来指定容器使用host模式的网络，即和宿主机共用一个Network Namespace，不会为容器创建独立的网络栈
 * 使用host模式的容器可以直接使用宿主机的IP地址和端口与外界通信，不需要进行NAT转换或端口映射，网络性能比较好，但是也会导致网络隔离性不好，容器之间和宿主机之间没有隔离，容易发生端口冲突
 * 使用host模式的容器适合一些对网络性能要求高或者需要访问宿主机上其他应用的场景，比如测试、监控、日志等
 
 
 
-```
-## 绑定udp端口，默认tcp
-docker run -d -p ip:port:docker_port/udp repo/image cmd
+### 连接容器间的网络，--link
 
+* 淘汰
+
+
+
+### 网桥端口映射，-p
+
+```sh
+# 小p，指定端口映射
+docker run -ti -d --name my-nginx -p 8088:80 docker.io/nginx
+
+# 大P，随机选择一个宿主机端口映射
+docker run -ti -d --name my-nginx2 -P docker.io/nginx
+```
+
+
+
+#### 查看端口映射
+
+```sh
+docker ps
+docker port 容器ID
+docker port 容器名称
+docker inspect 容器ID
+docker inspect 容器名称
+```
+
+
+
+#### 绑定指定宿主机IP映射
+
+* 不设置IP则默认绑定到`0.0.0.0:8888`
+
+```sh
+docker run -ti -d --name my-nginx3 -p 127.0.0.1:8888:80 docker.io/nginx 
+```
+
+
+
+#### 指定通信协议
+
+```sh
+docker run -ti -d --name my-nginx5 -p 8099:80/tcp docker.io/nginx
+docker run -ti -d --name my-nginx6 -p 192.168.10.214:8077:80/udp docker.io/nginx 
+```
+
+
+
+#### 多重绑定
+
+* 多次使用`-p`参数指定相同容器端口
+
+```sh
+docker run -ti -d --name my-nginx8 -p 192.168.10.214:7777:80 -p 127.0.0.1:7788:80 docker.io/nginx 
+```
+
+
+
+#### Dockerfile对映射的影响
+
+* Dockerfile中使用EXPOSE，那么外部只能映射这些指定的内部端口
+* Dockerfile中没有使用EXPOSE，那么外部可以随便映射内部端口
+
+```
 
 # 配置DNS
 /etc/docker/daemon.json
@@ -1216,6 +1291,12 @@ docker history image_ID
   * docker-compose.yml
   * 服务，service，即容器
   * 工程，project，即docker-compose.yml定义的完整的业务单元
+* `docker stack deploy`区别和联系
+  * docker-compose是一个Python项目，用于解析docker-compose.yml文件，并使用Docker API来操作容器。docker-compose更适合于开发和测试场景，因为它支持build指令，可以现场创建镜像
+  * docker stack deploy是一个Docker引擎内置的命令，用于部署Swarm集群中的服务。docker stack deploy更适合于生产部署场景，因为它支持deploy指令，可以指定服务的副本数、资源限制、重启策略等
+  * docker-compose和docker stack deploy都可以处理版本号为3的docker-compose.yml文件，但docker stack deploy不支持版本号为2的文件。另外，docker stack deploy会忽略一些Swarm场景下不支持的配置指令，如links和network_mode
+  * 
+
 
 
 
@@ -1487,12 +1568,86 @@ python my-script.py
 
 
 
+#### 快速启动
+
+* `--name mysql1 `，指定名称
+* `-e MYSQL_ROOT_PASSWORD=123456`，指定环境变量
+* `-d`，后台启动
+
+```sh
+docker run 
+--name mysql1 
+-e MYSQL_ROOT_PASSWORD=123456 
+-d 
+mysql
+```
+
+
+
+#### Oracle Linux 镜像安装软件
+
+* mysql使用oracle linux作为基础镜像，没有使用yum或apt作为包管理工具
+* 可以使用`microdnf`安装软件
+
+
+
+#### 最佳实践
+
+* `--restart=unless-stopped`，总是重启，除非人为停止
+* `--network my_network`，使用自定义网络，网络名称`my_network`，容器间可以使用容器名称相互访问
+
+```sh
+# 创建自定义网桥，可以通过容器名称相互访问
+docker network create my_network
+
+# 启动
+docker run 
+--name mysql1 
+-e MYSQL_ROOT_PASSWORD=123456
+-d 
+--restart=unless-stopped
+--network my_network
+mysql
+```
+
+
+
+#### 使用容器内的默认客户端
+
+* 新建容器访问自定义网络
+  * 必须使用新建的自定义网络才能使用容器名称相互访问
+
+```sh
+docker run -it --rm --network my_network  mysql mysql -h容器名称 -u用户名 -p
+docker run -it --rm --network my_network  mysql mysql -h 容器IP -u用户名 -p
+```
+
+* 新建容器访通过网桥路由到宿主机外部网络
+
+```sh
+docker run -it --rm mysql mysql -h外部网址 -u用户名 -p
+docker run -it --rm mysql mysql -h 外部IP -u用户名 -p
+```
+
+
+
 #### 配置项
 ```sh
-# 密码环境变量（三选一） 
+# 指定密码
 MYSQL_ROOT_PASSWORD=passwd
+
+# 允许空密码
 MYSQL_ALLOW_EMPTY_PASSWORD=1
+
+# 随机密码，可从日志中获取
 MYSQL_RANDOM_ROOT_PASSWORD=1
+
+# 启动时创建的数据库名称
+MYSQL_DATABASE=mydb
+
+# 启动时创建的用户和密码
+MYSQL_USER=username
+MYSQL_PASSWORD=password
 
 # 目录配置
 /etc/mysql/conf.d # 用户自定义配置
@@ -1508,11 +1663,11 @@ MYSQL_RANDOM_ROOT_PASSWORD=1
 
 ```
 
-#### 启动并登陆
-```sh
-# 拉取
-docker pull mysql
 
+
+#### 启动并登陆
+
+```sh
 # 启动
 docker run 
     -p 8888:3306 
@@ -1695,6 +1850,14 @@ show master status \G;
 
 
 
+### adminer
+
+```sh
+docker run --name adminer -p 3305:8080 -d --restart=unless-stopped adminer
+```
+
+![image-20230925122904347](.gitbook/assets/image-20230925122904347.png)
+
 
 
 ### redis
@@ -1865,6 +2028,43 @@ redis-cli --cluster reshared IP:6381
 # 删除主机7
 docker exec -it redis-node-1 /bin/bash
 redis-cli --cluster del-node IP:6387 6387id
+```
+
+
+
+### postgresql
+
+
+
+
+
+### pgadmin
+
+
+
+
+
+### rabbitmq
+
+* 默认端口5672
+* 默认管理端口15672
+* 默认镜像不带管理界面，管理界面需要使用标签`rabbitmq:3-management`
+* 默认vhost是`/`r
+* 管理界面密码可以通过环境变量配置，默认是`guest/guest`
+
+```sh
+docker run --name rabbitmq -p 5672:5672 -p 15672:15672 -d --restart=unless-stopped rabbitmq:3-management
+
+# VHOST 环境变量
+RABBITMQ_DEFAULT_VHOST=my_vhost
+```
+
+
+
+### httpbin
+
+```sh
+docker run -d --restart=unless-stopped -p 5555:80 kong/httpbin
 ```
 
 

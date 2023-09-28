@@ -33,6 +33,7 @@ netsh interface portproxy add v4tov6 \
 ## 查看nat映射列表
 ```powershell
 netsh interface portproxy show v4tov4
+netsh interface portproxy show v4tov6
 ```
 
 ## 删除nat映射
