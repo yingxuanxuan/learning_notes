@@ -16,3 +16,4 @@
 * [icecream](icecream.md)
 * [loguru](loguru.md)
 * [attrs](attrs.md)
+* [cattrs](cattrs.md)
