@@ -1,128 +1,131 @@
 # MySQL
 
 
-## 入门
 
-### 导图
-
-![MySQL高级特性篇技术图谱_尚硅谷-宋红康](C:/Users/%E8%8B%B1%E6%97%8B/AppData/Local/Temp/360zip$Pic/360$0/MySQL%E9%AB%98%E7%BA%A7%E7%89%B9%E6%80%A7%E7%AF%87%E6%8A%80%E6%9C%AF%E5%9B%BE%E8%B0%B1_%E5%B0%9A%E7%A1%85%E8%B0%B7-%E5%AE%8B%E7%BA%A2%E5%BA%B7.png)
+## 数据库入门
 
 
 
 ### 概念
 
-* 数据持久化
-* 易于管理、结构化查询
-* DB, database数据库
-* DBMS，Database Management System，数据库软件
-* SQL, Structure Query Language, 结构化查询语言
-* DCL，Data Control Language，权限控制
-* DDL，Data Define Language，数据定义语言
-* DML，Data Manipaulation Language，数据操纵语言
+* 为什么使用数据库
+  * 数据持久化，persistence，把数据保存在可掉电式存储设备中供之后使用
+  * 易于管理、结构化查询
 
-### 版本
 
-* 主流：Mysql5.7
-* 推广：Mysql8.0.34
-* 版本选择:  <https://zhuanlan.zhihu.com/p/144457223>
+
+
+* 数据库相关概念
+  * DB，database，数据库
+    * 狭义数据库指，按特定格式保存数据的文件
+
+  * DBMS，Database Management System，数据库管理系统
+    * 是一种操纵和管理数据库的大型软件，用于建立、使用、维护数据库，对数据库进行统一管理和控制，用户通过数据库管理系统访问数据库总表内的数据
+
+  * SQL，Structure Query Language，结构化查询语言
+  * DCL，Data Control Language，权限控制
+  * DDL，Data Define Language，数据定义语言
+  * DML，Data Manipaulation Language，数据操纵语言
+
+
+
+
+### 版本选择
+
+* 纵向版本
+  * 主流：Mysql5.7
+  * 推广：Mysql8.0.34
+  * 版本选择:  <https://zhuanlan.zhihu.com/p/144457223>
+
+
+
+* 横向版本
+  * MySQL Community Server 社区版本
+  * MySQL Enterprise Edition 企业版本
+  * MySQL Cluster 集群版本，开源免费
+  * MySQL Cluster CGE 高级集群版
+
+
+
+### 客户端
+
+* 官方客户端
+
+  * MySQL Workbench，GUI客户端
+
+  * MySQL Workbench OSS，社区版
+
+  * MySQL WorkbenchSE，企业版
+
+* 客户端比较
+
+  * MySQL Workbench
+    * 支持数据建模，ER图
+  * phpMyAdmin
+    * 支持
+  * Navicat Preminum
+    * 多数据库通用
+    * 收费
+  * SQLyog
+    * 收费
+  * dbeaver
+    * 需要安装Java
+
+
+
+![MySQL :: MySQL Workbench](.gitbook/assets/mysql_wb_performance_dashboard_win.png)
+
+
+
+![5 MySQL Workbench Alternatives and Competitors](.gitbook/assets/mysql-workbench-389-2.jpg)
+
+
 
 ### docker安装
 
 ```bash
-docker run --name mysql8 -e MYSQL_ROOT_PASSWORD=123456 -d mysql
+docker run --name mysql8 -e MYSQL_ROOT_PASSWORD=123456 -d  -p 3306:3306 mysql
 ```
 
+
+
 ### Linux rpm安装
+
 ```bash
 # 下载yum源配置
 wget http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
+
 # 安装yum源
 rpm -Uvh *.rpm
+
 # 安装mysql
 sudo yum install mysql-community-server
 ```
 
-### 本地配置
-```bash
-# 设置密码
-/user/bin/mysqladmin -u root password 'new-password'
-# 安全设置
-mysql_secure_installation
-# 配置文件位置
-/etc/my.cnf
-# 数据文件位置
-/var/lib/mysql/
-# 修改默认存储位置
-[mysqld]
-datadir=/var/lib/mysql
-# 修改默认日志位置
-[mysqld_safe]
-log-error=/var/log/mysqld.log
-# 修改数据库默认编码
-character set 默认: latin1
-collation 默认: latin1_swedish_ci
-show character set; #显示所有字符集
-show variables like 'character_set%' /  '%char%'; #显示环境变量
-show variables like 'collation%';
-create database [name]    default character set utf8    default collate utf8_general_ci;
-alter database [name] character set utf8 collate utf8_general_ci;
-# 修改默认编码配置文件
-/etc/my.cnf
-[client]
-default-character-set=utf8/utf8mb4(>5.5.3 支持emoji)
-[mysqld]
-default-storage-engine = INNODB
-character-set-server = utf8/utf8mb4(>5.5.3 支持emoji)
-collation-server = utf8_general_ci/utf8mb4_general_ci(>5.5.3 支持emoji)
 
-[mysqld]
-init-connect='SET NAMES utf8'
-权限生效：
-flush privileges;
-创建用户：
-create user yingxuanxuan identified by "password";
-删除用户：
-drop user yingxuanxuan;
-删除HOST
-drop user 'jeffrey'@'localhost';
-重命名用户：
-rename user yingxuanxuan to yingxuanxuan2；
-修改当前用户密码：
-set password = password("passwd");
-修改指定用户密码：
-set password for username = password("passwd");
-权限层级：
-1.全局
-2.数据库
-3.表
-4.列
-5.子程序
-grant all privileges on 数据库.表 to 用户名@主机 identified by 密码；
-删除权限：
-revoke all privileges from username;
 
-备份：
-mysqlddump -u root -p 数据库名称 > 备份文件.sql
+### CentOS yum安装
 
-恢复:
-mysql -u root -p 数据库名称 < 备份文件.sql
-
-查看权限：
-show grants for root@'localhost';
-
-列显示查询结果：
-select * from mysql.user where user='test'and host='127.0.0.1'\G;
-
-结果导出到文件：
-select * from xxx INTO  OUTFILE 'xxx/xx'
-
-查看数据引擎：
-show engines;
-MyISAM不支持事务，InnoDB支持事务。
-alter table person type=INNODB;
+```sh
 ```
 
-### 启动
+
+
+### 查看版本
+
+```sh
+# 查看数据库版本
+
+mysql --version;
+mysql -V;
+
+# select version();
+```
+
+
+
+### 启停服务
+
 ```bash
 # centos6
 service mysqld start
@@ -133,11 +136,22 @@ service mysqld stop
 systemctl start mysqld 
 systemctl status mysqld 
 systemctl stop mysqld 
+
+# windows
+net start mysql80
+net stop mysql80
 ```
 
-### 连接
+
+
+### 命令行连接
+
+* `-h`，服务地址，不指定为localhost
+* `-P`，服务端口，不指定为3306
+* `-u`，登录用户，不指定为root
+* `-p`，登录密码，留空为交互式输入，在命令行中输入会产生warning
+
 ```bash
-# -p密码不能有空格
 mysql -h host -P 3306 -u root -ppasswd
 
 # 退出
@@ -145,7 +159,10 @@ exit
 # ctrl + c
 ```
 
-### 远程连接
+
+
+### 远程连接权限配置
+
 ```mysql
 # < mysql 8.0 允许远程连接
 GRANT ALL PRIVILEGES ON *.* TO `root`@`%` IDENTIFIED BY `passwd` with grant option;
@@ -155,13 +172,216 @@ CREATE USER 'root'@'%' IDENTIFIED BY 'passwd';
 GRANT ALL ON *.* TO 'root'@'%'; 
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'passwd';
 FLUSH PRIVILEGES;
+```
+
+
+
+### 配置文件
+
+
+```ini
+# 配置文件位置
+/etc/my.cnf
+
+# 数据文件位置
+/var/lib/mysql/
+
+# 修改默认存储位置
+[mysqld]
+datadir=/var/lib/mysql
+
+# 修改默认日志位置
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+
+# 修改数据库默认编码
+character set atin1;
+collation latin1_swedish_ci;
+```
+
+
+
+### 默认表
+
+* information_schema，表信息，系统信息，权限
+* mysql，运行信息
+* performance_schema
+* sys,
+
+
+
+### 字符集配置
+
+* 一个数据表有两个字符相关配置
+  * character，或character set，字符集，即支持的编码规则
+  * collation，字符之间的排列规则
+
+
+
+* 默认字符集
+
+  * mysql5.7以前，默认字符集是`Latin1`，只支持欧洲语言字符集
+
+  * mysql8.0及之后，默认的字符集为`utf8mb4`，支持4字节UTF-8编码的字符集，能够表示世界上几乎所有的字符
+
+
+
+* 表和字段的字符集
+  * mysql支持给表设置默认字符集和排序规则
+  * mysql支持给字段指定字符集和排序规则，但一般不建议这么做
+  * 可以修改表的默认字符集并转换所有列，但一般不建议这么做
+
+
+
+```mysql
+# 显示所有字符集
+show character set;
+
+# 显示数据库环境变量
+show variables like 'character_set%' / '%char%';
+show variables like 'collation%';
+
+# 创建数据库时指定字符集
+create database 数据库名 
+  default character set utf8
+  default collate utf8_general_ci;
+
+# 修改数据库字符集
+alter database 数据库名 
+  character set utf8 
+  collate utf8_general_ci;
+  
 
 ```
 
-### 常见命令
+
+
+* 运行时修改字符集（不建议）
+
+```mysql
+# 修改客户端使用的字符集
+set character_set_client=utf8;
+
+# 修改当前连接使用的字符集
+set character_set_connection=utf8;
+
+# 修改返回给客户端的结果集的字符集
+set character_set_results=utf8;
+
+# 修改当前数据库的默认字符集
+set character_set_database=utf8;
+
+# 修改当前数据库的默认校对规则
+set collation_database=utf8_general_ci;
+```
+
+
+
+* 配置文件修改字符集
+
+```ini
+# /etc/my.cnf
+
+# utf8mb4 是什么
+
+# utf8扩展
+# 5.5.3起支持
+# 支持emoji
+
+# 客户端配置
+# 或 [mysql]
+[client]
+default-character-set=utf8mb4
+
+# 服务端配置
+[mysqld]
+default-storage-engine = INNODB
+character-set-server = utf8mb4
+collation-server = utf8mb4_general_ci
+
+[mysqld]
+init-connect='SET NAMES utf8'
+```
+
+
+
+### 常用管理命令
+
+```sh
+# 设置密码
+/user/bin/mysqladmin -u root password 'new-password'
+
+# 安全初始化
+mysql_secure_installation
+
+# 创建用户
+create user yingxuanxuan identified by "password";
+
+# 删除用户
+drop user yingxuanxuan;
+
+# 删除HOST
+drop user 'jeffrey'@'localhost';
+
+# 重命名用户
+rename user yingxuanxuan to yingxuanxuan2；
+
+# 修改当前用户密码
+set password = password("passwd");
+
+# 修改指定用户密码：
+set password for username = password("passwd");
+
+# 修改权限
+
+# 权限层级：
+# 1.全局
+# 2.数据库
+# 3.表
+# 4.列
+# 5.子程序
+
+grant all privileges on 数据库.表 to 用户名@主机 identified by 密码；
+
+# 删除权限
+revoke all privileges from username;
+
+# 生效权限
+flush privileges;
+
+# 备份
+mysqlddump -u root -p 数据库名称 > 备份文件.sql
+
+# 恢复
+mysql -u root -p 数据库名称 < 备份文件.sql
+
+# 查看权限
+show grants for root@'localhost';
+
+# 列显示查询结果 \G
+select * from mysql.user where user='test'and host='127.0.0.1'\G;
+
+# 结果导出到文件：
+select * from xxx INTO  OUTFILE 'xxx/xx'
+
+# 查看数据引擎：
+show engines;
+
+# 修改数据表引擎
+# MyISAM不支持事务，InnoDB支持事务。
+alter table person type=INNODB;
+```
+
+
+
+### 常见查询命令
+
 ```mysql
 # 查看所有数据库
 show databases;
+
+# 创建数据库
+create database test;
 
 # 使用数据库
 use test;
@@ -170,31 +390,103 @@ use test;
 show tables;
 show tables from db;
 
-# 查看数据库版本
-select version();
-mysql --version;
-mysql -V;
-
-# 创建数据库
-create database test;
-
 # 查看表结构
 desc table;
 ```
 
-### 语法规范
+
+
+## SQL入门
+
+
+
+### 概念
+
+* SQL，Structured Query Language，结构化查询语言
+* 是访问和处理数据库的标准计算机语言
+* 由IBM上世纪70年代开发出来
+* 美国国家标准化组织，ANSI标准
+  * SQL-86
+  * SQL-89
+  * SQL-92
+  * SQL-99
+* 各厂商数据库的SQL在细节上存在兼容性问题
+
+
+
+### 分类
+
+* 根据功能，将SQL语言分为三类，DDL、DML、DCL
+* DDL，Data Definition Languages，数据定义语言
+  * 定义数据库、表、视图、索引等
+    * CREATE
+  * 创建、删除、修改数据库和数据表
+    * ALTER
+    * DROP
+    * RENAME
+    * TRUNCATE
+* DML，Data Manipulation Language，数据操作语言
+  * 增删改查
+    * INSERT
+    * DELETE
+    * UPDATE
+    * SELECT
+* DCL，Data Control Language，数据控制语言
+  * 定义数据库、表、字段、用户的访问权限和安全级别
+    * GRANT
+    * REVOKE
+  * 事务提交、回滚
+    * COMMIT
+    * ROLLBACK
+    * SAVEPOINT
+* DQL，Data Query Language，数据查询语言
+  * 由于数据查询比较重要，查询可能单独拎出来作为DQL
+* TCL，Transaction Control Language，事务控制语言
+  * COMMIT、ROLLBACK
+
+
+
+### 语法规则和规范
+
+* SQL可以卸载一行或多行。为了提高可读性，各子句分行写，必要时使用缩进。
+* 命令以`;`或`\g`或`\G`结束
+* 关键字不能被缩写也不能分行
+* 必须保证所有的括号、单引号、双引号成对
+* 必须使用英文半角输入方式
+* 字符串类型和日期类型的数据可以使用单引号表示
+* 列的别名尽量使用双引号，不建议省略as
 * 不区分大小写，建议关键字大写
-* 命令用分号结尾
-* 可以换行
-* `#`开头单行注释
-* `--`开头单行注释
-* /* 多行注释 */
+* 注释
+  * `#`开头，单行注释
+  * `--`开头，单行注释
+  * `/* */`包裹，多行注释 
+
 * 字符和日期必须使用单引号
 * 字符串必须使用单引号
 * 数字可以使用单引号
 
+
+
+## 关系型数据库设计规范
+
+* E-R，entity-relationship，实体-联系模型
+  * 实体集，class，对应数据库中的一个表，table
+  * 实体，instance，对应数据表中一行，row，也称为记录，record
+  * 属性，attribute，对应数据表中一列，column，也称为一个字段，field
+  * 联系集
+* 表的关联关系，relationship
+  * 一对一，one-to-one
+  * 一对多，one-to-many
+  * 多对多，many-to-many
+  * 自关联，self reference
+
+
+
 ## 数据查询语言，DQL
+
 * DQL, Data Query Language 
+
+
 
 ### 基础查询 select
 
@@ -1558,7 +1850,14 @@ SHOW VARIABLES LIKE '%auto_increment%';
 SET auto_increment_increment=3;
 ```
 
-## TCL, Transaction Contral Language
+
+
+## 事务控制语言，TCL
+
+* TCL，Transaction Contral Language
+
+
+
 ### 存储引擎
 * innodb
 * myisam # 5.5之前，不支持事务

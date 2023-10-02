@@ -1564,7 +1564,7 @@ python my-script.py
 ### mysql
 
 * 编码
-  * 默认编码是拉丁、要修改为utf8mb4
+  * mysql5.7及以前默认编码是拉丁、要修改为utf8mb4
 
 
 
@@ -1573,13 +1573,33 @@ python my-script.py
 * `--name mysql1 `，指定名称
 * `-e MYSQL_ROOT_PASSWORD=123456`，指定环境变量
 * `-d`，后台启动
+* `--restart=unless-stopped`，总是重启，除非人为停止
+* `--network my_network`，使用自定义网络，网络名称`my_network`，容器间可以使用容器名称相互访问
+* `--character-set-server=utf8mb4`，给mysql进程设置字符集
+* `--collation-server=utf8mb4_unicode_ci`，给mysql进程设置字符集顺序
 
 ```sh
+# 创建自定义网桥，可以通过容器名称相互访问
+docker network create my_network
+
+# 运行容器
 docker run 
---name mysql1 
+--name mysql8
 -e MYSQL_ROOT_PASSWORD=123456 
 -d 
+-p 3306:3306
+--restart=unless-stopped
 mysql
+--character-set-server=utf8mb4 
+--collation-server=utf8mb4_unicode_ci
+
+# 运行mysql8
+# 默认utf8mb4字符集
+docker run --name mysql8 -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d --restart=unless-stopped mysql
+
+# 运行mysql5
+docker run --name mysql5 -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d --restart=unless-stopped mysql:5 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
 ```
 
 
@@ -1588,27 +1608,6 @@ mysql
 
 * mysql使用oracle linux作为基础镜像，没有使用yum或apt作为包管理工具
 * 可以使用`microdnf`安装软件
-
-
-
-#### 最佳实践
-
-* `--restart=unless-stopped`，总是重启，除非人为停止
-* `--network my_network`，使用自定义网络，网络名称`my_network`，容器间可以使用容器名称相互访问
-
-```sh
-# 创建自定义网桥，可以通过容器名称相互访问
-docker network create my_network
-
-# 启动
-docker run 
---name mysql1 
--e MYSQL_ROOT_PASSWORD=123456
--d 
---restart=unless-stopped
---network my_network
-mysql
-```
 
 
 
@@ -1669,15 +1668,17 @@ MYSQL_PASSWORD=password
 
 ```sh
 # 启动
-docker run 
-    -p 8888:3306 
-    --privileged=true
-    --name mysql
-    -v /var/mysql/conf:/etc/mysql/conf.d
-    -v /var/mysql/logs:/logs
-    -v /var/mysql/data:/var/lib/mysql
-    -e MYSQL_ROOT_PASSWORD=passwd
-    -d mysql
+docker run
+-p 8888:3306 
+--privileged=true
+--name mysql
+--restart=unless-stopped
+-v /var/mysql/conf:/etc/mysql/conf.d
+-v /var/mysql/logs:/logs
+-v /var/mysql/data:/var/lib/mysql
+-e MYSQL_ROOT_PASSWORD=passwd
+-d 
+mysql
     
 # 执行命令行
 docker exec -it container_Id /bin/bash
@@ -1846,6 +1847,26 @@ change master to master_host='IP', master_user='slave', master_password='123456'
 
 ```mysql
 show master status \G;
+```
+
+
+
+### mysql-workbench
+
+* 默认端口
+  * http，3000
+  * https，3001
+
+```sh
+docker pull linuxserver/mysql-workbench
+
+docker run
+--name mysql-workbench
+-d
+-p 3000:3000
+linuxserver/mysql-workbench
+
+docker run -d --name mysql-workbench -p 3000:3000 linuxserver/mysql-workbench
 ```
 
 
@@ -2032,6 +2053,18 @@ redis-cli --cluster del-node IP:6387 6387id
 
 
 
+### redisinsight
+
+```sh
+docker pull redislabs/redisinsight
+```
+
+
+
+
+
+
+
 ### postgresql
 
 
@@ -2065,6 +2098,30 @@ RABBITMQ_DEFAULT_VHOST=my_vhost
 
 ```sh
 docker run -d --restart=unless-stopped -p 5555:80 kong/httpbin
+```
+
+
+
+### 禅道
+
+
+
+![img](.gitbook/assets/130818-6ac581.png)
+
+
+
+```sh
+sudo docker pull hub.zentao.net/app/zentao:18.5 
+
+sudo docker run \
+--name [容器名] \
+-p [主机端口]:80 \
+--network=[网络驱动名] \
+--ip [容器IP] \
+--mac-address [mac地址] \
+-v [主机禅道目录]:/data \
+-e MYSQL_INTERNAL=true \
+-d hub.zentao.net/app/zentao:[镜像标签] 
 ```
 
 

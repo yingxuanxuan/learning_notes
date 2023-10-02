@@ -1,6 +1,8 @@
 # Python
 
-## Markdown示例
+
+
+## Markdown说明
 
 * 1
 * 1
@@ -28,13 +30,42 @@
 
 
 
-## 安装与设置
+## 简介
+
+
+
+### 什么是
+
+* Python是一种高级语言，C语言更接近机器逻辑，Python更接近人的思维
+* Python是解释型语言，执行时不用提前编译，所以执行速度慢，效率低
+* Python是著名的“龟叔”Guido van Rossum在1989年圣诞节期间，为了打发无聊的圣诞节而编写的一个编程语言，第一个版本发行于1991年
+* Python内建大量库，被称为“batteries included”，减少重复工作
+* Python社区还构建Pypi，支持大量第三方库，减少重复开发
+
+
+
+### 常见Python解释器
+
+* CPython，官方、默认C语言解释器
+* IPython，交互式解释器，只是一个CPython外挂，提供额外的交互功能和插件
+* PyPy，JIT动态编译解释器，将多次循环的代码编译为机器码
+* cython，将Python代码编译为机器码运行
+* Jython，Python的Java运行环境解释器
+* IronPython，Python的.Net运行环境解释器
+
+
+
+## 安装设置
+
+
 
 ### Windows下安装Python
+
 * 下载地址：<https://www.python.org/downloads/> 
 * 安装注意事项
   * 勾选“Add Python 3.8 to PATH”添加环境变量，否则需要手动添加
   * 勾选“Install launcher for all user"为所有用户安装，否则会安装到用户目录
+
 
 
 ### Linux编译安装Python
@@ -75,13 +106,7 @@ ln -s /usr/Python-3.8.0/bin/python3 /usr/bin/python3
 ln -s /usr/Python-3.8.0/bin/pip3 /usr/bin/pip3
 ```
 
-### 常见Python解释器
-* CPython，官方、默认C语言解释器
-* IPython，交互式解释器，只是一个CPython外挂，提供额外的交互功能和插件
-* PyPy，JIT动态编译解释器，将多次循环的代码编译为机器码
-* cython，将Python代码编译为机器码运行
-* Jython，Python的Java运行环境解释器
-* IronPython，Python的.Net运行环境解释器
+
 
 ### 版本
 * windows可以同时安装python2，python3
@@ -92,6 +117,8 @@ ln -s /usr/Python-3.8.0/bin/pip3 /usr/bin/pip3
 * 使用`sys.version`打印版本
 * 使用`sys.version_info`判断版本
 * 操作系统环境下使用命令`python --version`获取版本号
+
+
 
 ### easy_install
 
@@ -104,14 +131,10 @@ easy_install "<package_name>==<version>"
 easy_install -U "<package_name>=<version>"
 ```
 
-#### easy_install 镜像加速
-```bash
-echo '[easy_install]  
-index_url=http://mirrors.aliyun.com/pypi/simple/  
-pip:~/.pip/pip.conf' > ~/.pydistutils.cfg  
-```
+
 
 ### pip
+
 ```shell
 # 低版本安装pip
 easy_install pip
@@ -157,19 +180,38 @@ pip install numpy -i https://pypi.tuna.tsinghua.edu.cn/simple --trusted-host pyp
 pip install --upgrade package_name==version
 ```
 
-#### setuptools
-* setuptools是python模块打包工具，可以生成egg包用于安装或发布到PyPI
-* easy_install实际上是setuptools中自带的命令
+
+
+* setuptools
+
+  * setuptools是python模块打包工具，可以生成egg包用于安装或发布到PyPI
+
+  * easy_install实际上是setuptools中自带的命令
+
 
 ```sh
 sudo python setup.py install
 ```
 
 
-#### 修改pip到国内镜像库
 
-* 配置文件修改pip配置
-* 路径`~/pip/pip.ini`
+### 镜像加速
+
+* easy_install镜像加速
+
+```bash
+echo '[easy_install]  
+index_url=http://mirrors.aliyun.com/pypi/simple/  
+pip:~/.pip/pip.conf' > ~/.pydistutils.cfg  
+```
+
+
+
+* pip镜像加速
+  * 配置文件修改pip配置，路径`~/pip/pip.ini`
+  * 命令修改pip配置，`pip config`
+
+
 
 ```ini
 [global]
@@ -179,7 +221,8 @@ index-url=http://mirrors.aliyun.com/pypi/simple/
 trusted-host=mirrors.aliyun.com
 ```
 
-* 命令修改pip配置
+
+
 ```bash
 pip config --global list
 pip config --global get global.index-url
@@ -191,26 +234,24 @@ pip config --user list
 pip config --site list
 ```
 
-### 预编译
-* python不支持预编译
-* 使用`__debug__`标记，在调用`python -O -OO` 时，`__debug__`为`False`，解释器会忽略`if __debug__`的表达式
 
-### 编译
 
-```sh
-import py_compile # 编译文件
-import compileall # 编译目录
-python -O -m py_compile file.py
-```
+### 虚拟环境 venv
 
-### virtualenv和venv
+* 对比virtualenv
 
-* virtualenv和venv用来创建独立的 Python 虚拟环境的工具，可以将每个项目与其他项目独立开来，互不影响，解决了依赖包版本冲突的问题
-* venv 不是 virtualenv 发展而来的，而是 Python 3.3 之后标准库内置的一个新模块，用来替代 virtualenv。venv 的设计参考了 virtualenv 的用法，但是简化了一些功能，比如不支持指定 Python 版本和继承父环境的包
-* virtualenv支持Python2和Python3，而 venv 只支持 Python 3.3 以上版本
-* venv 是 Python 标准库内置的模块，而 virtualenv 需要额外安装
+  * virtualenv和venv用来创建独立的 Python 虚拟环境的工具，可以将每个项目与其他项目独立开来，互不影响，解决了依赖包版本冲突的问题
 
-#### virtualenv
+  * venv 不是 virtualenv 发展而来的，而是 Python 3.3 之后标准库内置的一个新模块，用来替代 virtualenv。venv 的设计参考了 virtualenv 的用法，但是简化了一些功能，比如不支持指定 Python 版本和继承父环境的包
+
+  * virtualenv支持Python2和Python3，而 venv 只支持 Python 3.3 以上版本
+
+  * venv 是 Python 标准库内置的模块，而 virtualenv 需要额外安装
+
+
+
+
+* virtualenv
 
 ```bash
 # 安装vitualenv
@@ -230,7 +271,9 @@ source py34env/bin/activate
 deactivate
 ```
 
-#### venv
+
+
+* venv
 
 ```sh
 # 创建虚拟环境
@@ -259,75 +302,103 @@ pip freeze > requirements.txt
 pip install -r requirements.txt
 ```
 
-### 脚本标识
-```python
-#!/usr/bin/env python3    # linux下选择执行python的版本
-#!/usr/bin/env python3.5  # linux下选择执行python的版本
-# -*- coding: utf-8 -*-   # python2下指定coding编码，-*-仅为了美观
+
+
+### VSCode Python 配置
+
+
+
+### VSCode 远程运行
+
+* 即交叉编译
+
+* 步骤
+  * 安装Chinese插件
+  * 安装remote-ssh插件
+  * 配置Host，User即可
+  * 输入密码登陆后，可以远程运行、编辑远程文件、远程调试
+  * 需要在远端安装Python插件，Pylint插件
+
+
+
+### VSCode Docker运行
+
+
+
+### Windows多版本
+
+* 多版本（大版本，如python2.7）可以同时安装，有py工具可以选择使用版本
+* 同一版本会覆盖安装（大版本，如python2.7.9覆盖python2.7.6）
+
+```py
+# 设置默认的Python版本为3.9
+set PY_PYTHON=3.9
+
+# 使用默认的Python版本
+py script.py
+
+# 使用指定的Python版本
+py -2 script.py # Python 2
+py -3 script.py # Python 3
+py -3.9 script.py # Python 3.9
 ```
 
-### VSCode远程运行、交叉编译
-1. 安装Chinese插件
-2. 安装remote-ssh插件
-3. 配置Host，User即可
-4. 输入密码登陆后，可以远程运行、编辑远程文件、远程调试
-5. 需要在远端安装Python插件，Pylint插件
-
-## 基础入门
-
-* Python是一种高级语言，C语言更接近机器逻辑，Python更接近人的思维
-* Python是解释型语言，执行时不用提前编译，所以执行速度慢，效率低
-* Python是著名的“龟叔”Guido van Rossum在1989年圣诞节期间，为了打发无聊的圣诞节而编写的一个编程语言，第一个版本发行于1991年
-* Python内建大量库，被称为“batteries included”，减少重复工作
-* Python社区还构建Pypi，支持大量第三方库，减少重复开发
 
 
-### 语言特性
-* 大小写敏感，大小视为不同变量  
-* 语句以冒号`:`结尾时，所有连续后行缩进四个空格视为一个代码块  
-* 缩进统一规范为4个空格符号
+### Linux多版本
 
-### 输入输出
-```python
-# 输出原型
-# print(*objects, sep=' ', end='\n', file=None, flush=False)
-# file=None 时输出到 sys.stdout
+* pyenv，<https://github.com/pyenv/pyenv>，可以设置当前默认版本，可以安装多个版本的python
+* pyenv切换默认版本python和pip都会切换
 
-# 输出示例
-print('a')
-print('a', 'b') # 每个逗号会输出一个空格
-print('a', 'b', sep=';') # a;b （默认为空格）
-print('a', 'b', end=';') # a b;（默认为\n，替换后不换行）
+![Terminal output example](.gitbook/assets/terminal_output.png)
 
-# 输入原型
-x = input()
-x = input("提示信息")
+```sh
+# 设置全局默认python版本
+pyenv global 3.10
 
-# 暂停屏幕，避免cmd关闭
-os.system("pause")
+# 设置当前目录（及子目录）python版本
+pyenv local 3.10
+
+# 设置的大浪前shell会话默认python版本
+pyenv shell 3.10
+
+# 设置默认版本为系统版本可以使用system关键字
+pyenv global system
+
+# 列出所有可安装python版本
+pyenv intall -l
+
+# 安装其他版本的python
+pyenv intall 3.10.4
+
+# 卸载版本
+pyenv uninstall 3.10.4
 ```
 
-### 注释
-```python
-# 行尾注释
 
-'单行注释（单引号）'
-"单行注释（双引号）"
 
-'''
-多行注释（三个单引号）
-'''
 
-"""
-多行注释（三个双引号）
-"""
 
+## 编译打包
+
+
+
+### 预编译
+
+* python不支持预编译
+* 使用`__debug__`标记，在调用`python -O -OO` 时，`__debug__`为`False`，解释器会忽略`if __debug__`的表达式
+
+
+
+### 编译
+
+```sh
+import py_compile # 编译文件
+import compileall # 编译目录
+python -O -m py_compile file.py
 ```
 
-### 获取帮助，help(obj)，dir(obj)
 
-* help显示帮助信息
-* dir列出对象的属性和方法
 
 ### 导出文档、pydoc
 
@@ -336,6 +407,8 @@ os.system("pause")
 
 * pydoc可以导出py注释为纯文本
 * pydoc可以导出py注释为html
+
+
 
 #### pydoc服务器
 
@@ -349,6 +422,8 @@ python3 -m pydoc -p 端口号
 # 自动选择端口
 python3 -m pydoc -p 端口号
 ```
+
+
 
 #### pydoc导出文档
 
@@ -364,6 +439,8 @@ python3 -m pydoc doc.txt
 python3 -m pydoc -w pythondir
 python3 -m pydoc -w pythonfile
 ```
+
+
 
 #### pydoc导出文档示例
 
@@ -445,6 +522,80 @@ FILE
 html
 
 ![在这里插入图片描述](.gitbook/assets/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L21vdWRheQ==,size_16,color_FFFFFF,t_70.png)
+
+
+
+
+
+## 基础入门
+
+
+
+### 语言特性
+
+* 大小写敏感，大小视为不同变量  
+* 语句以冒号`:`结尾时，所有连续后行缩进四个空格视为一个代码块  
+* 缩进统一规范为4个空格符号
+
+
+
+### 脚本标识
+
+```python
+#!/usr/bin/env python3    # linux下选择执行python的版本
+#!/usr/bin/env python3.5  # linux下选择执行python的版本
+# -*- coding: utf-8 -*-   # python2下指定coding编码，-*-仅为了美观
+```
+
+
+
+### 输入输出
+
+```python
+# 输出原型
+# print(*objects, sep=' ', end='\n', file=None, flush=False)
+# file=None 时输出到 sys.stdout
+
+# 输出示例
+print('a')
+print('a', 'b') # 每个逗号会输出一个空格
+print('a', 'b', sep=';') # a;b （默认为空格）
+print('a', 'b', end=';') # a b;（默认为\n，替换后不换行）
+
+# 输入原型
+x = input()
+x = input("提示信息")
+
+# 暂停屏幕，避免cmd关闭
+os.system("pause")
+```
+
+
+
+### 注释
+
+```python
+# 行尾注释
+
+'单行注释（单引号）'
+"单行注释（双引号）"
+
+'''
+多行注释（三个单引号）
+'''
+
+"""
+多行注释（三个双引号）
+"""
+
+```
+
+
+
+### 获取帮助，help(obj)，dir(obj)
+
+* help显示帮助信息
+* dir列出对象的属性和方法
 
 ### 传值传址引用
 
@@ -2348,7 +2499,10 @@ async with Closing() as c:
 
 ## 模块
 
+
+
 ### 模块/包定义
+
 * 模块：一个`.py`文件就是一个模块  
 * 模块可以提高代码的可维护性
 * 模块可以提高代码的可复用性
@@ -2357,7 +2511,10 @@ async with Closing() as c:
 * 包可以避免模块名称冲突，但是应当避免与系统包名称冲突   
 * `__init__.py`文件可以是一个空文件，也可以执行代码  
 
-## 使用模块
+
+
+### 使用模块
+
 * 模块注释：一个模块的第一个字符串是文档注释` __doc__`
 
 * 引用模块：import sys
@@ -2409,7 +2566,7 @@ if __name__ == '__main__':
     test()
 ```
 
-### 从目录启动程序专题
+### 运行模块，python -m
 
 ```python
 # 目录中如果包含__main__.py文件，就可以使用
@@ -2442,7 +2599,7 @@ pkj.main()
 ### 安装第三方模块
 * 安装第三方模块：`pip install Pillow` 会自动从pypi.python.org下载
 
-#### 集成安装发行版
+### 集成安装发行版
 * Anaconda: <https://www.anaconda.com/>  
 * 优点是不需要考虑第三方包之间的版本兼容性
 
@@ -2451,7 +2608,10 @@ pkj.main()
 * 添加模块路径方法：sys.path.append('path')
 * 在运行环境中设置环境变量PYTHONPATH
 
+
+
 ## 面向对象编程 
+
 * 面向对象编程（Object Oriented Programming）简称OOP，把计算机程序视为一系列对象的集合，每个对象接收其他对象发来的消息，并处理消息。计算机程序的执行就是一系列消息在各个对象之间传递。
 * OOP把对象作为程序的基本单元，一个对象包含了数据和操作数据的函数。
 * 数据封装、继承、多态是面向对象的三大特点

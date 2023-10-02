@@ -110,3 +110,39 @@ urlpatterns = [
 ]
 ```
 
+-
+
+## 序列化，Serialization
+
+
+
+## 请求和响应，Requests and responses
+
+
+
+## 基于类的视图，Class based views
+
+
+
+## 身份验证和权限，Authentication and permissions
+
+
+
+## 关系和超链接API，Relationships and hyperlinked
+
+
+
+## 视图集和路由器，Viewsets and routers
+
+
+
+## 抽象过程
+
+
+
+## drf-yasg
+
+
+
+## django-filter
+
