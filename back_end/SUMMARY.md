@@ -13,3 +13,6 @@
 * [ipython](ipython.md)
 * [RabbitMQ](rabbitmq.md)
 * [Kafka](kafka.md)
+* [icecream](icecream.md)
+* [loguru](loguru.md)
+* [attrs](attrs.md)
