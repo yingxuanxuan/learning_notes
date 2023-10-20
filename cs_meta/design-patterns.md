@@ -1,11 +1,138 @@
 # Design Patterns
 
-目录
-----------
-[toc]
 
-UML
-----------
+
+## 概念
+
+* 什么是设计模式
+  * 软件设计中普遍存在（反复出现）的各种问题，所提出的通用解决方案。
+  * 系统地命名、解释、评价这些重复出现的设计。
+
+
+
+* GoF介绍
+  * Gang of Four的简称
+  * Erich Gamma，Richard Helm，Ralph Johnson，John Vlissides，四个人
+  * 共同写作《设计模式：可复用面向对象软件的基础》
+
+
+
+* 面向对象与设计模式的联系
+  * 设计模式总结的是面向对象思想下的通用解决方案
+
+
+
+* 什么是面向对象
+  * OO，object-oriented
+  * 程序被组织成对象的集合，每个对象都包含了数据和操作数据的函数
+
+
+
+* 面向对象的三大特性
+  * 封装
+    * 函数
+    * 类
+    * 属性作用域，私有、公有
+  * 继承
+  * 多态，同一个方法可以在不同的类中有不同的实现方式
+    * C++虚函数和普通函数
+    * Java通过接口和继承实现
+    * Python通过鸭子类型实现，即反射，查找相同名称的属性
+    * JS通过原型链实现
+
+
+
+* 什么是接口
+  * 若干抽象方法的集合
+  * Python支持多重继承，可以通过继承抽象基类实现
+
+
+
+* 接口的作用
+  * 限制实现接口的类必须按照接口给定的调用方式实现
+  * 对高层模块隐藏了类的内部实现
+  * 例如支付接口
+    * 上层模块调用支付接口，无需关心细节
+    * 底层模块实现各种支付接口，无需修改上层
+
+
+
+* python中实现接口
+  * `metaclass=ABCMeta`的类，不能直接实例化，必须继承后实例化
+  * 使用`abstractmethod`装饰器修饰函数，不能直接调用，必须实现后才能调用
+
+```python
+from abc import ABCMeta
+from abc import abstractmethod
+
+class C(metaclass=ABCMeta):
+    @abstractmethod
+    def func(self):
+       	pass
+```
+
+
+
+
+
+## 设计原则
+
+* SOLID原则
+  * SRP，Single Responsibility Principle，单一职责原则
+  * OCP，Open Close Principle，开放封闭原则
+  * LSP，Liskov Substitution Principle，里氏替换原则
+  * ISP，Interface Segregation Principle，接口隔离原则
+  * DIP，Dependence Inversion Principle，依赖倒置原则
+
+
+
+* 单一职责原则，Single Responsibility Principle
+  * 一个类只负责一项职责
+  * 或者说，一个类应该只有一个引起它变化的原因
+  * 或者说，不要存在多余一个导致类变更的原因
+
+
+
+* 开放封闭原则，Open Close Principle
+  * 对扩展开放，对修改关闭
+  * 软件实体（类、模块、函数）应尽量在不修改原有代码的情况下进行扩展
+
+
+
+* 里氏代换原则，Liskov Substitution Principle
+  * 所有引用父类的地方必须能透明地使用其子类对象。
+  * 只有当衍生类可以替换掉基类，软件单位的功能不受到影响时，基类才能真正被复用，而衍生类也能够在基类的基础上增加新的行为。
+
+
+
+* 接口隔离原则，Interface Segregation Principle
+  * 使用多个隔离的接口来降低耦合度
+  * 使用多个专门的接口，而不使用单一的总接口
+  * 即客户端不应该依赖那些它不需要的接口
+  * 例如，将抽象动物类拆分为抽象鸟类、抽象爬行动物类，不要使用一个多合一的抽象动物类
+
+
+
+* 依赖倒转原则，Dependence Inversion Principle
+  * 是开闭原则的基础，针对接口编程，而不是针对实现编程
+  * 高层模块不应该依赖底层模块，二者都应该依赖其抽象
+  * 或者说，抽象不应该依赖细节；细节应该依赖抽象
+
+
+
+* 迪米特法则，Demeter Principle
+  * 一个实体应当尽量少的与其他实体之间发生相互作用，使得系统功能模块相对独立。
+
+
+
+* 合成复用原则，Composite Reuse Principle
+  * 尽量使用合成/聚合的方式，而不是使用继承。继承实际上破坏了类的封装性，超类的方法可能会被子类修改。
+
+
+
+
+
+## UML
 * Unified Modeling Language, 统一建模语言
 * 结构性图：
     * 类图
@@ -38,94 +165,409 @@ UML
     * 关联: 拥有者 实线箭头指向 被拥有者
     * 依赖: 使用者 虚线箭头指向 被使用者
 
-面向对象
-----------
-* 面向对象的三大特性
-    * 封装
-    * 继承
-    * 多态（C++虚函数和普通函数，Java函数分为普通函数和final函数）
-* 接口：若干抽象方法的集合
-    * 作用：限制实现接口的类必须按照接口给定的调用方式实现。对高层模块隐藏了类的内部实现。
 
-设计原则（SOLID原则）
-----------
-* 开闭原则，Open Close Principle
-    * 对扩展开放，对修改关闭
-* 里氏代换原则，Liskov Substitution Principle
-    * 所有引用父类的地方必须能透明地使用其子类对象。（ 只有当衍生类可以替换掉基类，软件单位的功能不受到影响时，基类才能真正被复用，而衍生类也能够在基类的基础上增加性的行为。）
-* 依赖倒转原则，Dependence Inversion Principle
-    * 是开闭原则的基础，针对接口编程，而不是针对实现编程。（高层模块不应该依赖底层模块，二者都应该依赖其抽象；抽象不应该依赖细节；细节应该依赖抽象。）
-* 接口隔离原则，Interface Segregation Principle
-    * 使用多个隔离的接口来降低耦合度
-* 迪米特法则，Demeter Principle
-    * 一个实体应当尽量少的与其他实体之间发生相互作用，是的系统功能模块相对独立。
-* 合成复用原则，Composite Reuse Principle
-    * 尽量使用合成/聚合的方式，而不是使用继承。继承实际上破坏了类的封装性，超类的方法可能会被子类修改。
 
-创建类设计模式-单例模式
-----------
 
-* 定义:
-    * 保证一个类仅有一个实例，并提供一个访问它的全局访问点。
-* 优点:
-    1. 全局仅一个实例，节省内存空间
-    2. 全局只有一个接入点，可以更好进行同步控制，避免多重占用。
-    3. 可以常驻内存，减少系统开销。
-* 应用:
-    1. 生成全局唯一的序列号。
-    2. 访问全局复用的唯一资源，如磁盘，总线。
-    3. 单个对象占用资源过多，如数据库。
-    4. 系统全局统一管理，如Task Manager。
-    5. 网站计数器。
+
+## 创建类模式
+
+* 什么是创建类模式
+  * 创建对象时用到的模式
+
+
+
+
+
+## 创建类 - 单例模式
+
+* 定义
+  * 保证一个类仅有一个实例，并提供一个访问它的全局访问点
+
+
+
+* 使用场景
+  * 生成全局唯一的序列号。
+  * 访问全局复用的唯一资源，如磁盘，总线。
+  * 单个对象占用资源过多，如数据库。
+  * 系统全局统一管理，如Task Manager。
+  * 网站计数器。
+
+
+
+* 角色
+  * 单例，Singleton
+
+
+
+* 优点
+    * 全局仅一个实例，节省内存空间
+    * 全局只有一个接入点，可以更好进行同步控制，避免多重占用。
+    * 可以常驻内存，减少系统开销
+
+
+
 * 缺点
-    1. 扩展困难
-    2. 违反单一职责原则
-    3. 在并发模块中需要最先完成，不利于测试。
-    4. 会导致资源瓶颈。
+    * 扩展困难
+    * 违反单一职责原则
+    * 在并发模块中需要最先完成，不利于测试。
+    * 会导致资源瓶颈。
 
-### 分类
-* 懒汉式：使用时才创建（会产生并发可重入问题）
-* 饿汉式：启动时创建
 
-### 方法1
+
+* 分类
+
+  * 懒汉式：使用时才创建（会产生并发可重入问题）
+
+  * 饿汉式：启动时创建
+
+
+
+
+* python单例
+  * python模块本身就是单例的，模块名相同，不会二次导入模块
+
+
+
+### Python元类与类装饰器
+
+* 指定元类
+  * 定义类时使用`metaclass`参数指定元类
+  * 定义类时使用`__metaclass__`属性指定元类，Python3已废弃
+
+
+
+* 元类与类的`__new__`、`__init__`、`__call__`对比
+
+  * `Meta.__new__(cls, name, bases, attrs)`
+    * 调用时机：创建类之前，只调用一次
+    * 用途：修改类属性`attrs`
+    * 入参：类名、父类列表、属性列表
+    * 返回值：创建的类，Meta的父类构建的对象
+  * `Meta.__init__(cls, name, bases, attrs)`
+    * 调用时机：创建类之后，只调用一次
+    * 用途：初始化类属性`attrs`，无法修改`attrs`
+    * 入参：`Meta.__new__(cls, name, bases, attrs)`中修改后调用`super().__new__(cls, name, bases, attrs)`传入的类名、父类列表、属性列表
+    * 返回值：无
+  * `Meta.__call__(cls, *args, **kwargs)`
+    * 调用时机：创建类之后，每次创建类实例之前
+    * 用途：自定义实例化过程，修改类的实例的参数、行为
+    * 入参：用户实例化类时传入，修改或透传给`Class.__new__(cls, *args, **kwargs)`
+    * 返回值：实例化的对象，Metaclass的父类构建的对象
+  * `Class.__new__(cls, *args, **kwargs)`
+    * 调用时机：每次创建实例之前
+    * 用途：在实例化之前做一些操作，干预对象的构建
+    * 入参：用户实例化类时传入，在`Metaclass.__call__`中修改或透传的
+    * 返回值：实例化的对象，Class的父类构建的对象
+  * `Class.__init__(self, *args, **kwargs)`
+    * 调用时机：每次创建实例之后
+    * 用途：在实例化之后做一些工作，干预对象，如初始化
+    * 入参：自定义
+    * 返回值：无
+
+  * `Class.__call__(self)`
+    * 调用时机：用户主动调用对象时
+    * 用途：实现`callable`对象，使得对象可以使用函数调用操作符
+    * 入参：用户自定义
+    * 返回值：用户自定义
+
+
+
+
+* 类构建的过程
+  * `读取类的定义` 
+  * -> `Meta.__new__` -> `Meta父类.__new__`
+  * -> `调用Python内核构建类` 
+  * -> `Meta.__init__` -> `Meta父类.__init__`
+  * -> `类构建完成`
+  * -> `调用装饰器`
+
+
+
+* 对象创建的过程
+  * `读取对象的创建参数` 
+  * `执行装饰器返回的包装对象`
+  * -> `Meta.__call__ 前` -> `Meta父类.__call__`
+  * -> `Class.__new__` -> `Class父类.__new__` 
+  * -> `调用Python内核构建对象` 
+  * -> `Class.__init__` -> `Class父类.__init__`
+  * -> `Meta.__call__ 后`
+
+
+
+* 调用父类的方法
+
+  * 单继承使用`super()`调用父类方法
+    * `super().__init__()`，不需要传`self`
+
+  * 多继承使用`super()`调用父类方法
+    * `super(父类, self).__init__()`，不需要传`self`
+  * 显示调用父类方法
+    * `父类.__init__(self, param)`，需要传`self`
+
+
+
+* 测试
+
+```py
+from icecream import ic
+
+
+class Meta(type):
+    def __new__(cls, name, bases, attrs):
+        ic('Meta.__new__ 前', cls, name, bases, attrs)
+
+        # 添加类属性
+        attrs['Meta_new_attr'] = None
+
+        # 调用父类 __new__
+        tmp = super().__new__(cls, name, bases, attrs)
+
+        # 返回创建的类
+        ic('Meta.__new__ 后', type(tmp), tmp)
+        return tmp
+
+    def __init__(cls, name, bases, attrs):
+        ic('Meta.__init__ 前', cls, name, bases, attrs)
+
+        # 添加类属性无效，类已经创建完成
+        attrs['Meta_init_attr'] = None
+
+        # 调用父类
+        super().__init__(name, bases, attrs)
+
+        # 不需要返回值
+        ic('Meta.__init__ 后')
+
+    def __call__(cls, *args, **kwargs):
+        ic('Meta.__call__ 前', cls, args, kwargs)
+
+        # 修改创建对象的参数
+        kwargs['Meta_call_kwarg'] = None
+
+        # 调用父类
+        tmp = super().__call__(*args, **kwargs)
+
+        # 返回
+        ic('Meta.__call__ 后', type(tmp), tmp)
+        return tmp
+
+
+def class_decorator(cls):
+    ic('class_decorator 前', cls)
+
+    def class_decorator_new(*args, **kwargs):
+        ic('class_decorator_new 前', cls, args, kwargs)
+
+        kwargs['class_decorator_new_kwargs'] = None
+
+        obj = cls(*args, **kwargs)
+
+        ic('class_decorator_new 后', type(obj), obj)
+        return obj
+
+    return class_decorator_new
+
+
+@class_decorator
+class Cls(metaclass=Meta):
+    Class_define_attr = None
+
+    def __new__(cls, *args, **kwargs):
+        ic('Class.__new__ 前', cls, args, kwargs)
+
+        kwargs['Class_new_kwarg'] = None
+
+        # 调用父类
+        # 父类是Object，不再需要参数
+        # 父类是其他，可能需要参数
+        tmp = super().__new__(cls)
+
+        # 返回对象
+        ic('Class.__new__ 后', type(tmp), tmp)
+        return tmp
+
+    def __init__(self, *args, **kwargs):
+        ic('Class.__init__ 前', self, args, kwargs)
+
+        # 添加对象创建属性无效，对象已经创建完成
+        kwargs['Class_init_kwarg'] = None
+
+        # 调用父类
+        # 父类是Object, 不再需要参数
+        # 父类是其他，可能需要参数
+        super().__init__()
+
+        # 不需要返回值
+        ic('Class.__init__ 后')
+
+    def __call__(self):
+        ic('用户主动调用函数执行操作符时')
+
+
+
+a = Cls('用户创建对象参数1')
+ic(a.Class_define_attr)
+ic(a.Meta_new_attr)
+# ic(a.Meta_init_attr)
+b = Cls('用户创建对象参数2')
 ```
-# 方法1,实现__new__方法
-# 并在将一个类的实例绑定到类变量_instance上,
-# 如果cls._instance为None说明该类还没有实例化过,实例化该类,并返回
-# 如果cls._instance不为None,直接返回cls._instance
 
+
+
+* 打印结果
+
+```py
+ic| 'Meta.__new__ 前': 'Meta.__new__ 前'
+    cls: <class '__main__.Meta'>
+    name: 'Cls'
+    bases: ()
+    attrs: {'Class_define_attr': None,
+            '__call__': <function Cls.__call__ at 0x000002519E7DD3A0>,
+            '__classcell__': <cell at 0x000002519DDCE430: empty>,
+            '__init__': <function Cls.__init__ at 0x000002519E7DD310>,
+            '__module__': '__main__',
+            '__new__': <function Cls.__new__ at 0x000002519E7DD280>,
+            '__qualname__': 'Cls'}
+ic| 'Meta.__new__ 后': 'Meta.__new__ 后'
+    type(tmp): <class '__main__.Meta'>
+    tmp: <class '__main__.Cls'>
+ic| 'Meta.__init__ 前': 'Meta.__init__ 前'
+    cls: <class '__main__.Cls'>
+    name: 'Cls'
+    bases: ()
+    attrs: {'Class_define_attr': None,
+            'Meta_new_attr': None,
+            '__call__': <function Cls.__call__ at 0x000002519E7DD3A0>,
+            '__classcell__': <cell at 0x000002519DDCE430: Meta object at 0x000002519B9C7450>, 
+            '__init__': <function Cls.__init__ at 0x000002519E7DD310>,
+            '__module__': '__main__',
+            '__new__': <function Cls.__new__ at 0x000002519E7DD280>,
+            '__qualname__': 'Cls'}
+ic| 'Meta.__init__ 后'
+ic| 'class_decorator 前', cls: <class '__main__.Cls'>
+ic| 'class_decorator_new 前': 'class_decorator_new 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数1',)
+    kwargs: {}
+ic| 'Meta.__call__ 前': 'Meta.__call__ 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数1',)
+    kwargs: {'class_decorator_new_kwargs': None}
+ic| 'Class.__new__ 前': 'Class.__new__ 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数1',)
+    kwargs: {'Meta_call_kwarg': None, 'class_decorator_new_kwargs': None}
+ic| 'Class.__new__ 后': 'Class.__new__ 后'
+    type(tmp): <class '__main__.Cls'>
+    tmp: <__main__.Cls object at 0x000002519E869070>
+ic| 'Class.__init__ 前': 'Class.__init__ 前'
+    self: <__main__.Cls object at 0x000002519E869070>
+    args: ('用户创建对象参数1',)
+    kwargs: {'Meta_call_kwarg': None, 'class_decorator_new_kwargs': None}
+ic| 'Class.__init__ 后'
+ic| 'Meta.__call__ 后': 'Meta.__call__ 后'
+    type(tmp): <class '__main__.Cls'>
+    tmp: <__main__.Cls object at 0x000002519E869070>
+ic| 'class_decorator_new 后': 'class_decorator_new 后'
+    type(obj): <class '__main__.Cls'>
+    obj: <__main__.Cls object at 0x000002519E869070>
+ic| a.Class_define_attr: None
+ic| a.Meta_new_attr: None
+ic| 'class_decorator_new 前': 'class_decorator_new 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数2',)
+    kwargs: {}
+ic| 'Meta.__call__ 前': 'Meta.__call__ 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数2',)
+    kwargs: {'class_decorator_new_kwargs': None}
+ic| 'Class.__new__ 前': 'Class.__new__ 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数2',)
+    kwargs: {'Meta_call_kwarg': None, 'class_decorator_new_kwargs': None}
+ic| 'Class.__new__ 后': 'Class.__new__ 后'
+    type(tmp): <class '__main__.Cls'>
+    tmp: <__main__.Cls object at 0x000002519F8FEB20>
+ic| 'Class.__init__ 前': 'Class.__init__ 前'
+    self: <__main__.Cls object at 0x000002519F8FEB20>
+    args: ('用户创建对象参数2',)
+    kwargs: {'Meta_call_kwarg': None, 'class_decorator_new_kwargs': None}
+ic| 'Class.__init__ 后'
+ic| 'Meta.__call__ 后': 'Meta.__call__ 后'
+    type(tmp): <class '__main__.Cls'>
+    tmp: <__main__.Cls object at 0x000002519F8FEB20>
+ic| 'class_decorator_new 后': 'class_decorator_new 后'
+    type(obj): <class '__main__.Cls'>
+```
+
+
+
+### Python单例实现1
+
+* 在父类`Class.__new__`中
+* 对象创建前
+* 判断对象是否已经创建
+
+```py
 class Singleton(object):
+    """通用单例父类
+
+    实现__new__方法
+	并在将一个类的实例绑定到类变量_instance上,
+    如果cls._instance为None说明该类还没有实例化过,实例化该类,并返回
+    如果cls._instance不为None,直接返回cls._instance
+    """
+
     def __new__(cls, *args, **kw):
         if not hasattr(cls, '_instance'):
-            # 注意参数args、kw不传会报错，虽然没有实际用处
+            
+            # 调用父类的构造函数，以确保正确地初始化对象
             orig = super(Singleton, cls)
+            
+            # 注意参数args、kw不传会报错，虽然没有实际用处
             cls._instance = orig.__new__(cls, *args, **kw)
             
             # cls._instance = super(Singleton, cls).__new__(cls, *args, **kw)
             # cls._instance = object.__new__(cls, *args, **kw)
+
         return cls._instance
 
+
+# 使用单例
 class MySingleton(Singleton):
     a = 1
-    
+
 s1 = MySingleton()
 s2 = MySingleton()
 
+
+# 测试单例
 s1.a = 3
 s2.a # 也等于3
 
 id(s1) == id(s2) # True
 s1 == s2 # True
 s1 is s2 # True
+
 ```
 
-### 方法2
-```
-# 方法2,共享属性;所谓单例就是所有引用(实例、对象)拥有相同的状态(属性)和行为(方法)
-# 同一个类的所有实例天然拥有相同的行为(方法),
-# 只需要保证同一个类的所有实例具有相同的状态(属性)即可
-# 所有实例共享属性的最简单最直接的方法就是__dict__属性指向(引用)同一个字典(dict)
+
+
+### Python单例实现2
+
+* 父类`Class.__new__`中
+* 对象创建后
+* 用旧对象的所有属性覆盖新对象的所有属性
+
+```py
 class Borg(object):
+    '''
+    所谓单例就是所有引用(实例、对象)拥有相同的状态(属性)和行为(方法)
+   	同一个类的所有实例天然拥有相同的行为(方法)
+    只需要保证同一个类的所有实例具有相同的状态(属性)即可
+    所有实例共享属性的最简单最直接的方法就是__dict__属性指向(引用)同一个字典(dict)
+    '''
+    
     _state = {}
     
     def __new__(cls, *args, **kw):
@@ -133,12 +575,17 @@ class Borg(object):
         ob.__dict__ = cls._state
         return ob
 
+
+# 使用单例
 class MyBorg(Borg):
     a = 1
+
 
 b1 = MyBorg()
 b2 = MyBorg()
 
+
+# 测试单例
 b1.a = 3
 b2.a # 3
 
@@ -146,10 +593,18 @@ id(b1) == id(b2) # False
 b1 == b2 # False
 b1 is b2 # False
 b1.__dict__ == b2.__dict__ # True
+
 ```
 
-### 方法3
-```
+
+
+### Python单例实现3
+
+* 元类`Meta.__call__`中
+* 类创建后，对象创建前
+* 判断对象是否已经创建
+
+```py
 # 方法3:本质上是方法1的升级（或者说高级）版
 # 使用__metaclass__（元类）的高级python用法
 class Singleton(type):
@@ -164,8 +619,9 @@ class Singleton(type):
             cls._instance = super(Singleton, cls).__call__(*args, **kw)
         return cls._instance
 
+
 class MySingleton(object):
-    __metaclass__ = Singleton2
+    __metaclass__ = Singleton
 
 s1 = MySingleton()
 s2 = MySingleton()
@@ -177,8 +633,16 @@ s1 == s2 # True
 s1 is s2 # True
 ```
 
-### 方法4（推荐）
-```
+
+
+### Python单例实现4
+
+* 使用类装饰器，每次创建对象前
+* 对象创建前
+* 判断对象是否已经创建
+* 实例保存在装饰器闭包中
+
+```py
 # 方法4:也是方法1的升级（高级）版本,
 # 使用装饰器(decorator),
 # 这是一种更pythonic,更elegant的方法,
@@ -194,6 +658,7 @@ def singleton(cls, *args, **kw):
     
     return _singleton
 
+
 @singleton # 装饰class的__new__
 class AnyClass(object):
     a = 1
@@ -202,33 +667,96 @@ class AnyClass(object):
         self.x = x
 ```
 
-创建类设计模式-工厂类相关模式、工厂模式
-----------
+
+
+
+
+## 创建类 - 工厂模式
+
 * 分类：
     * 简单工厂模式：又称静态工厂方法模式。通常使用静态类方法或者函数实现。
     * 工厂方法模式：父类Factory，子类覆盖方法实现工厂。
-    * 抽象工厂模式：生产的对象是一个产品族，每个产品族产生一个工程父类。
+    * 抽象工厂模式：生产的对象是一个产品族，每个产品族产生一个工厂父类。
 
-### 简单工厂模式，Simple Factory Pattern，静态工厂方法模式
-* 定义：
-    * 专门定义一个类来负责创建其他类的实例，根据参数的不同创建不同类的实例，被创建的实例通常具有共同的父类，这个模式叫简单工厂模式。
 
-### 抽象工厂模式
-* 定义：
-    * 提供一个创建一系列相关或相互依赖的对象的接口，而无须指定他们的具体类。
 
-### 示例
+
+
+## 创建类 - 简单工厂模式
+
+* 简单工厂模式
+  * Simple Factory Pattern
+  * 也叫做静态工厂方法模式
+
+
+
+* 什么是简单工厂模式
+    * 专门定义一个类来负责创建其他类的实例，根据参数的不同创建不同类的实例
+    * 被创建的实例通常具有共同的父类
+    * 或者说，不直接向客户端暴露对象创建的实现细节，而是通过一个工厂类来负责创建产品类的实例
+
+
+
+* 简单工厂模式中的角色
+  * 工厂，Creator
+  * 抽象产品，Product
+    * 使产品对外有相同抽象接口，可以对外统一使用方式
+  * 具体产品，Concrete Product
+
+
+
+* 优点
+  * 隐藏了对象创建的实现细节
+  * 客户端不需要修改代码
+
+
+
+* 缺点
+  * 违反了单一职责原则，将创建逻辑集中到一个工厂类里
+  * 当添加新产品时，需要修改工厂类代码，违反了开闭原则
+
+
+
+* 示例
+
+```py
+# 抽象产品
+class Animal:
+    pass
+
+
+# 具体产品
+class Cat(Animal):
+    pass
+
+class Dog(Animal):
+    pass
+
+
+# 工厂
+class AnimalShelter:
+
+    def adopt_a_pet(kind_of_pet)
+        if kind_of_pet = 'cat':
+            return Cat()
+        elif kind_of_pet = 'dog':
+            return Dog()
+        else:
+            raise TypeError('Unknown kind of pet')
 ```
-"""
-工厂模式：实例化延迟到子类
-缺点是使用类作为代价，且factory修改不封闭，每增加product就要修改
-但可以使用配置文件，就可以封闭了
-"""
 
+
+
+* 示例
+
+```py
+# 抽象产品
 class ProductOpt:
     def get_result(self):
         pass
 
+    
+# 具体产品
 class ProductAdd(ProductOpt):
     def get_result(self):
         return self.num1 - self.num2
@@ -242,6 +770,8 @@ class ProductErr(ProductOpt):
         print("error")
         return 0
 
+
+# 工厂
 class Factory:
     operation = {}
     operation['+'] = ProductAdd()
@@ -254,6 +784,8 @@ class Factory:
             op = ProductErr()
         return op
 
+
+# 使用工厂
 factory = Factory()
 product = factory.create_product('+')
 product.num1 = 1
@@ -262,37 +794,314 @@ product.get_result() # 3
 ```
 
 
-创建类设计模式-建造者模式、构建模式、生成（器）模式
-----------
-* 定义：
-    * 将一复杂对象的构建过程和它的表现分离，使得同样的构建过程可以获取（创 建）不同的表现。
-* 使用场景：
-* 优点：
-* 缺点：
+
+
+
+## 创建类 - 工厂方法模式
+* 什么是工厂方法模式
+    * 定义一个用于创建对象的接口，即抽象工厂，每种产品实现自己的具体工厂，使用时让客户端决定实例化哪个类
+
+
+
+* 角色
+  * 抽象工厂，Creator
+  * 具体工厂，Concrete Creator
+  * 抽象产品，Product
+  * 具体产品，Concrete Product
+
+
+
+* 优点
+  * 每个具体产品都对应一个具体工厂，不需要修改工厂代码
+  * 隐藏了对象创建的实现细节
+
+
+
+* 缺点
+  * 每增加一个具体的产品类，就必须增加一个相应的具体工厂类
+  * 只适用于，创建的过程特别复杂时
+
+
+
+* 示例
+
+```py
+# 抽象产品
+class Animal(metaclass=ABCMeta):
+    pass
+
+
+# 具体产品
+class Cat(Animal):
+    pass
+
+class Dog(Animal):
+    pass
+
+
+# 抽象工厂
+class AdoptAnimal(metaclass=ABCMeta):
+    @abstractmethod
+    def adopt(self):
+        pass
+    
+
+# 具体工厂
+class AdoptCat(AdoptAnimal):
+    def adopt(self):
+        return Cat()
+
+
+class AdoptDog(AdoptAnimal):
+    def adopt(self):
+        return Dog()
+
+
+# 工厂
+class AnimalShelter:
+    def adopt_a_pet(clsAdoptAnimal)
+        pet = clsAdoptAnimal().adopt()
+
+
+# 使用工厂
+pet = AnimalShelter().adopt_a_pet(AdoptCat)
+```
+
+
+
+## 创建类 - 抽象工厂模式
+
+* 什么是抽象工厂模式
+  * 定义一个工厂类接口，让工厂子类来创建一系列相关或相互依赖的对象
+  * 提供一个创建一系列相关或相互依赖的对象的接口，而无须指定他们的具体类
+
+
+
+* 对比工厂方法模式
+  * 抽象工厂模式中的每个具体工厂都生产一套产品
+
+
+
+* 优点
+  * 将客户端与类的具体实现相分离
+  * 每个工厂创建了一个完整的产品系列，易于交换产品系列
+  * 有利于产品的一致性（产品之间的约束关系）
+
+
+
+* 缺点
+  * 难以支持新的种类的（抽象）组件
+
+
+
+* 示例
+  * 生产一部电脑，需要三个部分，主机、操作系统软件、显示器，三类组件对象
+  * 每类组件都有不同的子类
+    * 主机
+      * 联想
+      * 戴尔
+      * 小米
+    * 显示器
+      * 三星
+      * AOC
+    * 操作系统
+      * Linux
+      * Windows
+  * 每个生产电脑的具体工厂，分别生产一部电脑所需要的三个组件对象
+
+```py
+# 一系列抽象组件
+class OS(metaclass=ABCMeta):
+    @abstractmethod
+    def name(self):
+        pass
+
+
+class Host(metaclass=ABCMeta):
+    @abstractmethod
+    def name(self):
+        pass
+
+
+class Display(metaclass=ABCMeta):
+    @abstractmethod
+    def name(self):
+        pass
+    
+
+
+# 一系列具体组件
+class Windows(OS):
+    def name(self):
+        ic('Windows')
+
+
+class Linux(OS):
+    def name(self):
+        ic('Linux')
+
+
+class HP(Host):
+    def name(self):
+        ic('HP')
+
+
+class Dell(Host):
+    def name(self):
+        ic('Dell')
+
+
+class Sumsang(Display):
+    def name(self):
+        ic('Sumsang')
+
+    
+class AOC(Display):
+    def name(self):
+        ic('AOC')
+
+        
+
+# 产品
+class Computer:
+    def __init__(self, os_cls, host_cls, display_cls):
+        self._os_cls = os_cls
+        self._host_cls = host_cls
+        self._display_cls = display_cls
+
+    def name(self)
+        self._os_cls().name()
+        self._host_cls().name()
+        self._display_cls().name()
+
+
+
+# 抽象工厂
+class Factory(metaclass=ABCMeta):
+    @abstractmethod
+    def make_os(self):
+        pass
+    
+    @abstractmethod
+    def make_host(self):
+        pass
+
+    @abstractmethod
+    def make_display(self):
+        pass
+
+	def make_computer(self):
+        computer = Computer(self.make_os(), self.make_host(), self.make_display())
+        return computer
+    
+
+# 具体工厂
+class Factory1(Factory)
+	def make_os(self):
+        return Windows
+    
+    def make_host(self):
+        return HP
+
+    def make_display(self):
+        return Sumsang
+
+
+class Factory2(Factory)
+	def make_os(self):
+        return Linux
+    
+    def make_host(self):
+        return Dell
+
+    def make_display(self):
+        return AOC
+
+
+
+# 使用工厂
+factory = Factory1()
+computer = factory.make_computer()
+computer.name()   
+
+
+```
+
+
+
+
+
+## 创建类 - 建造者模式
+
+* 也叫做
+  * 构建模式
+  * 生成（器）模式
+
+
+
+* 定义
+    * 将一复杂对象的构建过程和它的表现分离，使得同样的构建过程可以创建不同的表现
+    * 构建拆分为
+      * 指挥者 Director 负责控制构建顺序
+      * 具体建造者 Concrete Builder 负责控制构建元素的种类
+
+
+
+* 对比抽象工厂模式
+  * 抽象工厂模式侧重于多个系列的产品对象
+  * 建造者模式侧重于构建的过程
+  * 建造者模式进一步将构建过程从抽象工厂中拆分出来
+
+
+
+* 优点
+    * 隐藏了一个产品的内部结构和装配过程
+    * 将构造代码与表示代码分开
+    * 可以对构造过程进行更精细的控制
+
+
+
+* 缺点
+    * 无
+
+
+
 * 角色：
     * 产品，Product
-    * 构建者，Builder，可以简化进BuilderManager作为一个函数
-    * 指挥者，BuilderManager
+    * 抽象建造者，Builder，可以简化进Director作为一个函数
+    * 具体建造者，Concrete Builder
+    * 指挥者，Director，BuilderManager
 
 
 
-创建类设计模式-原型模式、克隆模式
-----------
-* 定义：
+## 创建类 - 原型模式、克隆模式
+* 定义
     * 通过复制原型对象创建新对象，而非用类创建对象。
-* 使用场景：
+
+
+
+* 使用场景
     * 对象在修改过之后，需要复制多份的场景
     * 需要优化资源的情况（浅拷贝）
     * 构建类时重复性的复杂工作不需要再多次进行，直接复制。
-* 优点：
+
+
+
+* 优点
     * 性能好，避免类构建，属性构建，节省资源（浅拷贝）。
     * 简化对象创建。
-* 缺点：
+
+
+
+* 缺点
     * 绕过了类创建过程，需要注意引起bug。
     * 需要注意某些编程语言中对静态变量，静态函数的影响。
 
-### 示例1
-```
+
+
+* 示例1
+
+```py
 """
 类似Photoshop的平面设计软件的图层概念，使用图层创建图层，修改应用在各个图层上。
 每次重新创建图层没有必要，只需复制一份资源即可。
@@ -319,8 +1128,11 @@ l2 = l1.clone()
 l3 = l1.deep_clone()
 ```
 
-### 示例2
-```
+
+
+* 示例2
+
+```py
 # 原型与工厂模式的区别应该是少一个与与产品平行的工厂类，通过克隆自己，可以创造多个对象
 
 # 有一个哺乳动物的原型，每个动物有名称，
@@ -364,8 +1176,11 @@ m1 = m.clone()
 m2 = m.clone()
 ```
 
-### 抽象1
-```
+
+
+* 抽象1
+
+```py
 from copy import copy, deepcopy
 
 class Clone:
@@ -377,8 +1192,12 @@ class Clone:
 
 ```
 
-结构类设计模式-代理模式
-----------
+
+
+
+
+## 结构类 - 代理模式
+
 * 尽量代理抽象类，更加通用
 * 实际上将代理功能和实际功能分开，可以更加符合单一职责原则。
 
@@ -401,7 +1220,7 @@ class Clone:
     * 代理主题 ProxySubject
 
 ### 示例
-```
+```py
 from abc import ABC, abstractmethod
 
 class AbstractSubject(ABC):
@@ -432,8 +1251,8 @@ proxy.request('error')
 ```
 
 
-结构类设计模式-装饰器模式、装饰模式
-----------
+## 结构类 - 装饰器模式、装饰模式
+
 * 装饰模式是代理模式的一个特例
 * 装饰模式是继承的一种替代模式。
 
@@ -448,7 +1267,7 @@ proxy.request('error')
     * 多层装饰器调试、维护比较困难
 
 ### 示例
-```
+```py
 '''
 饮料加冰，饮料加糖
 '''
@@ -506,8 +1325,7 @@ coke_ice = IceDecorator(coke)
 coke_sugar = SugarDecorator(coke)
 ```
 
-结构类设计模式-适配器模式、适配模式、变压器模式、包装模式
-----------
+## 结构类 - 适配器模式、适配模式、变压器模式、包装模式
 * 定义：
     * 将一个类的接口转换成客户端期待的另一种接口，从而使原本接口不匹配的类能够一起工作。装饰模式是给一个对象增加了一些额外的职责，而适配器模式是将另一个对象进行了伪装。
 * 应用场景：
@@ -522,7 +1340,7 @@ coke_sugar = SugarDecorator(coke)
     * 复杂度提高，效率下降，从新设计系统时不应该使用。
 
 ### 示例
-```
+```py
 class Socket3:
     def __init__(self):
         self._live_wire = '1'
@@ -569,8 +1387,7 @@ l = Lamp()
 l.connect(Adapter(Socket3()))
 ```
 
-结构类设计模式-门面模式、外观模式
-----------
+## 结构类 - 门面模式、外观模式
 * 概念：
     * 要求一个子系统的外部与其内部的通信必须通过一个统一的对象进行。门面模式提供一个高层次的接口，使得子系统更易于使用。门面模式注重“统一的对象”，也就是提供一个访问子系统的接口。
 * 门面模式与模板模式的区别：
@@ -589,7 +1406,7 @@ l.connect(Adapter(Socket3()))
 
 
 ### 示例
-```
+```py
 class AlarmSensor:
     def run(self):
         print('Alarm Ring...')
@@ -626,8 +1443,7 @@ emergency_facade = EmergencyFacade()
 emergency_facade.run()
 ```
 
-结构类设计模式-组合模式，部分整体模式
-----------
+## 结构类 - 组合模式，部分整体模式
 * 定义：
     * 将对象组合成树形结构以表示“部分”和“整体”的层次结构，使得用户对单个对象和组合对象的使用具有一致性。
 * 使用场景：
@@ -640,7 +1456,7 @@ emergency_facade.run()
     * 叶子节点和分支节点直接使用了实现类，从而不方便使用抽象类，限制了接口的影响范围。
 
 ### 示例：组装电脑
-```
+```py
 from abc import ABCMeta, abstractmethod
 
 class ComputerComponent(metaclass=ABCMeta):
@@ -733,8 +1549,8 @@ if __name__ == '__main__':
 ```
 
 
-结构类设计模式-享元模式，flyweight
-----------
+## 结构类 - 享元模式，flyweight
+
 * 定义：
     * 使用共享对象支持大量细粒度对象。大量细粒度的对象的支持共享，可能会涉及这些对象的两类信息：内部状态信息和外部状态信息。内部状态信息就是可共享出来的信息，它们存储在享元对象内部，不会随着特定环境的改变而改变；外部状态信息就不可共享的信息了。享元模式中只包含内部状态信息，而不应该包含外部状态信息。这点在设计业务架构时，应该有所考虑。
 * 使用场景：
@@ -748,13 +1564,13 @@ if __name__ == '__main__':
     * 并发系统下会产生线程安全问题。
 
 ### 示例
-```
+```py
 
 
 ```
 
-结构类设计模式-桥梁模式、桥接模式
-----------
+## 结构类 - 桥梁模式、桥接模式
+
 * 定义：
     * 将抽象与实现解耦（注意此处的抽象和实现，并非抽象类和实现类的那种关系，而是一种角色的关系，这里需要好好区分一下），可以使其独立变化。在形如上例中，Pen只负责画，但没有形状，它终究是不知道要画什么的，所以我们把它叫做抽象化角色；而Shape是具体的形状，我们把它叫做实现化角色。抽象化角色和实现化角色是解耦的，这也就意味着，所谓的桥，就是抽象化角色的抽象类和实现化角色的抽象类之间的引用关系。
 * 应用场景：
@@ -768,7 +1584,7 @@ if __name__ == '__main__':
     * 增加对系统的理解难度。
 
 ### 示例
-```
+```py
 # 画笔与形状分离
 class Shape:
     def __init__(self, *args):
@@ -790,8 +1606,8 @@ class Rectangle(Shape):
 
 ```
 
-行为类设计模式-策略模式
-----------
+## 行为类 - 策略模式
+
 * 定义：
     * 定义一系列算法，将每个算法都封装起来，并且使它们之间可以相互替换。策 略模式使算法可以独立于使用它的用户而变化。
 * 应用场景：
@@ -805,14 +1621,13 @@ class Rectangle(Shape):
     * 策略的使用方必须知道有哪些策略，才能决定使用哪一个策略，这与迪米特法则相违背。
 
 ### 示例
-```
+```py
 # 条条大路通罗马
 
 
 ```
 
-行为类设计模式-责任链模式、职责链模式、职责模式
-----------
+## 行为类 - 责任链模式、职责链模式、职责模式
 * 定义：
     * 使多个对象都有机会处理请求，从而避免了请求的发送者和接收者之间的耦合关系。将这些对象连成一条链，并沿着这条链传递该请求，直到有对象处理它为止。
 * 应用场景：
@@ -824,7 +1639,7 @@ class Rectangle(Shape):
     * 业务处理异常会难以定位是哪个处理者的问题。
 
 ### 示例：批假系统
-```
+```py
 # 各个层级主管批假权限不同
 # LineManager <3
 # DepartmentManager <3  >7
@@ -868,8 +1683,8 @@ lm.handleRequest(10)
 lm.handleRequest(15)
 ```
 
-行为类设计模式-命令模式
-----------
+## 行为类 - 命令模式
+
 * 定义：
     * 将一个请求封装成一个对象，从而可以使用不同的请求将客户端参数化，对请求排队或者记录请求日志，可以提供命令的撤销和恢复功能。
 * 使用场景：
@@ -885,8 +1700,9 @@ lm.handleRequest(15)
     * 调度者，Invoker 
     * 用户，Client
 
-行为类设计模式-中介者模式、中介模式、调停模式
-----------
+
+## 行为类 - 中介者模式、中介模式、调停模式
+
 * 定义：
     * 用一个中介对象来封装一系列的对象交互，中介者使各对象不需要显示地相互引用，从而使其耦合松散，而且可以独立地改变他们之间的交互。
 * 应用场景：
@@ -905,8 +1721,8 @@ lm.handleRequest(15)
     * 设备管理器，封装设备选择，设备使用者与设备管理器交互。
 
 
-行为类设计模式-模板模式、模板方法模式（父类实现，子类继承）
-----------
+## 行为类 - 模板模式、模板方法模式（父类实现，子类继承）
+
 * 定义：
     * 定义一个操作中的算法的框架，而将算法中用到的某些具体的步骤放到子类中实现，使得子类可以在不改变算法结构的情况下重新定义该算法的某些特定步骤。这个定义算法骨架的方法就叫模板方法模式，简称模板模式。
 * 应用场景：
@@ -914,13 +1730,13 @@ lm.handleRequest(15)
     * 各子类中公共的行为应被提取出来并集中到一个公共父类中以避免代码重复。
     * 需要通过子类来决定父类算法中某个步骤是否执行，实现子类对父类的反向控制。
 
-行为类设计模式-迭代器模式、迭代模式
-----------
+
+## 行为类 - 迭代器模式、迭代模式
 今天的主角是迭代器模式。在python中，迭代器并不用举太多的例子，因为python中的迭代器应用实在太多了（不管是python还是其它很多的编程语言中，实际上迭代器都已经纳入到了常用的库或者包中）。而且在当前，也几乎没有人专门去开发一个迭代器，而是直接去使用list、string、set、dict等python可迭代对象，或者直接使用__iter__和next函数来实现迭代器。
 
 
-行为类设计模式-访问者模式、访问模式，数据结构与算法解耦如sorted、reversed
-----------
+## 行为类 - 访问者模式、访问模式，数据结构与算法解耦如sorted、reversed
+
 * 定义：
     * 封装一些作用于某种数据结构中各元素的操作，它可以在不改变数据结构的前提下定义作用于这些元素的新的操作。
 * 优点：
@@ -935,8 +1751,8 @@ lm.handleRequest(15)
     * 数据结构，DataNode
     * 对象结构，ObjectStructure，DataNode容器，可遍历
 
-行为类设计模式-观察者模式、发布订阅模式、监听模式、模型视图模式、源监听模式、从属者模式
-----------
+
+## 行为类 - 观察者模式、发布订阅模式、监听模式、模型视图模式、源监听模式、从属者模式
 * 定义：
     * 定义对象间一种一对多的依赖关系，当该对象状态改变时，所有依赖于它的对象都会得到通知并被自动更新。
 * 使用场景：
@@ -960,7 +1776,7 @@ lm.handleRequest(15)
     * 拉模型：获取被观察者对象，观察者自行拉取所需信息
 
 ### 示例1
-```
+```py
 # 火警触发警报、灭火器、急救中心
 
 class Observer:
@@ -1001,7 +1817,7 @@ o.notify_all()
 ```
 
 ### 抽象1
-```
+```py
 from abc import ABCMeta, abstractmethod
 
 class Observer(metaclass=ABCMeta):
@@ -1059,8 +1875,7 @@ def test_water_heater():
     heater.set_temperature(100)
 ```
 
-行为类设计模式-解释器模式、解释模式
-----------
+## 行为类 - 解释器模式、解释模式
 * 定义：
     * 给定一种语言，定义它的文法表示，并定义一个解释器，该解释器使用该表示来解释语言中的句子。
     * 一般需要定义终结符和非终结符。
@@ -1074,7 +1889,7 @@ def test_water_heater():
     * 解释器目标比较单一，行为规则比较固定，因而重要的模块中尽量不要使用解释器模式。
 
 ### 示例
-```
+```py
 # 只能处理双值表达式
 # 只支持单字符运算符
 # 不能处理正负号
@@ -1226,8 +2041,7 @@ if '__main__' == __name__:
     test()
 ```
 
-行为类设计模式-备忘录模式、备忘模式
-----------
+## 行为类 - 备忘录模式、备忘模式
 * 定义：
     * 在不破坏封装性的前提下，捕获一个对象的内部状态，并在该对象之外保存这个状态。这样就可以将该对象恢复到原来保存的状态。在备忘录模式中，如果要保存的状态多，可以创造一个备忘录管理者角色来管理备忘录。
 * 适用场景：
@@ -1247,7 +2061,7 @@ if '__main__' == __name__:
     * 备忘录管理者，Caretaker，备份存档的管理者。
 
 ### 抽象
-```
+```py
 from copy import deepcopy
 
 class Memento:
@@ -1280,8 +2094,7 @@ class Originator:
 ```
 
 
-行为类设计模式-状态模式、状态机
-----------
+## 行为类 - 状态模式、状态机
 * 定义：
     * 当一个对象内在状态改变时允许其行为改变，这个对象看起来像改变了类型。
 * 使用场景：
@@ -1301,19 +2114,17 @@ class Originator:
         * 无限状态机、可以自由添加状态，对扩展开放？能实现这种状态机的通用设计模式可能不存在。状态不可能与上下文解耦。
 
 
-新设计模式-过滤器模式
-----------
+## 新设计模式-过滤器模式
 * 比责任链模式简单，责任链模式有顺序关系，过滤器模式没有
 * 循环迭代处理对象，比链式递进关系简单
 
 
-新设计模式-对象池技术
-----------
+## 新设计模式-对象池技术
 * 比享元模式更进一步，通过借、还操作来复位对象状态。
 * 可以通过sys.getrefcount()获得引用计数自动释放对象
 
 ### 抽象
-```
+```py
 from abc import ABC, abstractmethod
 import logging
 import time
@@ -1393,9 +2204,7 @@ class ObjectPool(ABC):
         return obj
 ```
 
-新设计模式-回调机制、函数式编程
-----------
+## 新设计模式-回调机制、函数式编程
 * 回调是策略模式的一个特例
 
-新设计模式-MVC、MVP、MVVM
-----------
+## 新设计模式-MVC、MVP、MVVM

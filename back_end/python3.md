@@ -8191,3 +8191,18 @@ def Mbox(title, text, style):
 
 Mbox('Your title', 'Your text', 1)
 ```
+
+
+
+## inspect
+
+### 通过函数打印代码
+
+* `inspect.getsource`
+
+```python
+import os
+import inspect
+print(inspect.getsource(os.path.exists))
+```
+

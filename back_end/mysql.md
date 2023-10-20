@@ -6,11 +6,11 @@
 
 
 
-### 概念
+### 数据库概念
 
 * 为什么使用数据库
-  * 数据持久化，persistence，把数据保存在可掉电式存储设备中供之后使用
-  * 易于管理、结构化查询
+  * 数据持久化，persistence
+  * 数据持久化，把内存数据保存在可掉电式存储设备中供之后使用，易于管理、结构化查询
 
 
 
@@ -18,21 +18,61 @@
 * 数据库相关概念
   * DB，database，数据库
     * 狭义数据库指，按特定格式保存数据的文件
-
+    * 本质是一个文件系统，存储了一系列有组织的数据
   * DBMS，Database Management System，数据库管理系统
-    * 是一种操纵和管理数据库的大型软件，用于建立、使用、维护数据库，对数据库进行统一管理和控制，用户通过数据库管理系统访问数据库总表内的数据
-
+    * 是一种操纵和管理数据库的大型软件
+    * 用于建立、使用、维护数据库，对数据库进行统一管理和控制
+    * 用户通过数据库管理系统访问数据库总表内的数据
   * SQL，Structure Query Language，结构化查询语言
-  * DCL，Data Control Language，权限控制
-  * DDL，Data Define Language，数据定义语言
-  * DML，Data Manipaulation Language，数据操纵语言
+    * 专门用于与数据库通讯的语言
+  * DB和DBMS的关系
+    * 一个DBMS可以管理多个DB
+
+
+
+* 什么是关系型数据库
+  * RDBMS
+  * 基于行（row）、列（column）保存一种对象的数据
+  * 多种对象的数据通过字段值形成强关联关系
+
+
+
+* 什么是非关系型数据库
+  * 一般基于键值存储数据，查询速度快
+  * 放弃了对象间的强关联关系，提高了性能
+  * 非关系型数据库有多种
+
+
+
+* 非关系型数据库分类
+  * 键值型数据库，如内存缓存
+    * Redis
+  * 文档型数据库，如JSON文档、XML文档
+    * MongoDB
+    * CouchDB
+  * 搜索引擎数据库，倒排索引
+    * Solr
+    * Elasticsearch
+    * Splunk
+  * 列数据库，降低系统IO、适用于分布式文件系统
+    * HBase
+  * 图数据库，存储图形关系
+    * Neo4J
+    * InfoGrid
+
+
+
+* RDBMS优势
+  * 支持复杂查询
+  * 支持事务
 
 
 
 
-### 版本选择
+### MySQL版本选择
 
 * 纵向版本
+  * 背景：MySQL从5.7版本直接跳到了8.0版本
   * 主流：Mysql5.7
   * 推广：Mysql8.0.34
   * 版本选择:  <https://zhuanlan.zhihu.com/p/144457223>
@@ -40,10 +80,14 @@
 
 
 * 横向版本
-  * MySQL Community Server 社区版本
-  * MySQL Enterprise Edition 企业版本
-  * MySQL Cluster 集群版本，开源免费
-  * MySQL Cluster CGE 高级集群版
+  * MySQL Community Server，社区版本
+    * 开源免费，无技术支持
+  * MySQL Enterprise Edition，企业版本
+    * 付费，技术支持
+  * MySQL Cluster，集群版本
+    * 开源免费，集群
+  * MySQL Cluster CGE，高级集群版
+    * 付费，集群，技术支持
 
 
 
@@ -69,6 +113,7 @@
   * SQLyog
     * 收费
   * dbeaver
+    * 支持NoSQL等多种数据库
     * 需要安装Java
 
 
@@ -113,20 +158,24 @@ sudo yum install mysql-community-server
 
 ### 查看版本
 
-```sh
-# 查看数据库版本
+* 命令行查看版本
 
+```sh
 mysql --version;
 mysql -V;
+```
 
-# select version();
+* SQL函数查看版本
+
+```mysql
+select version();
 ```
 
 
 
 ### 启停服务
 
-```bash
+```sh
 # centos6
 service mysqld start
 service mysqld status
@@ -151,11 +200,23 @@ net stop mysql80
 * `-u`，登录用户，不指定为root
 * `-p`，登录密码，留空为交互式输入，在命令行中输入会产生warning
 
-```bash
-mysql -h host -P 3306 -u root -ppasswd
+```sh
+# 参数和参数值之间可以挨着
+# -p和密码之间必须挨着，或者留空交互式输入
+mysql -h 主机 -P 端口 -u 用户名 -p密码
 
+# 本机可以默认值登录
+mysql -p
+```
+
+
+
+### 退出连接
+
+```mysql
 # 退出
 exit
+quit
 # ctrl + c
 ```
 
@@ -163,14 +224,26 @@ exit
 
 ### 远程连接权限配置
 
+* 数据库默认只允许root用户在localhost连接
+* mysql8.0升级了默认的鉴权方法，如果要适配旧的客户端，需要改为旧的鉴权方法
+
 ```mysql
 # < mysql 8.0 允许远程连接
-GRANT ALL PRIVILEGES ON *.* TO `root`@`%` IDENTIFIED BY `passwd` with grant option;
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'passwd' with grant option;
+
 
 # > mysql 8.0 允许远程连接，加密规则改变，通过mysql_native_password恢复
+
+# 创建用户
 CREATE USER 'root'@'%' IDENTIFIED BY 'passwd'; 
+
+# 将 所有数据库.所有表 赋权给 用户@所有连接host
 GRANT ALL ON *.* TO 'root'@'%'; 
+
+# 修改鉴权方式
 ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'passwd';
+
+# 刷新全新啊
 FLUSH PRIVILEGES;
 ```
 
@@ -201,15 +274,6 @@ collation latin1_swedish_ci;
 
 
 
-### 默认表
-
-* information_schema，表信息，系统信息，权限
-* mysql，运行信息
-* performance_schema
-* sys,
-
-
-
 ### 字符集配置
 
 * 一个数据表有两个字符相关配置
@@ -223,6 +287,16 @@ collation latin1_swedish_ci;
   * mysql5.7以前，默认字符集是`Latin1`，只支持欧洲语言字符集
 
   * mysql8.0及之后，默认的字符集为`utf8mb4`，支持4字节UTF-8编码的字符集，能够表示世界上几乎所有的字符
+
+
+
+* utf8mb4 是什么
+
+  * utf8扩展
+
+  * 5.5.3起支持
+
+  * 支持emoji
 
 
 
@@ -250,7 +324,6 @@ create database 数据库名
 alter database 数据库名 
   character set utf8 
   collate utf8_general_ci;
-  
 
 ```
 
@@ -282,18 +355,15 @@ set collation_database=utf8_general_ci;
 ```ini
 # /etc/my.cnf
 
-# utf8mb4 是什么
+# 客户端字符集配置
 
-# utf8扩展
-# 5.5.3起支持
-# 支持emoji
-
-# 客户端配置
-# 或 [mysql]
+# [mysql]
 [client]
 default-character-set=utf8mb4
 
-# 服务端配置
+
+# 服务端字符集配置
+
 [mysqld]
 default-storage-engine = INNODB
 character-set-server = utf8mb4
@@ -302,6 +372,144 @@ collation-server = utf8mb4_general_ci
 [mysqld]
 init-connect='SET NAMES utf8'
 ```
+
+
+
+## SQL入门
+
+
+
+### 概念
+
+* SQL，Structured Query Language，结构化查询语言
+* 是访问和处理数据库的标准计算机语言
+* 由IBM上世纪70年代开发出来
+* 美国国家标准化组织，ANSI标准
+  * SQL-86
+  * SQL-89
+  * SQL-92，淘汰标准
+  * SQL-99，现行标准
+* 各厂商数据库的SQL在细节上存在兼容性问题
+
+
+
+### 分类
+
+* SQL语言分类
+  * 管饭分为三类
+    * DDL，数据定义语言
+    * DML，数据操作语言
+    * DCL，数据控制语言
+
+  * 其他细化分类
+    * DQL，数据查询语言，将SELECT从DML中拆分出来
+    * TCL，事务控制语言，将事务从DCL中拆分出来
+
+
+
+
+* DDL，Data Definition Languages，数据定义语言
+  * 定义数据库、表、视图、索引等
+    * CREATE
+  * 创建、删除、修改数据库和数据表
+    * ALTER
+    * DROP
+    * RENAME
+    * TRUNCATE
+
+
+
+* DML，Data Manipulation Language，数据操作语言
+  * 增删改查
+    * INSERT
+    * DELETE
+    * UPDATE
+    * SELECT
+
+
+
+* DCL，Data Control Language，数据控制语言
+  * 定义数据库、表、字段、用户的访问权限和安全级别
+    * GRANT
+    * REVOKE
+  * 事务提交、回滚
+    * COMMIT
+    * ROLLBACK
+    * SAVEPOINT
+
+
+
+* DQL，Data Query Language，数据查询语言
+  * 由于数据查询比较重要，查询可能单独拎出来作为DQL
+
+
+
+* TCL，Transaction Control Language，事务控制语言
+  * COMMIT、ROLLBACK
+
+
+
+### 语法规则和规范
+
+* 语法规则
+  * SQL可以卸载一行或多行。为了提高可读性，各子句分行写，必要时使用缩进。
+  * 命令以`;`结束分隔
+  * `\g`或`\G`在命令行中可以将列显示转换为行显示
+  * 关键字不能被缩写也不能分行
+  * 必须保证所有的括号、单引号、双引号成对
+  * 必须使用英文半角输入方式
+  * 字符串类型和日期类型的数据规范使用单引号，兼容双引号
+  * 数字可以使用单引号
+  * 列的别名使用双引号，不建议省略AS关键字，兼容单引号
+  * SQL不区分大小写，但是操作系统区分大小写（DBMS使用操作系统的文件系统）
+
+
+
+* 命名规则
+  * 库名、表名不超过30个字符，变量名不超过29个字符
+  * 只能使用[A-Z, a-z, 0-9, _ ] 共63个字符
+  * 最好不要包含空格
+  * 最好不要和关键字重复，重复了需要使用``包裹
+  * 多个表中相同字段，名称和类型最好保持一致
+
+
+
+
+* 注释
+  * `#`开头，单行注释
+  * `--`开头，单行注释
+  * `/* */`包裹，多行注释，不能嵌套
+
+
+
+* 规范
+  * MySQL在windows环境下是大小写不敏感的
+  * MySQL在Linux环境下是大小写敏感的
+    * 数据库名、表名、表的别名、变量名是严格区分大小写的
+    * 关键字、函数名、列名（或字段名）、列的别名（字段的别名）是忽略大小写的
+  * 建议
+    * 数据库名、表名、表别名、字段名、字段别名等都小写
+    * SQL关键字、函数名、绑定变量等都大写
+
+
+
+### 默认数据库
+
+* information_schema
+  * 服务器系统信息，如数据库名称、数据表名称、字段名称、存取权限、数据文件所在文件夹、系统文件夹
+
+* performance_schema
+  * 性能数据
+
+* sys
+  * 服务器性能指标，供系统管理员和开发人员监控
+
+* mysql
+  * 运行所需的系统信息
+  * 数据文件夹
+  * 字符集
+  * 约束检查
+
 
 
 
@@ -374,111 +582,179 @@ alter table person type=INNODB;
 
 
 
-### 常见查询命令
+### 列出所有数据库
 
 ```mysql
-# 查看所有数据库
 show databases;
-
-# 创建数据库
-create database test;
-
-# 使用数据库
-use test;
-
-# 查看所有表
-show tables;
-show tables from db;
-
-# 查看表结构
-desc table;
 ```
 
 
 
-## SQL入门
+### 创建数据库
+
+```mysql
+create database 数据库名;
+
+create database test;
+```
 
 
 
-### 概念
+### 删除数据库
 
-* SQL，Structured Query Language，结构化查询语言
-* 是访问和处理数据库的标准计算机语言
-* 由IBM上世纪70年代开发出来
-* 美国国家标准化组织，ANSI标准
-  * SQL-86
-  * SQL-89
-  * SQL-92
-  * SQL-99
-* 各厂商数据库的SQL在细节上存在兼容性问题
+```mysql
+drop database 数据库名;
+drop database test;
+```
 
 
 
-### 分类
+### 查看数据库创建信息
 
-* 根据功能，将SQL语言分为三类，DDL、DML、DCL
-* DDL，Data Definition Languages，数据定义语言
-  * 定义数据库、表、视图、索引等
-    * CREATE
-  * 创建、删除、修改数据库和数据表
-    * ALTER
-    * DROP
-    * RENAME
-    * TRUNCATE
-* DML，Data Manipulation Language，数据操作语言
-  * 增删改查
-    * INSERT
-    * DELETE
-    * UPDATE
-    * SELECT
-* DCL，Data Control Language，数据控制语言
-  * 定义数据库、表、字段、用户的访问权限和安全级别
-    * GRANT
-    * REVOKE
-  * 事务提交、回滚
-    * COMMIT
-    * ROLLBACK
-    * SAVEPOINT
-* DQL，Data Query Language，数据查询语言
-  * 由于数据查询比较重要，查询可能单独拎出来作为DQL
-* TCL，Transaction Control Language，事务控制语言
-  * COMMIT、ROLLBACK
+```mysql
+show create database 数据库名;
+
+show create database 数据库名\G
+show create database test\G
+```
 
 
 
-### 语法规则和规范
+### 使用数据库
 
-* SQL可以卸载一行或多行。为了提高可读性，各子句分行写，必要时使用缩进。
-* 命令以`;`或`\g`或`\G`结束
-* 关键字不能被缩写也不能分行
-* 必须保证所有的括号、单引号、双引号成对
-* 必须使用英文半角输入方式
-* 字符串类型和日期类型的数据可以使用单引号表示
-* 列的别名尽量使用双引号，不建议省略as
-* 不区分大小写，建议关键字大写
-* 注释
-  * `#`开头，单行注释
-  * `--`开头，单行注释
-  * `/* */`包裹，多行注释 
+```mysql
+use 数据库名;
 
-* 字符和日期必须使用单引号
-* 字符串必须使用单引号
-* 数字可以使用单引号
+use test;
+```
 
 
 
-## 关系型数据库设计规范
+### 列出所有数据表
 
-* E-R，entity-relationship，实体-联系模型
-  * 实体集，class，对应数据库中的一个表，table
-  * 实体，instance，对应数据表中一行，row，也称为记录，record
-  * 属性，attribute，对应数据表中一列，column，也称为一个字段，field
-  * 联系集
-* 表的关联关系，relationship
-  * 一对一，one-to-one
-  * 一对多，one-to-many
-  * 多对多，many-to-many
-  * 自关联，self reference
+```mysql
+# 列出当前数据库的所有表
+# use 数据库;
+show tables;
+
+# 列数指定数据库所有数据表
+show tables from db;
+```
+
+
+
+### 创建数据表
+
+```mysql
+# 创建表
+# 最后一个字段定义后没有逗号
+
+create table 表名(
+	字段名 数据类型,
+    字段名 数据类型
+);
+
+create table student(
+	id int,
+	name varchar(20)
+);
+```
+
+
+
+### 查看表中所有数据
+
+```mysql
+select * from 数据库表名称;
+select * from sutdent;
+```
+
+
+
+### 添加记录
+
+```mysql
+insert into 表名 values(值列表);
+
+# 添加两条记录
+# 需要提前设置字符集支持中文
+
+insert into student values(1, '张三');
+insert into student values(2, '李四');
+```
+
+
+
+### 查看创建表的语句，建表语句
+
+```mysql
+show create table 表名称;
+show create table student;
+
+show create table 表名称\G
+show create table student\G
+```
+
+
+
+### 查看表结构，行列显示
+
+```mysql
+describe 表名;
+
+describe employees;
+
+
+# 简写
+desc employees;
+```
+
+
+
+![image-20231016004024034](.gitbook/assets/image-20231016004024034.png)
+
+
+
+* Field，字段名称
+* Type，字段类型
+* Null，该列是否可以存储NULL值
+* Key，该列是否已编制索引
+  * PRI表示该列是表主键的一部分
+  * UNI表示该列是UNIQUE索引的一部分
+  * MUL表示在列中某个给定值允许出现多次
+
+* Default，表示该列是否有默认值，如果有，那么值是多少
+* Extra，表示可以获取的与给定列有关的附加信息，例如AUTO_INCREMENT等
+
+
+
+### 删除表格
+
+```mysql
+drop table 表名称;
+
+drop table student;
+```
+
+
+
+### 导入数据
+
+```mysql
+# 在mysql中执行
+
+source 文件路径;
+```
+
+
+
+### 伪表关键字，DUAL
+
+* 为了让所有SELECT语句都有FROM子句，构造一个无意义无数据的表
+
+```mysql
+SELECT 1 + 1， 3 * 2；
+```
 
 
 
@@ -488,14 +764,16 @@ desc table;
 
 
 
-### 基础查询 select
+### 基础查询，SELECT
 
 ```mysql
 # 查询所有列
-select * from departments;
+select * 
+from departments;
 
 # 查询指定列（按指定顺序显示）
-select department_id,department_name from departments;
+select department_id,department_name 
+from departments;
 
 # 查询常量值
 select 100;
@@ -532,7 +810,10 @@ ifnull(var) # 返回1, 0
 ifnull(var, 'str') # 返回str，原值
 ```
 
-### 条件查询 where
+
+
+### 条件查询，WHERE
+
 ```mysql
 # 简单条件运算符
 < # 小于
@@ -604,118 +885,282 @@ select last_name, commission_pct from employees where commission_pct is null;
 select last_name, commission_pct from employees where commission_pct <=> null;
 ```
 
-### 排序查询，order by
+
+
+### 排序查询，ORDER BY
+
+* 排序关键字
+  * ASC，ascend，升序
+  * DESC，descend，降序
+  * 默认升序，ASC可以省略不写
+
+
+
 ```mysql
 # 语法
-select col
-from table
-[where condition]
-order by col [asc|desc]
+SELECT 字段列表
+FROM 表名
+[WHERE 条件列表]
+ORDER BY 排序条件 [ASC 或 DESC]
 
-# 默认asc升序，可以省略不写
-
-## 降序
-select * from employees order by salary desc;
-
-## 升序
-select * from employees order by salary;
-
-## 使用别名排序
-select *, salary*12*(1+ifnull(commission_pct, 0)) as S 
+# 降序
+select * 
 from employees 
+order by salary desc;
+
+# 升序
+select *
+from employees
+order by salary;
+
+```
+
+
+
+* 使用计算后的值排序
+
+```mysql
+# 使用别名排序
+select *, salary*12*(1+ifnull(commission_pct, 0)) as S
+from employees
 order by salary*12*(1+ifnull(commission_pct, 0)) desc;
 
 select *, salary*12*(1+ifnull(commission_pct, 0)) as S 
-from employees 
+from employees
 order by S desc;
 
-## 字符长度 length() 
-select * from employees order by lenght(last_name);
-
-## 多个字段排序
-select * from employees order by salary asc, employee_id desc;
+# 字符长度 length()
+select * 
+from employees
+order by length(last_name);
 ```
 
-### 常见单行函数
-* 格式：select func(var) [from table]; # select是否用到table中的字段
+
+
+* 多列排序
+  * 第一列有相同值时，才生效第二列排序
 
 ```mysql
-# 字符函数
-
-## length() # 字符串长度
-length('e') # 英文字符占1个字节
-length('中') # 中文占3个字节
-show variables like '%char%'; # utf8
-
-## concat() # 拼接字符串
-select concat(last_name, '_', first_name)
-
-## upper() lower() # 大小写转换
-select UPPER('abc');
-select lower('ABC');
-
-## substr() substring() # 截取字符串
-select substr('12345678', 7); # 78，从1开始计数截取到结束
-select substr('12345678', 2，3); # 234，从2开始截取3个字符
-
-## instr() # 查询子串位置
-select instr('12345678', '678'); # 6
-select instr('12345678', '90'); # 找不到返回0
-
-## trim() # 清除空格或指定字符
-select trim('    123    '); # 123
-select trim('a' from 'aaaa123aaaa') # 123
-
-## lpad(), rpad() # 左右填充
-select lpad('a', 3, '*'); # **a
-select rpad('a', 3, '*'); # a**
-
-## replace() 替换
-select replace('abc****abc*****abc', 'abc', '123'); # 所有都会被替换
+select * 
+from employees 
+order by salary asc, employee_id desc;
+```
 
 
-# 数学函数
 
-## round() 四舍五入，仅考虑1位小数
+### 单行函数
+
+
+
+#### 数值函数
+
+* `ABS(x)`，绝对值
+* `SIGN(x)`，符号，整数返回1，负数返回-1，0返回0
+* `PI()`，圆周率
+* `CEIL(x)`，`CEILING(X)`，上取整
+* `FLOOR(x)`，下取整
+* `ROUND(x)`，四舍五入，保留整数
+* `ROUND(x, y)`，四舍五入，保留y位小数
+* `TRUNCATE(x, y)`，截断小数，保留y位小数
+* `LEAST(e1, e2, e3...)`，求最小值
+* `GREATEST(e1, e2, e3...)`，求最大值
+* `MOD(x, y)`，求余数，x % y
+* `RAND()`，随机数
+* `RADN(x)`，固定种子调用求伪随机数，种子相同随机结果相同
+* `SQRT(x)`，求平方根，负数返回NULL
+
+
+
+```mysql
+# round() 四舍五入，仅考虑1位小数
 select round(1.500001); # 2
 select round(1.499999); # 1
 
-## ceil() 向上取证，大于等于该参数的最小整数
+# ceil() 向上取证，大于等于该参数的最小整数
 select cell(1.002) # 2
 select cell(1.000) # 1
 select cell(-1.02) # -1
 
-## floor() 向下取整
+# floor() 向下取整
 select floor(0.9); # 0
 select floor(-0.8); # -1
 
-## truncate() 截断，小数点后保留n位
+# truncate() 截断，小数点后保留n位
 select truncate(1.1234, 1) # 1.1
 
-## mod() 取余
+# mod() 取余
 select mod(10, -3); # 1
 select mod(-10, -3); # -1
 
-## rand() 0-1随机小数
+# rand() 0-1随机小数
+```
 
 
-# 日期函数
 
-## now() 当前日期时间
+#### 角度与弧度函数
+
+* `RADIANS(x)`，角度转弧度
+* `DEGREES(x)`，弧度转角度
+
+```mysql
+SELECT RADIANS(30);
+# 0.5235987755982988
+
+SELECT RADIANS(60);
+# 1.0471975511965976
+
+SELECT RADIANS(90);
+# 1.5707963267948966
+
+SELECT DEGREES(2*PI())
+# 360
+
+SELECT DEGREES(RADIANS(90));
+# 90
+```
+
+
+
+#### 三角函数
+
+* 参数或结果为弧度
+* `SIN(x)`，正弦，x为弧度
+* `ASIN(x)`，`-1 < x < 1`，不在范围内结果为NULL
+* `COS(x)`，余弦
+* `ACOS(x)`，反余弦
+* `TAN(x)`，正切
+* `ATAN(x)`，反正切
+* `ATAN2(m, n)`，返回两个参数的反正切值
+* `COT(x)`，余切
+
+
+
+#### 指数与对数
+
+* `POW(x, y)`，`POWER(x, y)`，求x的y次方
+* `EXP(x)`，返回e的x次方，e是自然常数
+* `LN(x)`，`LOG(x)`，返回以e为敌的x的对数
+* `LOG10(x)`，返回以10为底的x的对数
+* `LOG2(x)`，返回以2为底的x的对数
+
+
+
+#### 进制间转换
+
+* `BIN(x)`，返回x的二进制编码
+* `HEX(x)`，返回x的十六进制编码
+* `OCT(x)`，返回x的八进制编码
+* `CONV(x, f1, f2)`，返回f1进制转f2进制
+
+
+
+#### 字符串函数
+
+* `ASCII(s)`，返回s中第一个字符的ASCII码值
+* `CHAR_LENGTH(s)`，`CHARACTER_LENGTH(s)`，返回字符数
+* `LENGTH(s)`， 返回占用字节数，和字符集有关
+* `CONCAT(s1,s2,...,sn)`， 连接为一个字符串
+* `CONCAT_WS(x,s1,s2,...,sn)`，相当于`x.join(s1, s2, ..., sn)`
+* `INSERT(str, idx, len, replacestr)`，从第idx位置开始，len个字符长的子串，替换为replacestr
+* `REPLACE(str, a, b)`，用b串替换字符串中所有的a串
+* `UPPER(s)`，`UCASE(s)`， 转成大写字母
+* `LOWER(s)`，`LCASE(s)`，转成小写字母
+* `LEFT(str,n)`，返回最左边的n个字符
+* `RIGHT(str,n)`，返回最右边的n个字符
+* `LPAD(str, len, pad)`，用pad对str最左边进行填充，直到str的长度为len个字符
+* `RPAD(str ,len, pad)`，用pad对str最右边进行填充，直到str的长度为len个字符
+* `LTRIM(s)`，去掉左侧的空白
+* `RTRIM(s)`，去掉右侧的空白
+* `TRIM(s)`，去掉前后空白
+* `TRIM(s1 FROM s)`，去掉前后的s1
+* `TRIM(LEADING s1 FROM s)`，去掉开始处的s1
+* `TRIM(TRAILING s1 FROM s)`，去掉结尾处的s1
+* `REPEAT(str, n)`，返回str重复n次的结果
+* `SPACE(n)`，返回n个空格
+* `STRCMP(s1,s2)`，比较字符串s1,s2的ASCII码值的大小
+* `SUBSTR(s,index,len)`，`SUBSTRING(s,n,len)`，`MID(s,n,len)`，返回从index位置len个字符
+* `LOCATE(substr,str)`，`POSITION(substr IN str)`，`INSTR(str,substr)`，返回字符串substr在字符串str中首次出现的位置，未找到，返回0
+* `ELT(m,s1,s2,…,sn)`，返回指定位置的字符串，如果m=1，则返回s1，如果m=2，则返回s2，如
+  果m=n，则返回sn
+* `FIELD(s,s1,s2,…,sn)`，返回字符串s在字符串列表中第一次出现的位置
+* `FIND_IN_SET(s1,s2)`，返回字符串s1在字符串s2中出现的位置。其中，字符串s2是一个以逗号分
+  隔的字符串
+* `REVERSE(s)`，返回s反转后的字符串
+* `NULLIF(value1,value2)`，比较两个字符串，如果value1与value2相等，则返回NULL，否则返回
+  value1
+
+
+
+```mysql
+# length() # 字符串长度
+length('e') # 英文字符占1个字节
+length('中') # 中文占3个字节
+show variables like '%char%'; # utf8
+
+# concat() # 拼接字符串
+select concat(last_name, '_', first_name)
+
+# upper() lower() # 大小写转换
+select UPPER('abc');
+select lower('ABC');
+
+# substr() substring() # 截取字符串
+select substr('12345678', 7); # 78，从1开始计数截取到结束
+select substr('12345678', 2，3); # 234，从2开始截取3个字符
+
+# instr() # 查询子串位置
+select instr('12345678', '678'); # 6
+select instr('12345678', '90'); # 找不到返回0
+
+# trim() # 清除空格或指定字符
+select trim('    123    '); # 123
+select trim('a' from 'aaaa123aaaa') # 123
+
+# lpad(), rpad() # 左右填充
+select lpad('a', 3, '*'); # **a
+select rpad('a', 3, '*'); # a**
+
+# replace() 替换
+select replace('abc****abc*****abc', 'abc', '123'); # 所有都会被替换
+
+```
+
+
+
+#### 日期和时间函数
+
+
+
+##### 获取日期、时间
+
+* `CURDATE()`，`CURRENT_DATE()`，返回当前日期，只包含年、月、日
+* `CURTIME()`，`CURRENT_TIME()`，返回当前时间，只包含时、分、秒
+* `NOW()`，`SYSDATE()`，`CURRENT_TIMESTAMP()`，`LOCALTIME()`，`LOCALTIMESTAMP()`，返回当前系统日期和时间
+* `UTC_DATE()`，返回UTC（世界标准时间）日期
+* `UTC_TIME()`，返回UTC（世界标准时间）时间
+
+
+
+![image-20231017095245695](.gitbook/assets/image-20231017095245695.png)
+
+
+
+```mysql
+# now() 当前日期时间
 select now(); # 2020-06-10 22:41:13
 
-## curdate() 当前日期
+# curdate() 当前日期
 select curdate(); # 2020-06-10
 
-## curtime() 当前时间
+# curtime() 当前时间
 select curtime(); # 22:41:13
 
-## year() month() monthname() day() hour() minute() second()
+# year() month() monthname() day() hour() minute() second()
 select year(now());
 select year('2008-1-3');
 select month(now());
 
-## str_to_date() # 字符串转换日期
+# str_to_date() # 字符串转换日期
 
 %Y # 四位年
 %y # 2位年
@@ -728,26 +1173,84 @@ select month(now());
 %s # 秒
 select str_to_date('1998-3-2', '%Y-%c-%d');
 
-## date_format() # 日期转字符串
+# date_format() # 日期转字符串
 
 
-## datediff() # 日期差
+# datediff() # 日期差
 select datediff(now(), '1995-1-1');
 
-# 其他函数
-select version();
-select database();
-select user(); # root
-select password('word') # 字符加密
-select md5('word')
+```
 
-# 流程控制函数
 
-## if函数
+
+##### 日期与时间戳转换
+
+* `UNIX_TIMESTAMP()`，以UNIX时间戳的形式返回当前时间。`SELECT UNIX_TIMESTAMP()` 1634348884
+* `UNIX_TIMESTAMP(date)`，将时间date以UNIX时间戳的形式返回。
+* `FROM_UNIXTIME(timestamp)`，将UNIX时间戳的时间转换为普通格式的时间
+
+```mysql
+SELECT UNIX_TIMESTAMP('2011-11-11 11:11:11');
+SELECT FROM_UNIXTIME(1576380910);
+```
+
+
+
+##### 获取月份、星期、星期数、天数等函数
+
+* `YEAR(date)`，`MONTH(date)`，`DAY(date)`，返回具体的日期值
+* `HOUR(time)`，`MINUTE(time)`，`SECOND(time)`，返回具体的时间值
+* `MONTHNAME(date)`，返回月份：January，...
+* `DAYNAME(date)`，返回星期几：MONDAY，TUESDAY.....SUNDAY
+* `WEEKDAY(date)`，返回周几，注意，周1是0，周2是1，。。。周日是6
+* `QUARTER(date)`，返回日期对应的季度，范围为1～4
+* `WEEK(date)`，WEEKOFYEAR(date) 返回一年中的第几周
+* `DAYOFYEAR(date)`，返回日期是一年中的第几天
+* `DAYOFMONTH(date)`，返回日期位于所在月份的第几天
+* `DAYOFWEEK(date)`，返回周几，注意：周日是1，周一是2，。。。周六是7
+
+
+
+##### 提取日期特定部分
+
+* `EXTRACT(type FROM date)`，返回指定日期中特定的部分，type指定返回的值
+
+```mysql
+SELECT EXTRACT(MINUTE FROM NOW()),EXTRACT( WEEK FROM NOW()),
+EXTRACT( QUARTER FROM NOW()),EXTRACT( MINUTE_SECOND FROM NOW())
+FROM DUAL;
+```
+
+
+
+##### 时间和秒转换
+
+* `TIME_TO_SEC(time)`，将 time 转化为秒并返回结果值。转化的公式为： 小时*3600+分钟
+  *60+秒
+* `SEC_TO_TIME(seconds)`，将 seconds 描述转化为包含小时、分钟和秒的时间
+
+
+
+##### 计算时间和日期
+
+
+
+
+
+##### 日期的格式化与解析
+
+
+
+
+
+#### 流程控制函数
+
+```mysql
+# if函数
 select if(10>5, 'large', 'small');
 select if(commission_pct is null, 'no', 'yes');
 
-## case，switch case
+# case，switch case
 case 字段或表达式
 when 常量1 then 值或者语句1;
 when 常量2 then 值或者语句2;
@@ -763,7 +1266,7 @@ else salary
 end as new_salary
 from employees;
 
-## case，多重if
+# case，多重if
 case
 when 条件1 then 值或者语句1
 when 条件2 then 值或者语句2
@@ -779,43 +1282,128 @@ when salary>10000 then 'C'
 else 'D'
 end as s
 from employees;
-
 ```
+
+
+
+#### 加密与解密函数
+
+* `PASSWORD(str)`，返回字符串str的加密版本，41位长的字符串。加密结果 不可
+  逆 ，常用于用户的密码加密
+* `MD5(str)`，返回字符串str的md5加密后的值，也是一种加密方式。若参数为
+  NULL，则会返回NULL
+* `SHA(str)`，从原明文密码str计算并返回加密后的密码字符串，当参数为NULL时，返回NULL。 SHA加密算法比MD5更加安全 。
+* `ENCODE(value,password_seed)`，返回使用password_seed作为加密密码加密value
+* `DECODE(value,password_seed)`，返回使用password_seed作为加密密码解密value
+
+```mysql
+select password('word'); # 字符加密
+select md5('word');
+```
+
+
+
+#### MySQL系统信息函数
+
+* `VERSION()`，返回当前MySQL的版本号
+* `CONNECTION_ID()`，返回当前MySQL服务器的连接数
+* `DATABASE()`，`SCHEMA()`，返回MySQL命令行当前所在的数据库
+* `USER()`，`CURRENT_USER()`，`SYSTEM_USER()`，`SESSION_USER()`，返回当前连接MySQL的用户名，返回结果格式为“主机名@用户名”
+* `CHARSET(value)`，返回字符串value自变量的字符集
+* `COLLATION(value)`，返回字符串value的比较规则
+
+```mysql
+select version();
+select database();
+select user(); # root
+```
+
+
+
+#### 其他函数
+
+* `FORMAT(value,n)`，返回对数字value进行格式化后的结果数据。n表示 四舍五入 后保留
+  到小数点后n位
+* `CONV(value,from,to)`，将value的值进行不同进制之间的转换
+* `INET_ATON(ipvalue)`，将以点分隔的IP地址转化为一个数字
+* `INET_NTOA(value)`，将数字形式的IP地址转化为以点分隔的IP地址
+* `BENCHMARK(n,expr)`，将表达式expr重复执行n次。用于测试MySQL处理expr表达式所耗费
+  的时间
+* `CONVERT(value USING char_code)`，将value所使用的字符编码修改为char_code
+
+
 
 ### 聚合函数
 
 * 一般结合group by分组后使用
 * 又称分组函数，统计函数，组函数
 
-#### 求和，sum
+
+
+#### 求和，SUM
+
+* 仅支持数值类型数据
+* 会自动过滤NULL
 
 ```mysql
 # sum，支持数值类型，null不参与运算
 select sum(salary) from employees;
 ```
 
-#### 平均值，agv
+
+
+#### 平均值，AVG
+
+* 仅支持数值类型数据
+* 分子和分母都会自动过滤NULL，`AGV = SUM / COUNT`
 
 ```mysql
 # avg，支持数值类型，null忽略，平均除数也忽略
 select avg(salary) from employees;
 ```
 
-#### 最大值，max
+
+
+* 含NULL值的平均值计算
+
+```mysql
+# 求平均奖金率，有些奖金率为NULL
+# 不能直接使用AVG
+
+SELECT SUM(commission_pct) / COUNT(IFNULL(commission_pct, 0));
+FROM employees;
+
+SELECT AGV(IFNULL(commision_pct, 0))
+FROM employees;
+```
+
+
+
+#### 最大值，MAX
+
+* 支持任意类型数据，可排序即可
 
 ```mysql
 # max，支持字符型和日期型，可以比较大小就支持，忽略null值
 select max(salary) from employees;
 ```
 
-#### 最小值，min
+
+
+#### 最小值，MIN
+
+* 支持任意类型数据，可排序即可
 
 ```mysql
 # min
 select min(salary) from employees;
 ```
 
-#### 计数，count
+
+
+#### 计数，COUNT
+
+* `count(expr)`，可以统计不为空的记录数
 
 ```mysql
 # 不指定列计数
@@ -826,13 +1414,25 @@ select count(1) from employees; # MYISAN INNODB 效率相同
 select count(salary) from employees; # 判断是否为NULL
 ```
 
-#### 结合去重，distinct
+* 比较用`count(*)`，`count(1)`，`count(列名)`
+  * 对于MyISAM引擎的表是没有区别的。这种引擎内部有一计数器在维护着行数。
+  * Innodb引擎的表用`count(*)`,`count(1)`直接读行数，复杂度是O(n)，因为innodb真的要去数一遍。但好于具体的count(列名)。
+* 能不能使用`count(列名)`替换`count(*)`
+  * 不要使用`count(列名)`来替代 `count(*)` ， `count(*)`是 SQL92 定义的标准统计行数的语法，跟数
+    据库无关，跟 NULL 和非 NULL 无关。
+  * `count(*)`会统计值为 NULL 的行，而`count(列名)`不会统计此列为 NULL 值的行。
+
+
+
+#### 结合去重，DISTINCT
 
 ```mysql
 # distinct
 select count(distinct salary) from employees;
 select sum(distinct salary) from employees;
 ```
+
+
 
 #### 一次查询多次使用
 
@@ -841,9 +1441,13 @@ select sum(salary), avg(salary), max(salary), min(salary), count(salary)
 from employees;
 ```
 
-### 分组查询，group by
+
+
+### 分组查询，GROUP BY
 
 * 一般结合聚合函数使用
+
+
 
 #### 按分组函数分组
 
@@ -891,6 +1495,25 @@ select min(id) from tt group by name, age;
 
 #### 过滤分组后的信息，having
 
+* 不能在 WHERE 子句中使用聚合函数
+
+
+
+* WHERE对比HAVING
+  * WHERE
+    * 先筛选数据再关联，执行效率高
+    * 不能使用分组中的计算函数进行筛选
+  * HAVING
+    * 可以使用分组中的计算函数
+    * 在最后的结果集中进行筛选，执行效率较低
+
+
+
+* 使用原则
+  * 包含分组统计函数的条件用 HAVING，普通条件用 WHERE。这样，我们就既利用了 WHERE 条件的高效快速，又发挥了 HAVING 可以使用包含分组统计函数的查询条件的优点。
+
+
+
 ```mysql
 ## 哪个部门的员工个数大于2
 
@@ -917,6 +1540,8 @@ having max_salary > 12000;
 从生成表中筛选放在having里
 ```
 
+
+
 #### 按表达式或函数分组
 
 ```mysql
@@ -927,7 +1552,10 @@ group by length(last_name)
 having count(*) > 5;
 ```
 
+
+
 #### 按多个字段分组
+
 ```mysql
 # 查询每个部门每个工种的员工的平均工资
 select avg(salary), department_id, job_id 
@@ -935,24 +1563,137 @@ from employees
 group by job_id, department_id;
 ```
 
-### sql92 连接查询，多表查询，多表连接
-* 多表查询必须添加限定条件
-* 92标准仅支持内连接
-* 内连接：
-    *  等值连接
-        *  多表等值连接结果为多表的交集部分
-        *  n表连接至少需要n-1个连接条件
-        *  多表连接顺序没有要求
-        *  一般需要为表起别名
-    *  非等值连接
-    *  自连接
-* 外连接：
-    *  左外连接
-    *  右外连接
-    *  全外连接
-* 交叉连接
 
-#### 等值连接
+
+#### 增加总分组，WITH ROLLUP
+
+* 例如下面语句会多一行全体平均工资
+
+```mysql
+SELECT department_id,AVG(salary)
+FROM employees
+WHERE department_id > 80
+GROUP BY department_id WITH ROLLUP;
+```
+
+* ==当使用ROLLUP时，不能同时使用ORDER BY子句进行结果排序，即ROLLUP和ORDER BY是互相排斥
+  的。==
+
+
+
+### 多表查询，SQL92
+
+* 什么是多表查询
+  * 多个有关联的表联合查询得出结果
+
+
+
+* 什么是笛卡尔积或交叉连接
+  * 假设两个集合，两个集合的所有可能的组合就是笛卡尔积
+  * `FROM`语句中导入多个表，但不在`WHERE`语句中加入限制条件，就会产生笛卡尔积
+
+```mysql
+SELECT table1.column, table2.column
+FROM table1, table2;
+```
+
+
+
+* 连接注意事项
+
+  * n表连接至少需要n-1个连接条件
+
+  * 多表连接顺序没有要求
+
+  * 一般需要为表起别名
+
+
+
+* 连接分类
+    * 按连接条件分为
+        * 等值连接
+            * 连接条件为等式
+        * 非等值连接
+            * 连接条件为非等式，例如`WHERE e.salary BETWEEN j.lowest_sal AND j.highest_sal;`
+    * 按是否与自身连接分为
+        * 自连接
+        * 非自连接
+    * 按是否显示全表分为
+        * 内连接
+        * 外连接
+
+
+
+* 内连接
+    * `JOIN`，`INNER JOIN`，`CROSS JOIN`不带条件都为笛卡尔积，带条件都为内连接
+
+
+
+* 外连接分为
+    * 左外连接，`LEFT JOIN`，`LEFT OUTER JOIN`，左边是主表，主表全显示，附表无匹配则`NULL`
+    * 右外连接，`RIGHT JOIN`，`RIGHT OUTER JOIN`，右边是主表，主表全显示，附表无匹配则`NULL`
+    * 全外连接，`FULL JOIN`，`OUTER JOIN`，`FULL OUTER JOIN`，左右表都全显示，无匹配则`NULL`
+
+
+
+![Types of SQL Joins : r/coolguides](.gitbook/assets/gnjv2trhkey61.jpg)
+
+
+
+* MYSQL的SQL92的连接
+
+  * MYSQL的SQL92中不支持`JOIN`关键字，多表查询必须添加限定条件
+
+  * MYSQL的SQL92通过`WHERE`条件，只能支持内连接
+
+```mysql
+SELECT table1.column, table2.column
+FROM table1, table2
+WHERE table1.column1 = table2.column2;  #连接条件
+
+SELECT last_name, department_name
+FROM employees, departments
+WHERE employees.department_id = departments.department_id;
+```
+
+
+
+* SQL92标准外连接（Oracle）
+  * 左外连接在右表条件加加号
+
+```mysql
+# 左外连接
+SELECT last_name,department_name
+FROM employees ,departments
+WHERE employees.department_id = departments.department_id(+);
+
+# 右外连接
+SELECT last_name,department_name
+FROM employees ,departments
+WHERE employees.department_id(+) = departments.department_id;
+```
+
+
+
+* MYSQL不支持全外连接
+  * 使用`UNION`连接左右外连接，去重，性能差
+  * 使用`UNION ALL`不去重
+
+```mysql
+SELECT employee_id,last_name,department_name
+FROM employees e LEFT JOIN departments d
+ON e.`department_id` = d.`department_id`
+WHERE d.`department_id` IS NULL
+UNION ALL  #没有去重操作，效率高
+SELECT employee_id,last_name,department_name
+FROM employees e RIGHT JOIN departments d
+ON e.`department_id` = d.`department_id`;
+```
+
+
+
+#### 等值连接示例
+
 ```mysql
 select beauty.id, beauty.name, boys.boyName 
 from beauty, boys 
@@ -1005,7 +1746,10 @@ and d.location_id=l.location_id
 and city like 's%';
 ```
 
-#### 非等值连接
+
+
+#### 非等值连接示例
+
 ```mysql
 # 员工的工资和工资级别
 select salary, grade_level
@@ -1013,7 +1757,10 @@ from employees as e, job_grades as g
 where salary between g.lowest_sal and g.highest_sal;
 ```
 
-#### 自连接
+
+
+#### 自连接示例
+
 ```mysql
 # 员工和领导名称，领导本身在员工表中
 
@@ -1022,26 +1769,34 @@ from employees as e, employees as m
 where e.manager_id = m.employee_id;
 ```
 
-### sql99
-* 内连接 inner join
-* 外连接：一个表中有，另一个表中没有
-* 左外连接 left [outer] join，left左边是主表，主表全显示
-* 右外连接 right [outer] join，right左边是辅表，主表全显示
-* 全外连接 full [outer] join
-* 交叉连接 cross
+
+
+### 多表查询，SQL99
+
+* 自然连接
+  * 自动使用两张表中名称相同的字段等值连接
+
 ```mysql
-# 格式
-select 查询列表
-from 表1 别名 
-连接类型 join 表2 别名
-on 连接条件
-[where]
-[group by]
-[having]
-[order by]
+SELECT employee_id,last_name,department_name
+FROM employees e NATURAL JOIN departments d;
 ```
 
+
+
+* USING连接
+  * 使用指定字段名称连接
+
+```mysql
+SELECT employee_id,last_name,department_name
+FROM employees e 
+JOIN departments d
+USING (department_id);
+```
+
+
+
 #### 内连接-等值连接
+
 ```mysql
 select last_name, department_name
 from employees as e
@@ -1075,7 +1830,10 @@ inner join jobs as j on e.job_id = j.job_id
 order by department_name desc;
 ```
 
+
+
 #### 内连接-非等值连接
+
 ```mysql
 select salary, grade_level
 from employees as e
@@ -1091,7 +1849,10 @@ having count(*) > 20
 order by grade_level desc;
 ```
 
+
+
 #### 内连接-自连接
+
 ```mysql
 select e.last_name, m.last_name
 from employees as e
@@ -1105,7 +1866,10 @@ on e.manager_id = m.employee_id
 where e.last_name like '%k%';
 ```
 
+
+
 #### 外连接
+
 ```mysql
 select *
 from beauty as b
@@ -1131,7 +1895,10 @@ on d.department_id = e.department_id
 where e.employee_id is null;
 ```
 
+
+
 #### 全外连接 - 不支持
+
 ```mysql
 select b.*, bo.*
 from beauty as b
@@ -1139,7 +1906,10 @@ full outer join boys as bo
 on b.boyfriend_id = bo.id;
 ```
 
+
+
 #### 交叉连接 - 笛卡尔乘积
+
 ```mysql
 select b.*, bo.*
 from beauty as b
@@ -1147,7 +1917,9 @@ cross join boys as bo;
 ```
 
 
+
 ### 子查询
+
 * 按出现位置分类
     * select后：仅支持标量子查询
     * from后：支持表子查询
@@ -1162,7 +1934,10 @@ cross join boys as bo;
     * 行子查询（结果集有一行多列）
     * 表子查询（结果集多行多列）
 
+
+
 #### 标量子查询
+
 ```mysql
 select *
 from employees as e
@@ -1203,7 +1978,10 @@ having min(salary) > (
 
 ```
 
+
+
 #### 列子查询（多行子查询）
+
 ```mysql
 select last_name
 from employees
@@ -1223,7 +2001,10 @@ where salary < any (
 ) and job_id <> 'IT_PROG';
 ```
 
+
+
 #### 行子查询（一行多列，或者多行多列）
+
 * 一般不用，有其他等价形式
 ```mysql
 select *
@@ -1245,7 +2026,10 @@ where employee_id = (
 );
 ```
 
+
+
 #### select子查询，子查询必须一行一列
+
 ```mysql
 select d.*,(
   select count(*)
@@ -1263,7 +2047,10 @@ select (
 ) as d;
 ```
 
+
+
 #### from子查询
+
 ```mysql
 select avg_dep.*, g.grade_level
 from (
@@ -1276,7 +2063,10 @@ on avg_dep.avg_sal between lowest_sal and highest_sal;
 
 ```
 
+
+
 #### exists子查询，相关子查询
+
 ```mysql
 # 有值则显示1
 select exists (
@@ -1306,11 +2096,33 @@ where d.department_id in (
 );
 ```
 
-### 分页查询
 
-语法
+
+### 限制条数（分页），LIMIT
+
+* 用途
+  * 分页
+  * 当明确知道结果只有一条时，提高查询、传输效率
+
+
+
+* 格式
 
 ```mysql
+# 方法一
+LIMIT [偏移,] 行数
+
+# 前10条
+LIMIT 0, 10
+
+# 前10条，省略偏移
+LIMIT 10
+
+# 方法二
+LIMIT 行数 OFFSET 偏移
+
+
+#完整格式
 select 查询列表
 from 表
 join type 表 on 条件
@@ -1318,13 +2130,22 @@ where 条件
 group by 条件
 having 条件
 order by 排序字段
-limit offset, size # 索引从0开始
+limit 偏移量, 限制量 # 索引从0开始
 # limit (page - 1)*size, size
-
-执行顺序 from -> where -> group -> having -> select -> order by -> limit
 ```
 
-示例
+
+
+* 分页
+
+```mysql
+# 分页公式
+(页数 - 1) * 页尺寸, 页尺寸
+```
+
+
+
+* 示例
 
 ```mysql
 select * from employees limit 0, 5;
@@ -1338,6 +2159,27 @@ where commission_pct is not null
 order by salary desc
 limit 10;
 ```
+
+
+
+### SQL执行顺序
+
+* 助记方法
+
+![image-20231017150705985](.gitbook/assets/image-20231017150705985.png)
+
+
+
+```mysql
+# 执行顺序 
+from -> where -> group -> having -> select -> distinct -> order by -> limit -> union
+```
+
+
+
+* 根据执行顺序，select中的别名可以在order by中使用，不能在where中使用
+
+
 
 ### 联合查询，合并查询，union
 
@@ -1357,11 +2199,16 @@ select * from employees where email like '%a%' or department_id > 90;
 (select * from employees where department_id > 90);
 ```
 
+
+
 ## 数据操纵语言，DML
 
 * Data Manipaulation Language 
 
+
+
 ### 插入，insert
+
 * 可以为空的字段可以不写
 * 有默认值的字段可以不写
 * 列的顺序可以颠倒
@@ -1402,6 +2249,8 @@ insert into beauty
 set id=19, name='liutao', phone = '999';
 
 ```
+
+
 
 ### 修改，update
 
@@ -1445,7 +2294,10 @@ set b.boyfriend_id=2
 where bo.id is null;
 ```
 
+
+
 ### 删除，delete
+
 * 不加条件是全表删除
 * 加上条件是匹配的删除
 ```mysql
@@ -1482,6 +2334,8 @@ where 筛选条件;
 
 ```
 
+
+
 ### 清空，truncate
 
 * truncate和delete的区别
@@ -1491,9 +2345,11 @@ where 筛选条件;
   * truncate删除没有返回值
   * truncate删除不能回滚，delete可以回滚
 
+```mysql
+truncate table 表名;
 ```
-truncate table 表名；
-```
+
+
 
 ### 删除、修改表时，不允许从表内查询数据
 
@@ -1505,11 +2361,48 @@ truncate table 表名；
 delete from tt where id not in (select id from (select min(id) as id from tt group by name, age) as t)
 ```
 
+
+
+## 关系型数据库设计规范
+
+* 介绍
+  * 一个数据库包含多个表，表名唯一
+  * 每个表定义数据在表中存储的数据和数据类型，类似于编程语言的类
+
+
+
+
+* E-R，entity-relationship，实体-联系模型
+  * 实体集，class，对应数据库中的一个表，table
+  * 实体，instance，对应数据表中一行，row，也称为记录，record
+  * 属性，attribute，对应数据表中一列，column，也称为一个字段，field
+
+
+
+* 表的关联关系，relationship
+  * 一对一，one-to-one
+    * 例如：学生基础信息、学生详细信息
+  * 一对多，one-to-many
+    * 例如：客户-订单，一个客户拥有多个订单，一个订单一般不对应多个客户
+    * 例如：商品分类-商品，一个分类包含多种商品，一个商品一般属于一个分类
+  * 多对多，many-to-many
+    * 需要第三张表记录关联关系
+    * 例如：班级-课程，一个班级上多个课程，一个课程被多个班级上
+    * 例如：产品-订单，产品、订单、订单明细（一个订单包含多个产品，一个产品被包含在多个订单中）
+  * 自关联，self reference
+    * 例如：员工-主管，主管也是员工
+
+
+
 ## 数据定义语言，DDL
 
 * DDL, Data Define Language
 
+
+
 ### 数据库管理
+
+
 
 #### 创建数据库
 
@@ -1518,12 +2411,16 @@ create database 数据库名称;
 create database if not exists 数据库名称;
 ```
 
+
+
 #### 删除数据库
 
 ```mysql
 drop database name;
 drop database if exists name;
 ```
+
+
 
 #### 修改数据库
 
@@ -1536,7 +2433,11 @@ alter database name character set utf8mb4;
 # 直接修改文件夹名称
 ```
 
+
+
 ### 数据表管理
+
+
 
 #### 创建表
 
@@ -1578,6 +2479,8 @@ create table author (
 desc author;
 ```
 
+
+
 #### 查看表定义
 
 ```mysql
@@ -1587,6 +2490,7 @@ desc 表名;
 <div align="left">
 <figure><img src=".gitbook/assets/image-20230808173523452.png" alt=""><figcaption></figcaption></figure>
 </div>
+
 
 #### 修改表
 
@@ -1613,12 +2517,16 @@ alter table author drop column annual;
 alter table old_table_name rename [to] new_table_name;
 ```
 
+
+
 #### 删除表
 
 ```mysql
 drop table book_author;
 drop table if exists table_name;
 ```
+
+
 
 #### 复制表
 
@@ -1638,6 +2546,8 @@ from raw_table;
 where 0;
 ```
 
+
+
 ### 常见数据类型
 
 * 数值型
@@ -1650,7 +2560,10 @@ where 0;
     * 长文本：text、blob（二进制）
 * 日期型
 
+
+
 #### 整形 
+
 ```mysql
 Tinyint # 1字节
 Smallint # 2字节
@@ -2146,7 +3059,10 @@ drop procedcure mypname;
 show create procedure mypname;
 ```
 
-## 函数
+
+
+## 自定义函数
+
 * 存储过程可以不返回值
 * 函数只能有一个返回值
 * 函数必须有return语句
@@ -2621,28 +3537,20 @@ show open tables
 
 ```
 
+
+
 ## 主从复制
+
 1. slave会从master读取binlog
 * 每个slave只有一个master
 * 每个slave只能有一个唯一的服务器ID
 * 
 
+
+
 ### 配置方法
+
 1. mysql版本一致且以服务运行
 2. 主从配置在[mysqld]
     * 主：
     * 从：
-
-
-
-### 
-### 
-
-
-
-
-
-## 面试题
-
-<https://blog.csdn.net/qq_22222499/article/details/79060495>
-<https://blog.csdn.net/ThinkWon/article/details/104778621>
