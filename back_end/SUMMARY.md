@@ -16,3 +16,5 @@
 * [icecream](icecream.md)
 * [loguru](loguru.md)
 * [attrs](attrs.md)
+* [cattrs](cattrs.md)
+* [pipenv poetry pdm](pipenv-poetry-pdm.md)
