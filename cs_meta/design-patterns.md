@@ -502,11 +502,19 @@ ic| 'class_decorator_new 后': 'class_decorator_new 后'
 
 
 
+### 测试用例
+
+```py
+```
+
+
+
 ### Python单例实现1
 
-* 在父类`Class.__new__`中
-* 对象创建前
-* 判断对象是否已经创建
+* 实现要点
+  * 在父类`Class.__new__`中
+  * 对象创建前
+  * 判断对象是否已经创建
 
 ```py
 class Singleton(object):
