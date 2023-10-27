@@ -4,6 +4,8 @@
 
 ## Markdown说明
 
+
+
 * 1
 * 1
   * 2
@@ -52,6 +54,8 @@
 * cython，将Python代码编译为机器码运行
 * Jython，Python的Java运行环境解释器
 * IronPython，Python的.Net运行环境解释器
+
+
 
 
 
@@ -597,13 +601,19 @@ os.system("pause")
 * help显示帮助信息
 * dir列出对象的属性和方法
 
+
+
 ### 传值传址引用
 
 * python传递不可变对象时，传递值
 * python传递可变对象时，传递引用
 * ==其实，python所有参数都是传递值，只不过python中的不可变对象指向相同地址，改变不可变对象会指向新值的地址，而改变可变对象不会改变对象地址==
 
+
+
 ### 数据类型
+
+
 
 #### 整数
 
@@ -632,6 +642,8 @@ os.system("pause")
 
 ```
 
+
+
 #### 浮点数
 
 * 浮点数超过一定范围为inf，无穷大
@@ -655,6 +667,8 @@ math.inf
 -math.inf
 ```
 
+
+
 #### 字符串
 
 * 使用单引号，或双引号括起来的文本
@@ -670,6 +684,8 @@ math.inf
 abc
 '''
 ```
+
+
 
 ##### 转义字符
 
@@ -695,6 +711,8 @@ r''' '''
 # 换行
 \n # newline
 ```
+
+
 
 ##### 编码
 
@@ -730,6 +748,8 @@ b'gb2312'.decode('gb2312') #解码gb2312流
 # -*- coding: utf-8 -*-
 ```
 
+
+
 ##### 格式化
 
 ```python
@@ -743,6 +763,8 @@ b'gb2312'.decode('gb2312') #解码gb2312流
 %2d # 用空格补齐整型参数
 %02d # 用0补齐整型参数
 ```
+
+
 
 ##### 新式格式化输出format
 
@@ -761,6 +783,8 @@ for i, name in enumerate(friends):
 # 显示17.1，格式化输出浮点数，保留1位小数
 '{1:.1f}'.format(17.125) 
 ```
+
+
 
 ##### 字符串方法
 
@@ -828,14 +852,20 @@ str.capitalize() # 首字母大写
 str.title() # 每个单词首字母大写
 ```
 
+
+
 #### 布尔值
 
 * 布尔值包括是否`True`和`False`，首字母必须大写
 * 布尔值可以进行逻辑运算，包括与、或、非`and`,`or`,`not`
 
+
+
 #### 空值，None
 
 * Python中空值含义为：什么都不是，不等于0
+
+
 
 #### 复数
 
@@ -843,6 +873,8 @@ str.title() # 每个单词首字母大写
 v = 1 + 5j
 type(v) # <class 'complex'>
 ```
+
+
 
 ### 变量
 
@@ -883,12 +915,18 @@ print(keyword.kwlist)
 del a
 ```
 
+
+
 ### 常量
 
 * Python中无法定义常量，无法保证常量不能被改变  
 * 常量习惯上所有字母都大写
 
+
+
 ###  类型转换
+
+
 
 #### int 转 byte
 
@@ -899,6 +937,8 @@ int(1).to_bytes(length=2)
 int(1).to_bytes(length=2, byteorder='big', signed=True)
 ```
 
+
+
 #### byte 转 int
 
 ```python
@@ -906,6 +946,8 @@ int(b'1') # 1
 int('1') # 1
 int(1) # 1
 ```
+
+
 
 #### float 转 int
 
@@ -918,11 +960,15 @@ int(-123.123) # -123
 int(-123.987) # -123
 ```
 
+
+
 #### 取小数部分
 
 ```python
 math.modf(1) # (0.0, 1.0)
 ```
+
+
 
 #### 专题：round 在 python2  python3 中的区别
 
@@ -940,6 +986,8 @@ round(2.5) # 2
 round(-1.5) # 2
 round(-2.5) # 2
 ```
+
+
 
 ### 运算符
 
@@ -961,6 +1009,8 @@ round(-2.5) # 2
 | `in` `not in`    | 成员运算符                  |
 | `not` `or` `and` | 逻辑运算符                  |
 | `=` `+=` `-=` `*=` `/=` `%=` `//=` `**=` `&=` `|=` `^=` `>>=` `<<=` | 赋值运算符|
+
+
 
 #### 逻辑运算 
 
@@ -987,6 +1037,8 @@ not 2   # False
 1 and 2 or 3 # 2
 ```
 
+
+
 #### 位运算
 
 ```python
@@ -998,6 +1050,8 @@ not 2   # False
 >> # 右移n位
 ```
 
+
+
 #### 除运算
 
 ```python
@@ -1005,6 +1059,8 @@ not 2   # False
           # 9/3 = 3 python2中为整除
 9//3 = 3 # 整除，地板除（取整）
 ```
+
+
 
 #### 取余运算符
 
@@ -1032,12 +1088,20 @@ r = N - int(N / m) * m
 '由于-1 < 0，-1 + 7 = 6，所以周一的前一天是周天'
 ```
 
+
+
 #### python三目运算符
 
 ```result_true if condition else result_false```
 
+
+
 ### 内置数据类型
+
+
+
 #### 数组，list
+
 * list是一种有序集合
 * list可以动态删除或添加  
 ```python
@@ -1118,7 +1182,10 @@ list(set(l1+l2))
 l1.extend(l2)
 ```
 
+
+
 #### 元祖，tuple
+
 * tuple初始化之后不能修改
 * tuple元素变量可以修改，变量名称不变
 * 能用tuple就不用list，可以减少程序错误
@@ -1146,7 +1213,10 @@ b = (2,)
 c = a + b # (1, 2)
 ```
 
+
+
 #### 字典，dict
+
 * 字典类型全称dictionary，等同于其他语言的map
 * dict使用键-值（key-value）方式存储，内部使用Hash查找，速度快
 * Hash值的key不能为可变对象
@@ -1209,12 +1279,22 @@ dict.clear()
 dict.update(dict)
 ```
 
+
+
 #### 集合，set
+
+
+
 ##### 概念
+
 * set等同于数学概念set，无序，无重复元素  
 * set会去掉重复元素  
 * set中不能放入可变元素如list，tuple可以   
+
+
+
 ##### 创建
+
 ```python
 # 需要提供一个list或tuple作为输入
 s = set([1,2,3])
@@ -1227,7 +1307,10 @@ s = set("abc")
 s # {'a', 'b', 'c'}
 ```
 
+
+
 ##### 修改
+
 ```python
 # 添加元素
 # 可以重复添加，但是不改变set
@@ -1252,7 +1335,10 @@ set.update(*others)
 set.clear()
 ```
 
+
+
 #####  运算，差，交集，并集，与非
+
 ```python
 set3 = set1 & set2 # 求交集
 set4 = set1 | set2 # 求并集，结果是一个新set
@@ -1268,7 +1354,10 @@ x in set1 # 是否成员
 x not in set1 
 ```
 
+
+
 ##### 对象使用set专题
+
 * set是按对象地址去重的，不是按值去重的，按值去重要实现 `__eq__` 用于比较
 * 实现 `__hash__` 用于字典哈希（set实际上是dict的key部分）
 ```python
@@ -1306,6 +1395,8 @@ print({a1, a2}) # {<__main__.A object at 0x00000178410F6AF0>}
 print({b1, b2}) # {<__main__.B object at 0x0000017841553700>, <__main__.B object at 0x00000178415537C0>}
 ```
 
+
+
 ### 条件判断
 
 * python没有switch case语句
@@ -1335,9 +1426,14 @@ else:
 
 ```
 
+
+
 ### 循环/迭代
 
+
+
 #### for in 循环
+
 ```python
 # 循环Iterable对象
 for x in list/tuple/range:
@@ -1358,13 +1454,19 @@ else:
     print(f'1 {i}') # Exception i 还未被定义
 ```
 
+
+
 #### range生成器
+
 ```python
 list(range(2)) # 值为[0,1]
 range(3, 1, -1) # [3, 2]
 ```
 
+
+
 #### while循环
+
 ```python
 while condition1:
     expression1
@@ -1375,11 +1477,15 @@ else: # Executed because no break in for
     expression
 ```
 
+
+
 #### bread语句，continue语句
 
 * 使用continue跳过本次循环
 
 * 使用break跳出本层循环
+
+
 
 #### 遍历dict
 
@@ -1395,27 +1501,43 @@ for key, value in dict.items():
     pass
 ```
 
+
+
 #### 遍历字符串
+
 ```python
 for char in str:
     pass
 ```
 
+
+
 #### 判断对象是否可迭代
+
 ```python
 isinstance(object, Iterable)
 ```
 
+
+
 #### 用enumerate将 迭代 转换成 (index，value)形式的tuple
+
 ```python
 for key,value in enumerate(list/str/tuple/set/...):
 ```
 
+
+
 ## 函数
+
+
 
 ### 调用函数
 
+
+
 #### 内置函数
+
 ```python
 # 执行语句（python代码）
 exec('cmd')
@@ -1474,6 +1596,8 @@ repr(object) # 转机器字符串，repr()返回的非ascii字符使用\x\u\U转
 ascii(object) # 返回对象的ascii表示字符串
 ```
 
+
+
 #### zip函数专题
 
 * 每个Iterable取一个，知道最短的耗尽
@@ -1524,6 +1648,8 @@ print(l_new)      # [
                   # ]
 ```
 
+
+
 #### math模块
 
 ```python
@@ -1559,6 +1685,8 @@ math.pi
 math.e
 ```
 
+
+
 #### random模块
 
 * 理解random.seed(int)
@@ -1591,26 +1719,40 @@ random.choice([1, 2, 3])
 random.shuffle(list)
 ```
 
+
+
 #### 函数帮助
+
 ```python
 help(函数名称) # 返回函数用法和参数需求
 ```
 
+
+
 #### 函数名称实质是一个变量
+
 ```python
 a = abs
 a(-1) # 使用变量a调用函数
 ```
 
+
+
 ### 定义函数
 
+
+
 #### 定义空函数
+
 ```python
 def fucname():
     pass # 使用pass空语句避免报错
 ```
 
+
+
 #### 返回值
+
 * 只能返回单个值  
 * 没有返回值时，函数执行完毕返回None  
 * 函数内执行到return语句则执行完毕
@@ -1638,12 +1780,16 @@ x, y, z = foo() # 获取返回值
 ```
 
 
+
 ### 函数的参数
 
 * 定义函数的时候，我们把参数的名字和位置确定下来，函数的接口定义就完成了。对于函数的调用者来说，只需要知道如何传递正确的参数，以及函数将返回什么样的值就够了，函数内部的复杂逻辑被封装起来，调用者无需了解。
 * Python的函数定义非常简单，但灵活度却非常大。除了正常定义的必选参数外，还可以使用默认参数、可变参数和关键字参数，使得函数定义出来的接口，不但能处理复杂的参数，还可以简化调用者的代码。
 
+
+
 #### 位置参数
+
 * 调用时，按照顺序依次传入函数
 ```python
 
@@ -1663,7 +1809,10 @@ def power(x, n)
 power(5, 3)
 ```
 
+
+
 #### 默认参数
+
 * 可以给参数设置默认值，降低函数的使用难度，同时不失去函数的抽象功能  
 * 必选参数必须在前，默认参数在后  
 * 当函数有多个参数时，把变化大的参数放前面，变化小的参数放后面，变化越小的参数越适合设置默认值
@@ -1676,12 +1825,18 @@ fuc(1, 2) # 提供两个参数，第三个参数使用默认值
 fuc(2, c=5) # 提供两个参数，跨默认值传参  
 ```
 
+
+
 #### 默认参数避免使用可变值  
+
 防止参数默认值可变错误   
 def fuc(l=[]) ， list 会累积，导致多次调用返回结果改变  
 参数默认值可变会导致多线程冲突  
 
+
+
 #### 可变参数（传入不定个数参数）
+
 ```python
 # 定义
 def fuc(*input):
@@ -1692,7 +1847,10 @@ fuc(1,2,3,4)
 fuc(*[1,2,3,4]) #对list，tuple取*可以变为多个参数
 ```
 
+
+
 #### 关键字参数（任意关键字）
+
 ```python
 def fuc(**kw):
     pass
@@ -1711,7 +1869,10 @@ def person(name, age, **kw):
         pass
 ```
 
+
+
 #### 命名关键字参数
+
 * 可以限制传入的参数名，避免任意关键字参数的检查
 * 可以为命名关键字参数设置默认值，调用时可以省略传入
 ```python
@@ -1731,11 +1892,16 @@ def fuc3(arg1, *arg2, key1, key2):
 fuc3(arg1, key1=x, key2=y)
 ```
 
+
+
 #### 参数组合顺序
+
 必选参数->默认参数->可变参数/命名关键字参数->关键字参数
 
 
+
 #### 尾递归优化避免栈溢出
+
 * 递归函数的优点是逻辑清晰，实现符合人思维方式
 * 理论上所有递归函数都可以用循环实现
 * 尾递归在函数返回的时候，调用函数自身，但是return语句中不能包含表达式
@@ -1762,10 +1928,15 @@ def fact_iter(num, product):
     return fact_iter(num - 1, num*product)
 ```
 
+
+
 #### 修改递归最大深度
+
 ```python
 sys.setrecursionlimit(100000)
 ```
+
+
 
 ### 函数重载
 
@@ -1777,7 +1948,10 @@ sys.setrecursionlimit(100000)
     * 重载2：根据函数参数类型不同，可以通过判断参数类型实现逻辑。
 
 
+
 ## Python高级特性
+
+
 
 ### 切片
 
@@ -1803,10 +1977,15 @@ tuple[::] #tuple也可以用切片操作，切片后返回新tuple
 str[::] #str也可以切片，切片后返回新str
 ```
 
+
+
 #### 切片回写（可以写回入参）
+
 ```python
 l[:] = new_l
 ```
+
+
 
 ### 迭代
 
@@ -1846,62 +2025,96 @@ for x, y in [(1,1), (2,2), (3,3)]:
     pass
 ```
 
+
+
 ### 列表生成式，列表推导式 List Comprehensions
 
 ```python
 [x*x for x in range(1, 11)] -> [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
 ```
 
+
+
 #### 最常用自然数列表生成式
+
 * range返回生成器，需要list显示化生成器
 ```python
 list(range(1, 100))  # [x for x in range(1, 100)]
 ```
 
+
+
 #### 带筛选的列表生成式，这个if是筛选条件不能加else
+
 ```python
 [x*x for x in range(1, 11) if x % 2 == 0] -> [4, 16, 36, 64, 100]
 ```
 
+
+
 #### 双层列表生成式（全排列）
+
 ```python
 [m + n for m in 'ab' for n in 'xy']
 ```
 
+
+
 #### 获取当前位置文件列表
+
 ```python
 [d for d in os.listdir('.')]
 ```
 
+
+
 #### 双变量列表生成式
+
 ```python
 [key + ':' +value for key, value in dict.items()]
 ```
 
+
+
 #### 列表生成式迭代执行函数
+
 ```python
 [str.lower() for str in strlist]
 ```
 
+
+
 #### 列表生成式中用于筛选、过滤的if不带else
+
 ```python
 [x for x in range(1, 11) if x%2 == 0] # [2, 4, 6, 8, 10]
 ```
 
+
+
 #### 列表生成式中用于表达式的if必须带else，不然不是完整语句
+
 ```python
 [x if x % 2 == 0 else -x for x in range(1,11)]
 ```
 
+
+
 ### 集合推导式
+
 ```python
 {x for x in range(5)}
 ```
 
+
+
 ### 字典推导式
+
 ```python
 {x:x for x in range(5)}
 ```
+
+
 
 ### 生成器
 
@@ -1911,7 +2124,10 @@ list(range(1, 100))  # [x for x in range(1, 100)]
 * 使用for循环不会抛出StopIteration
 * for循环无法取到生成器return的返回值，只能通过StopIteration.Value取值
 
+
+
 #### 列表生成式表达式变生成器
+
 ```python
 generator=(x*x for x in range(10))
 for n in generator:
@@ -1920,7 +2136,10 @@ for n in generator:
 generator.next()
 ```
 
+
+
 #### 用yield函数变生成器
+
 ```python
 def func():
     for x in range(10):
@@ -1934,6 +2153,8 @@ for x in gene:
 
 gene.next()
 ```
+
+
 
 ### 迭代器
 
@@ -1987,12 +2208,16 @@ isinstance(iter('abc'), Iterator) # True
 
 ```
 
+
+
 ## 函数式编程 Functional Programming
 
 * 把复杂任务分解成简单的任务，这种设计方式叫做面向过程的程序设计。
 * 函数是面向过程程序设计的基本单元。
 * 纯函数式编程不允许使用变量，所以python不是纯函数式编程语言  
 * python中函数名既是一个变量，变量可以指向函数
+
+
 
 ### 高阶函数 Higher-order function（将函数作为变量）
 
@@ -2001,7 +2226,10 @@ def newfuc(functionname):
     return functionname(0)
 ```
 
+
+
 #### map()
+
 map函数接收两个参数，一个是函数，一个是Iterable
 ```python
 map(function, Iterable)
@@ -2011,7 +2239,10 @@ r = map(abs, range(-10,0))
 list(r)
 ```
 
+
+
 #### reduce()
+
 * reduce接收两个参数，第一个参数是一个函数，第二个参数是一个序列
 * reduce把参数1的函数作用在参数2序列上，参数1函数必须接收两个参数
 * reduce把参数2中的两个元素进行计算，将结果和下一个元素传入参数1函数继续进行计算
@@ -2037,7 +2268,9 @@ reduce(fn, map(char2num, '13579')
 ```
 
 
+
 #### filter(function, Iterable)
+
 * 根据function返回True，False筛选Iterable
 * filter的返回值是一个Iterator
 ```python
@@ -2057,7 +2290,10 @@ def is_palindrome(n):
 list(filter(is_palindrome, range(1, 1000)))
 ```
 
+
+
 #### sorted(list)
+
 sorted(list, key=function) ， 使用key函数处理后再比较大小
 sorted(list, reverse=Ture) ， 逆向排序
 ```python
@@ -2067,7 +2303,10 @@ sorted([], key=str.lower) # 忽略大小写排序
 sorted([], key=str.lower, reverse=True) # 忽略大小写逆向排序
 ```
 
+
+
 #### 高级排序，sorted
+
 ```python
 from operator import itemgetter, attrgetter, methodcaller
 
@@ -2076,6 +2315,8 @@ sorted(list, key=attrgetter('age') # 属性
 sorted(list, key=methodcaller('method')) # 方法
 
 ```
+
+
 
 ### 标准操作符函数operator模块
 
@@ -2094,6 +2335,8 @@ func(l) # (a, b, c)
 # operator.methodcaller
 
 ```
+
+
 
 #### operator操作符函数对照表：
 
@@ -2150,6 +2393,8 @@ func(l) # (a, b, c)
 |                       | `a /= b`            | `itruediv(a, b)`                    |
 |                       | `a ^= b`            | `ixor(a, b)`                        |
 
+
+
 ### 函数作为返回值
 
 两次返回的函数不相等
@@ -2182,6 +2427,8 @@ f2 = lazy_sum(1,2,3,4,5)
 f1 == f2 # False
 ```
 
+
+
 ### 闭包
 
 * 返回函数不要引用任何可能会变化的变量，因为函数先返回后计算，函数计算时循环变量已经是最大值  
@@ -2200,7 +2447,10 @@ counter() # 2
 counter() # 3
 ```
 
+
+
 #### 闭包中的自由变量
+
 * 闭包使用了外层函数的变量，外层函数的局部变量作用域被延伸，变成了自由变量
 * 子函数被执行时就会更新自由变量，而不会因不存在而报错
 * python3中新增了nonlocal关键字，就可以改变父层变量，python2中只能使用global全局变量
@@ -2208,7 +2458,10 @@ counter() # 3
 ?
 ```
 
+
+
 #### nonlocal
+
 * nonlocal是 Python3 新增的作用域关键词
 * Python对闭包的支持一直不是很完美，在 Python2 中，闭包函数可以读取到父级函数的变量，但是无法修改变量的值，为此，我们经常要把变量声明为global全局变量，但是这样就打破了闭包的性质。为了解决这个问题，Python3 引入了nonlocal，如上例代码，我们使用声明了nonlocal n之后，就可以正常操作。
 
@@ -2217,7 +2470,10 @@ counter() # 3
 ?
 ```
 
+
+
 #### global
+
 * 全局变量、外层变量，可以在内层使用，但是不能修改。
 * 使用前声明 global var, nonlocal var.
 
@@ -2267,10 +2523,16 @@ def f(x):
     return x*x
 ```
 
+
+
 ### 装饰器
+
 * 不修改函数的定义，在代码运行期间动态增加功能的方式，称之为“装饰器”（Decorator）
 
+
+
 #### 装饰器工具
+
 ```python
 # 函数的__name__属性
 def now():
@@ -2283,7 +2545,10 @@ f.__name__ # 'now'
 # wrapper.__name__ = func.__name__
 ```
 
+
+
 #### 无参数装饰器
+
 ```python
 import functools # 修改函数名称
 def log(func): # 函数名作为入参
@@ -2294,7 +2559,10 @@ def log(func): # 函数名作为入参
     return wrapper # 返回装饰过的函数
 ```
 
+
+
 #### 带参数装饰器
+
 ```python
 import functools
 def log(text): # 装饰器的入参
@@ -2307,7 +2575,10 @@ def log(text): # 装饰器的入参
     return decorator # 返回装饰器
 ```
 
+
+
 #### 使用装饰器
+
 ```python
 @log
 def f():
@@ -2317,6 +2588,8 @@ def f():
 def f():
     pass
 ```
+
+
 
 #### 使用装饰器装饰class
 
@@ -2328,11 +2601,15 @@ def f():
 
 ```
 
+
+
 #### 使用装饰器装饰function，但是返回值是class，就需要为class实现`__call__`方法
 
 ```python
 
 ```
+
+
 
 #### 使用类装饰函数
 
@@ -2340,11 +2617,15 @@ def f():
 
 ```
 
+
+
 #### 使用类装饰类
 
 ```python
 https://blog.csdn.net/xiemanr/article/details/72510885
 ```
+
+
 
 ### 偏函数（固定某些参数）
 
@@ -2362,6 +2643,8 @@ def int2(x, base=2)
 import functools
 int2=functools.partial(int, base=2)
 ```
+
+
 
 ### 回调函数
 
@@ -2413,16 +2696,25 @@ if '__main__' == __name__:
 
 ```
 
+
+
 ### with语句
+
 使用with语句可以在退出语句block时，保证执行清理语句，避免大段嵌套try...finally...
 
+
+
 #### 使用with语句
+
 ```python
 with object(args) as rename:
     pass
 ```
 
+
+
 #### 自定义with语句（上下文管理器 context_manager）
+
 ```python
 class Closing:
     def __enter__(self):
@@ -2438,7 +2730,10 @@ class Closing:
             return False
 ```
 
+
+
 #### 使用contextmanager自定义with语句（上下文管理器 context_manager）
+
 ```python
 from contextlib import contextmanager
 
@@ -2449,7 +2744,10 @@ def closing():
     # __exit__ 部分的内容
 ```
 
+
+
 #### 使用nested 避免with语句嵌套
+
 ```python
 with A() as X:
     with B() as Y:
@@ -2461,8 +2759,14 @@ with nested(A(), B(), C()) as (X, Y, Z):
     # with-body
 ```
 
+
+
 #### asyncio with
+
+
+
 ##### 实现异步with
+
 ```python
 if PY_35:
     @asyncio.coroutine
@@ -2480,22 +2784,32 @@ if PY_35:
         self.close()
 ```
 
+
+
 ##### 使用异步with
+
 ```python
 async with Closing() as c:
     # aync with body
 ```
 
+
+
 ### functools模块
+
 ```python
 
 ```
+
+
 
 ### itertools模块
 
 ```python
 
 ```
+
+
 
 ## 模块
 
@@ -2566,6 +2880,8 @@ if __name__ == '__main__':
     test()
 ```
 
+
+
 ### 运行模块，python -m
 
 ```python
@@ -2596,14 +2912,23 @@ import pkg
 pkj.main()
 ```
 
+
+
 ### 安装第三方模块
+
 * 安装第三方模块：`pip install Pillow` 会自动从pypi.python.org下载
 
+
+
 ### 集成安装发行版
+
 * Anaconda: <https://www.anaconda.com/>  
 * 优点是不需要考虑第三方包之间的版本兼容性
 
+
+
 ### 模块搜索路径
+
 * 模块搜索路径：sys.path
 * 添加模块路径方法：sys.path.append('path')
 * 在运行环境中设置环境变量PYTHONPATH
@@ -2616,9 +2941,14 @@ pkj.main()
 * OOP把对象作为程序的基本单元，一个对象包含了数据和操作数据的函数。
 * 数据封装、继承、多态是面向对象的三大特点
 
+
+
 ### 类和实例
 
+
+
 #### 定义类
+
 * 类是创建实例的模板，而实例是具体的对象，各个实例拥有的数据都相互独立。
 * 类的方法是与实例绑定的函数，和普通函数不同，类方法可以直接访问实例的数据。
 * 通过在实例上调用方法，可以直接操作对象内部的数据，无需知道方法内的实现细节。
@@ -2628,12 +2958,18 @@ class Students(object): # 默认继承object
     pass
 ```
 
+
+
 #### 创建对象
+
 ```python
 var = ClassName() # 类名() 创建对象
 ```
 
+
+
 #### 静态绑定属性
+
 ```python
 class Students(object):
     # 类方法的第一个参数永远是self
@@ -2645,7 +2981,10 @@ class Students(object):
 a = Student('name', score)
 ```
 
+
+
 #### 动态绑定属性
+
 * 不能对内置类型动态绑定
 ```python
 # 对象a，class Student，不包含属性age，可以在创建后动态添加
@@ -2666,7 +3005,10 @@ a = A()
 a.func()
 ```
 
+
+
 #### 类的属性、方法的访问限制
+
 * 私有变量：在属性名称和方法名称前加两个下划线`_`
 * 保护变量：在属性名称和方法名称前加一个下划线`_`
 * 特殊变量（系统变量）：前后各加两个下划线`_`
@@ -2685,7 +3027,9 @@ a.__name = 'new_name' # 无语法错误，但是对象的`__name`值未改变
 ```
 
 
+
 #### 类函数、静态函数、实例函数，类方法、静态方法，实例方法
+
 * 类函数必须传入一个参数cls，用classmethod修饰
 * classmethod，主要用做构造函数，返回一个cls()或者`__new__()`
 * 实例函数必须传入一个参数self，实例化之后才能调用
@@ -2710,9 +3054,14 @@ Test.st()
 Test().ins()
 ```
 
+
+
 ### 继承与多态
 
+
+
 #### 继承
+
 * 子类Subclass，基类、父类、超类Base class，Super class
 
 ```python
@@ -2761,7 +3110,10 @@ cat = Cat()
 cat.run() # 调用父类方法
 ```
 
+
+
 #### 多态
+
 * 覆盖父类函数，运行是总调用子类方法，子类不存在该方法再调用父类方法
 * 只要是同一个父类，调用方只管调用，不管细节
 ```python
@@ -2803,11 +3155,17 @@ isinstance([], (list, tuple)) # True
 issubclass(A, B)
 ```
 
+
+
 #### 动态语言的鸭子类型
+
 * 看起来像鸭子，走起路来像鸭子，那他就可以被看作是鸭子
 * 动态语言调用方法不检查类型，传入参数不限制类型，只要存在相同方法就可以
 
+
+
 #### 重复继承（实体类抽象化）
+
 ```python
 from abc import ABC, abstractmethod
 
@@ -2843,7 +3201,10 @@ t2.run()
 t3 = Abstract2()
 ```
 
+
+
 #### 动态修改类属性
+
 ```python
 class A:
     def a(self):
@@ -2878,9 +3239,14 @@ b.x()
 b.y()
 ```
 
+
+
 ### 获取对象信息
 
+
+
 #### 获取对象类型，type()
+
 ```python
 # 获取class类型
 type(object) # <class 'type'>
@@ -2914,7 +3280,10 @@ type((x for x in range(10)))==types.GeneratorType # True
 # 注意：自定义成员函数类型为 types.MethodType
 ```
 
+
+
 #### 获取所有属性方法，dir()
+
 ```python
 # 返回一个list，包含输入对象的所有属性和方法
 dir(str)
@@ -2930,6 +3299,8 @@ class Dog(object):
 len(Dog()) # 100
 ```
 
+
+
 #### 判断类实例，isinstance()
 
 ```python
@@ -2937,12 +3308,16 @@ if not isinstance(x, (int, float)):
     raise TypeError('message')
 ```
 
+
+
 #### 判断子类，issubclass()
 
 ```python
 # 判断继承关系
 issubclass(A, B)
 ```
+
+
 
 #### 使用`__dict__`获取 属性-对象 dict
 
@@ -2965,6 +3340,8 @@ obj.__dict__
 # 获取类的属性字典__dict__
 A.__dict__
 ```
+
+
 
 #### 使用python attr方法操作属性
 
@@ -2996,9 +3373,14 @@ fn = getattr(obj, 'power')
 fn() # 81
 ```
 
+
+
 ### 实例属性和类属性
 
+
+
 #### 类变量与成员变量
+
 ```python
 class Class(object):
     VALUE1 = 100
@@ -3013,7 +3395,10 @@ class Class(object):
 * 其中VALUE2是成员变量，只能从对象访问
 * 其中VALUE3是不是成员变量，因为没有在`__init__`中创建，只能从对象访问
 
+
+
 ### 类专有方法
+
 ```python
 __init__ # 构造函数
 __call__ # 函数调用
@@ -3035,7 +3420,11 @@ __mod__ # 求余运算
 __pow__ # 乘方
 ```
 
+
+
 ## 面向对象高级编程
+
+
 
 ### 专题：获取模块中的函数对象
 
@@ -3082,6 +3471,8 @@ class A:
 if __name__ == '__main__':
     A().main()
 ```
+
+
 
 #### 动态导入模块，importlib
 
@@ -3166,7 +3557,10 @@ f = d['funcname'] # 返回一个属性对应的对象，此处为一个函数对
 f() # 执行函数
 ```
 
+
+
 ### 专题：通过字符串调用函数
+
 ```python
 from operator import methodcaller
 
@@ -3190,6 +3584,8 @@ a = A()
 a.main()
 
 ```
+
+
 
 ### 专题：给对象动态绑定属性（包括函数）
 
@@ -3225,7 +3621,10 @@ Student.set_score = set_score # 动态绑定方法
 # 动态添加静态方法也需要使用 @staticmethod 装饰器
 ```
 
+
+
 #### 使用`__slots__`限制属性方法的添加（对子类无效）
+
 * 子类也定义`__slot__`则仅允许子类slot+父类slot
 
 ```python
@@ -3238,9 +3637,14 @@ s.age = 25 # ok
 s.score = 99 # AttributeError
 ```
 
+
+
 ### 使用@property设置属性
 
+
+
 #### set、get、参数检查
+
 ```python
 class Student(object):
     def get_score(self):
@@ -3254,7 +3658,10 @@ class Student(object):
         self._score = value
 ```
 
+
+
 #### @property装饰器
+
 ```python
 class Student(object):
     @property # getter，并创建@score.setter装饰器
@@ -3270,9 +3677,14 @@ class Student(object):
         self._score = value
 ```
 
+
+
 ### 多重继承
 
+
+
 #### 多重继承
+
 * 多重继承避免多层分类，如蝙蝠属于哺乳动物，但会飞
 ```python
 # 动物
@@ -3316,11 +3728,17 @@ class Bat(Mammal, Flyable):
     pass
 ```
 
+
+
 #### MixIn
+
 * MixIn类似接口，用在功能性父类
 * 一个子类主要继承一个类，其他功能性继承MixIn
 
+
+
 #### 定制类
+
 ```python
 # __slots__() # 限制属性
 # __len__() # 定义长度获取，使class能作用于len()函数 
@@ -3408,8 +3826,14 @@ class O(object):
 '例如类型转换int(), str(), float()等'
 ```
 
+
+
 #### 枚举类
+
+
+
 ##### 自增值Enum，默认从1开始计数
+
 ```python
 from enum import Enum
 Month = Enum('Month', 
@@ -3420,7 +3844,10 @@ for name, member in Month.__members__.items():
     print(name, '=>', member, ',', member,value) # value自动从1开始
 ```
 
+
+
 ##### 自定义枚举类
+
 ```python
 from enum import Enum, unique
 @unique
@@ -3443,8 +3870,14 @@ Weekday.__members__.items()
 [(Sum, Weekday.Sum)]
 ```
 
+
+
 #### 使用元类
+
+
+
 ##### type()定义类
+
 * 由于动态语言特性，python的类和方法都是运行时动态创建的
 * type函数可以查看一个类型或变量的类型
 * type同时是所有class的类型，例如type(type(str))的类型就是type
@@ -3471,7 +3904,10 @@ h = Hello()
 # type参数3：class的方法名称与函数绑定
 ```
 
+
+
 ##### metaclass元类
+
 * 根据定义创建类
 * 一般来说mateclass类名总是以Metaclass结尾
 * Metaclass需要继承type
@@ -3493,7 +3929,10 @@ L = MyList()
 L.add(1)
 ```
 
+
+
 ##### metaclass用途
+
 * ORM（Object Relational Mapping）对象关系映射
 * 数据库字段根据定义动态生成
 ```python
@@ -3578,7 +4017,11 @@ class Model(dict, metaclass=ModelMetaclass):
         print('ARGS: %s' % str(args))
 ```
 
+
+
 ## 内存管理
+
+
 
 ### 变量与对象
 
@@ -3613,6 +4056,8 @@ b = []
 a is b # False
 ```
 
+
+
 ### python内存管理技术
 
 * python分层管理内存分配
@@ -3622,16 +4067,23 @@ a is b # False
 * Layer0: 操作系统内存分配
 
 
+
 #### 引用计数
 
+
+
 ##### 获取对象引用计数
+
 ```python
 import sys
 a = 123456789
 sys.getrefcount(a)
 ```
 
+
+
 ##### 引用计数的增加和减少
+
 ```python
 import sys
 a = 123456789
@@ -3668,38 +4120,59 @@ def foo():
     a = 123456789
 ```
 
+
+
 #### 垃圾回收原理
 
 * 垃圾回收分为：
     * 引用计数为0。
     * 垃圾收集，标记清除，分代回收。
 
+
+
 #### 引用计数
+
 * 当引用为0时，调用`object.__del__()`清除对象。
+
+
 
 #### 标记清除（针对循环引用）
 
+
+
 #### 垃圾回收过程
+
 1. 分配对象 - 取消分配对象 > 700次：启动垃圾0代回收，回收后依然存活放入1代
 2. 每10次0代回收，启动一次1代回收，回收后任然存活，放入2代
 3. 每10次1代回收，启动一次2代回收。
 4. 2代回收中发现循环引用为`不可到达`对象，自动释放。
 
+
+
 #### 获取回收阈值
+
 ```python
 import gc
 gc.get_threshold()
 ```
 
+
+
 #### 手动垃圾回收
+
 ```python
 import gc
 gc.collect()
 ```
 
+
+
 ### 内存泄漏
 
+
+
 #### 循环引用造成内存泄漏
+
 * 循环引用回收缓慢，如对象内含较大对象，会造成事实上的内存泄漏
 ```python
 class Test:
@@ -3710,7 +4183,10 @@ t = Test()
 t.test = t # 循环引用
 ```
 
+
+
 #### 使用弱引用（weakref)
+
 * weakref.ref()只返回一个获取引用对象的方法，需要执行函数才能获取值
 ```python
 import weakref
@@ -3741,20 +4217,31 @@ class Test:
         sel._test = weakref.ref(v)
 ```
 
+
+
 #### 循环引用对象定义`object.__del__`
+
 * 循环引用对象定义`object.__del__`会造成内存泄漏。
 * python会放弃释放定义了`object.__del__()`的对象，放入gc.garbage列表。
 
+
+
 #### 内存泄漏检测工具
+
 * objgraph
 * tracemalloc
 * pympler
 
 
+
 ## 错误调试和测试
+
 为避免复杂错误状态和函数正常结果混在一起，造成调用者大量判断代码和逐级错误上报，一般高级语言都内置try异常机制。
 
+
+
 ### try
+
 ```python
 try:
     10/0
@@ -3767,6 +4254,8 @@ else:
 finally:
     pass
 ```
+
+
 
 #### Exception基类BaseException
 
@@ -3841,7 +4330,10 @@ BaseException
            +-- ResourceWarning
 ```
 
+
+
 #### 抛出错误
+
 * 当错误无法解决时，主动抛出exception，让调用者去处理
 * raise不带任何参数，可以抛出原exception
 ```python
@@ -3853,6 +4345,8 @@ raise FooError # 抛出无需参数类会自动生成对象
 
 raise
 ```
+
+
 
 #### 打印调用栈
 
@@ -3869,11 +4363,15 @@ exeption Exception, e:
 	traceback.format_exc()
 ```
 
+
+
 ### 日志 logging
 
 * 直接使用logging打印日志会只使用默认root logger
 * root logger默认会输出到stdout打印到屏幕
 * 默认日志级别为warning
+
+
 
 #### 简单使用示例
 
@@ -3897,6 +4395,8 @@ logging.basicConfig(level=logging.INFO)
 # 设置filename会导致root logger输出到文件
 logging.basicConfig(filename='root.log', level=logging.DEBUG)
 ```
+
+
 
 #### 高级日志使用
 
@@ -3991,6 +4491,8 @@ DEBUG 10
 NOTSET 0
 ```
 
+
+
 ##### 高级使用示例
 
 
@@ -4056,7 +4558,10 @@ class TestClass:
         print(get_func_name())
 ```
 
+
+
 ### assert
+
 * assert不同于print，可以在优化版中不执行assert
 ```python
 assert 1!=0, '1 is not 0'
@@ -4064,18 +4569,37 @@ assert 1!=0, '1 is not 0'
 python3 -0 err.py
 ```
 
+
+
 ### pdb
 
-#### 参数启动法
-python3 -m pdb err.py
 
-#### 编程启动法
+
+#### 命令行启动
+
+```py
+python3 -m pdb err.py
+```
+
+
+
+#### 编程启动
+
+```py
 import pdb
-pdb.set_trace() ，设置断点
+pdb.set_trace() # 设置断点
+```
+
+
+
+
 
 ### 单元测试
 
-#### 编程启动法
+
+
+#### 编程启动
+
 ```python
 import unitest
 class TestDict(unitest.TestCase):
@@ -4094,12 +4618,18 @@ if __name__ == '__main__':
     unitest.main()
 ```
 
-#### 命令参数启动法：
+
+
+#### 命令行启动
+
 ```bash
 python3 -m unittest test.py
 ```
 
+
+
 ### 文档测试
+
 * 可以用...省略异常时产生的大量输出
 ```python
 def abs(n)
@@ -4126,7 +4656,11 @@ if __name__=='__main__':
     doctest.testmod()
 ```
 
+
+
 ## IO
+
+
 
 ### 二进制编码
 
@@ -4135,7 +4669,10 @@ import codecs
 codecs.open("lol","w","utf-8")
 ```
 
+
+
 ### 读文件
+
 * 以文本读方式打开后，读取到的内容是str对象
 ```python
 f = open('/root/test.txt', 'r') # 打开文件文件
@@ -4161,7 +4698,10 @@ with open('/root/test.txt', 'r') as f:  # 打开文件，自动关闭
     f.read()
 ```
 
+
+
 ### 写文件
+
 ```python
 f = open('/root/test.txt', 'w')
 f = open('/root/test.txt', 'w', encoding='utf-8') #指定写文件编码
@@ -4171,7 +4711,10 @@ with open('/root/test.txt', 'w') as f: #打开文件，自动关闭
     f.write('Hello, world!')
 ```
 
+
+
 ### IO
+
 * io模块提供了Python用于处理各种I/O类型的重要工具
 * I/O类型包括文本I/O、二进制I/O、原始I/O，不同类型不能混淆，不然会引发错误。
 * I/O、流、类文件对象是相同概念。
@@ -4179,7 +4722,10 @@ with open('/root/test.txt', 'w') as f: #打开文件，自动关闭
 * 使用`open`方法可以获得文件描述符，以文件方式操作内存或文件。
 * 使用`socket.makefile`方法可以获得文件描述符，以文件方式操作socket。
 
+
+
 #### StringIO、str buffer、文本I/O
+
 * 使用open方法`open(path, 'r', encoding='utf-8')`获得的就是文本流
 * 使用`socket.makefile(mode='r')`获取文本流
 * StringIO底层是TextIOBase
@@ -4192,7 +4738,10 @@ f.getvalue() # 获取全部内容str
 f.readline() # 按行读取
 ```
 
+
+
 #### BytesIO、bytes buffer、二进制I/O、缓冲I/O
+
 * 使用open方法`open(path, 'rb')`获得的就是字节流
 * 使用`socket.makefile(mode='rb')`获取字节流
 * BytesIO底层是BufferedIOBase
@@ -4204,12 +4753,18 @@ f.getvalue()
 f.read() #返回bytes
 ```
 
+
+
 #### 原始流、原始I/O、非缓冲I/O
+
 * 原始流底层使用RawIOBase
 * 通过设置`buffering=0`获得原始流`open(path, 'rb', buffering=0)`
 * 一般很少使用直接使用原始流
 
+
+
 #### 系统IO，TextIOBase
+
 * sys.stdin
 * sys.stdout
 * sys.stderr
@@ -4225,7 +4780,9 @@ sys.stdout.flush()
 ```
 
 
+
 #### 性能分析
+
 * BytesIO会对读写操作进行区块缓存，无论操作系统是否支持
 * StringIO是原生Unicode内存容器。
 * TextIO自动进行编、解码转换，性能低。
@@ -4235,7 +4792,9 @@ sys.stdout.flush()
 * 二进制缓冲对象BufferedReader等不可重入的。
 
 
+
 #### 类继承关系
+
 * IOBase(abc.ABC)      ， 定义流基本接口，不支持的接口抛出UnsupportedOperation
 
 
@@ -4257,7 +4816,13 @@ sys.stdout.flush()
 * StringIO(TextIOBase)
 * TextIOWrapper(BufferedIOBase, TextIOBase)
 
+
+
+
+
 ### 文件与目录
+
+
 
 #### OS模块
 
@@ -4338,14 +4903,20 @@ os.chdir('/root')
 os.system('mkdir xxx')
 ```
 
+
+
 #### shutil（补充os模块）
+
 ```python
 import shutil # 
 shutil.copyfile('from', 'to') # 复制文件
 shutil.move('from', 'to') # 移动
 ```
 
+
+
 #### 获取当前文件位置、运行位置专题
+
 ```python
 os.getcwd() # 获取当前工作目录路径，绝对路径，current work dir
 sys.path[0] # 文件当前工作目录路径，绝对路径
@@ -4360,6 +4931,8 @@ os.path.realpath(__file__) # 绝对路径
 os.path.split(os.path.realpath(__file__)) # tuple(dir, filename)
 
 ```
+
+
 
 #### 遍历目录下所有文件专题
 
@@ -4397,6 +4970,8 @@ os.path.getsize(path)
 
 ```
 
+
+
 ### 序列化
 
 ```python
@@ -4409,7 +4984,10 @@ pickle.loads(bytes) #反序列化
 pickle.load(file) #从文件反序列化
 ```
 
+
+
 ### JSON
+
 * json是比xml更快的，独立于各编程语言的通用对象序列化标准
 * json的根，只能是dict或者list
 ```python
@@ -4422,7 +5000,10 @@ true/false # True/False
 null # None
 ```
 
+
+
 #### 将python对象序列化成json
+
 ```python
 # json.dumps
 import json
@@ -4448,7 +5029,10 @@ with open('data.txt','w')as outfile:
     json.dump(data.__dict__, outfile, ensure_ascii=False)
 ```
 
+
+
 #### dict与class相互转换，方便json与class互转
+
 ```python
 class DictAsClass(dict):
 	# 限制属性内容，必须使用self.ATTRIBUTE才能访问到子类定义的ATTRIBUTE
@@ -4510,9 +5094,14 @@ print(b.z)
 print(b.get(a, 1))
 ```
 
+
+
 ## 进程与线程
 
+
+
 ### fork多进程（Linux only）
+
 * Unix/Linux提供一个系统调用fork()，调用一次返回两次，操作系统把当前进程复制一份作为子进程
 * 子进程永远返回0，父进程返回子进程ID，可以据此在代码中判断当前处于父进程还是子进程
 * 父进程需要记录每个子进程的ID
@@ -4535,12 +5124,18 @@ else:
     print('child pid is {}, ppid is {}'.format(os.getpid(), os.getppid()))
 ```
 
+
+
 ### multiprocessing.Process多进程
+
 * multiprocessing是跨平台通用的多进程模块
 * multiprocessing在windows上模拟fork操作，将对象通过pickle序列化后传到子进程，调用失败时需要检查pickle操作
 * Process 类代表一个进程对象
 
+
+
 #### 创建进程（target函数式）
+
 ```python
 from multiprocessing import Process
 import os
@@ -4557,7 +5152,10 @@ if __name__ == '__main__':
     [p.join() for p in pl] # 等待子进程结束后再继续往下运行，用于进程间同步
 ```
 
+
+
 #### 创建进程进程（继承Process式，覆盖Process.run函数）
+
 * Process的属性，包括`__init__`中初始化的属性，会pickle后传递给新进程
 * <https://bugs.python.org/issue8289>
 ```python
@@ -4575,7 +5173,10 @@ if __name__ == '__main__':
     [p.join() for p in pl]
 ```
 
+
+
 ### multiprocessing.Pool多进程（进程池）
+
 * 超过Pool进程数量的任务会等待进程空闲依次执行
 
 #### 方法
@@ -4597,7 +5198,9 @@ if __name__ == '__main__':
 * apply和apply_async返回multiprocessing.pool.AsyncResult对象，用于获取结果
 
 
+
 #### apply阻塞示例
+
 ```python
 from multiprocessing import Pool
 import time
@@ -4612,7 +5215,10 @@ if __name__ == '__main__':
         print(p.apply(f))
 ```
 
+
+
 #### apply_async示例
+
 ```python
 # 示例1
 from multiprocessing import Pool
@@ -4660,7 +5266,10 @@ if __name__ == '__main__':
     p.join()
 ```
 
+
+
 #### map示例
+
 ```python
 from multiprocessing import Pool
 import time
@@ -4684,7 +5293,10 @@ if __name__ == '__main__':
         print(result)
 ```
 
+
+
 #### map_async示例
+
 ```python
 from multiprocessing import Pool
 import time
@@ -4705,7 +5317,10 @@ if __name__ == '__main__':
         print(result.get()) 
 ```
 
+
+
 ### multiprocessing理论
+
 * multiprocessing支持三种启动进程的方法：
     * spawn：
         * 只继承run()方法所需的资源
@@ -4751,16 +5366,23 @@ if __name__ == '__main__':
 ```
 
 
+
 ### subprocess调用进程作为子进程
 
+
+
 #### subprocess.call（命令式调用）
+
 ```python
 import subprocess
 r = subprocess.call(['nslookup', 'www.python.org'])
 print('Exit code:', r)
 ```
 
+
+
 #### subprocess.communicate（持续交互）
+
 ```python
 import subprocess
 p = subprocess.Popen(['nslookup'], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -4769,9 +5391,14 @@ print(output.decode('utf-8'))
 print('Exit code:', p.returncode)
 ```
 
+
+
 ### 进程间通信
 
+
+
 #### multiprocessing.Queue进程间通信
+
 * 用于多个进程间通信
 * 多个Process可以Put、Get同一个Queue
 * Queue是单向的，只有一个方向的管道，如果需要交换多种信息，需要区分类型或者建立多个Queue
@@ -4820,20 +5447,29 @@ if __name__ == '__main__':
     q.join_thread()
 ```
 
+
+
 ##### multiprocessing.SimpleQueue
+
 * 一个简化的Queue
 * `SimpleQueue.empty()`
 * `SimpleQueue.get()`
 * `SimpleQueue.put(item)`
 
+
+
 ##### multiprocessing.JoinableQueue([maxsize])
+
 * 是Queue的子类
 * `JoinableQueue.task_down()`
     * 每个每次调用get()、执行完任务后，执行task_down()标记任务完成，join释放
 * `JoinableQueue.join()`
     * 阻塞直到任务完成
 
+
+
 #### multiprocessing.Pipe进程间通信
+
 * 两个进程间通信
 * Pipe是双向管道
 * 多进程同时读、同时写需要加锁
@@ -4867,12 +5503,18 @@ if __name__ == '__main__':
     p.join()
 ```
 
+
+
 #### 进程锁
+
 * multiprocessing.Lock
 * Lock.acquire(block=True, timeout=None)
 * Lock.release()
 
+
+
 #### 共享内存
+
 * multiprocessing.Value ， 单一，固定类型数据共享
 * multiprocessing.Array ， 数组，固定类型数据共享
 * multiprocessing.sharedctypes ， 共享c数据类型
@@ -4897,7 +5539,10 @@ if __name__ == '__main__':
     print(arr[:])
 ```
 
+
+
 #### 服务进程，管理器
+
 * multiprocess.Manager()
 * 用于进程间或者跨网络进程间共享数据
 * 支持类型：
@@ -4938,12 +5583,17 @@ if __name__ == '__main__':
 ```
 
 
+
 ### 分布式进程，multiprocessing.managers
+
 * 实现在另一个进程的数据共享
 * 可以实现在远端执行代码，但是两端代码必须使用相同定义
 * 可以通过互联网跨服务器共享数据，同步互斥等
 
+
+
 #### 示例
+
 * Server
 ```python
 import queue
@@ -5030,7 +5680,10 @@ for i in range(10):
 print('master exit.')
 ```
 
+
+
 #### 抽象通用远程任务队列
+
 * remote_queue.py
 ```python
 from multiprocessing.managers import BaseManager
@@ -5176,9 +5829,13 @@ print('client exit.')
 ```
 
 
+
 ### threading高级线程
 
+
+
 #### 函数式启动线程
+
 ```python
 # thread方法
 import threading # 导入
@@ -5206,7 +5863,10 @@ tl = [threading.Thread(target=loop, name='thread {}'.format(i), args=[i]) for i 
 print('all thread stoped')
 ```
 
+
+
 #### 继承式启动线程
+
 ```python
 from threading import Thread
 class Task(Thread):
@@ -5251,7 +5911,10 @@ tl = [T(i) for i in range(4)]
 print('all thread stoped')
 ```
 
+
+
 #### Lock
+
 ```python
 lock = threading.Lock()
 lock.acquire()
@@ -5261,13 +5924,23 @@ with lock:
     pass
 ```
 
+
+
 #### ThreadLocal
+
+```python
 var = threading.local()
+```
+
+
 
 #### python多线程多核利用率问题
 因为Python的线程虽然是真正的线程，但解释器执行代码时，有一个GIL锁：Global Interpreter Lock，任何Python线程执行前，必须先获得GIL锁，然后，每执行100条字节码，解释器就自动释放GIL锁，让别的线程有机会执行。这个GIL全局锁实际上把所有线程的执行代码都给上了锁，所以，多线程在Python中只能交替执行，即使100个线程跑在100核CPU上，也只能用到1个核。
 
+
+
 #### threading.Timer
+
 * threading.Timer是Thread的子类
 ```python
 class threading.Timer(interval, function, args=None, kwargs=None)
@@ -5283,7 +5956,10 @@ t = threading.Timer(5, r)
 t.start()
 ```
 
+
+
 #### 线程间通信 queue.Queue，可多线程读，多线程写，无需加锁
+
 ```python
 import threading, queue
 q = queue.Queue()
@@ -5300,10 +5976,17 @@ for item in range(30):
 q.join() # block until all task_done
 ```
 
+
+
 ### ` _thread`低级线程
+
 略
 
+
+
 ### 延迟（定时任务）处理调度
+
+
 
 #### 循环sleep检查
 
@@ -5318,7 +6001,10 @@ def timer(n):
 timer(2)
 ```
 
+
+
 #### threading.Timer回调（Timer是一个新线程）
+
 ```python
 import time
 import threading
@@ -5331,7 +6017,10 @@ def timer(n):
 timer(2)
 ```
 
+
+
 #### sched模块（线程内定时任务）
+
 * 初始化：scheduler(时间函数=time.time, 睡眠函数=time.sleep)
 * 在绝对时间执行一个任务：scheduler.enterabs(绝对时间, 优先级, 回调, 参数)
 * 在相对时间执行一个任务：scheduler.enter(相对时间, 优先级, 回调, 参数)
@@ -5355,11 +6044,16 @@ scheduler.enter(2, 0, timer, (2, 0))
 scheduler.run()
 ```
 
+
+
 #### 第三方库 APScheduler
+
 * 持久化任务
 * 以daemon方式运行
 * 支持crontab类型的任务
 * `pip install apscheduler`
+
+
 
 ##### 协程调度示例，定制一次性触发器示例
 
@@ -5498,14 +6192,22 @@ asyncio.run(main())
 #     telnet 127.0.0.1 8081
 ```
 
+
+
 ## 协程、异步IO
 
+
+
 ### 协程、Coroutine
+
 * 又称为微线程、纤程
 * 没有线程切换，比线程效率高
 * 不需要锁机制，没有并发冲突（为了保护数据完整性，有协程互斥机制）
 
+
+
 #### yield 实现协程
+
 * 生成器和协程的区别：
     * 生成器，generator
         * 使用yield给出下一个值，结束时raise StopIteration
@@ -5571,6 +6273,8 @@ producer(c)
 '''
 ```
 
+
+
 ### python3.4：装饰器版本asyncio
 
 ```python
@@ -5592,12 +6296,18 @@ loop.run_until_complete(asyncio.wait(tasks))
 loop.close()
 ```
 
+
+
 ### gevent
+
 * gevent是一个基于greenlet实现的网络库，通过greenlet实现协程
 * gevent是对greenlet的高级封装，greenlet遇到io操作的时候就会切换到其他greenlet
 * greenlet封装了libevent时间循环的api，可以让开发者在不改变编程习惯的同时，用同步的方式写异步IO的代码
 
+
+
 #### 动态添加gevent示例
+
 ```python
 import gevent
 
@@ -5626,6 +6336,8 @@ if __name__ == "__main__"
     main.join()
 ```
 
+
+
 ### python3.5以上版本的asyncio
 
 * python3.5引入关键字`async`、`await`
@@ -5641,7 +6353,10 @@ if __name__ == "__main__"
     2. 任务、Task：用于包装协程用于任务调度，如并行、取消、阻塞运行await
     3. 期程、Future：底层可等待对象，表示异步操作的最终结果，不应该直接使用。
 
+
+
 #### 高层asyncio示例，执行Task
+
 ```python
 import asyncio
 
@@ -5660,7 +6375,10 @@ async def main():
 asyncio.run(main())
 ```
 
+
+
 #### 底层asyncio示例，生产Future，等待Future完成
+
 * 示例1
 ```python
 import asyncio
@@ -5731,6 +6449,8 @@ async def main():
 asyncio.run(main())
 ```
 
+
+
 #### 高层接口
 
 * 协程是通过async/await语法进行声明的函数。
@@ -5738,6 +6458,8 @@ asyncio.run(main())
     1. asyncio.run()直接运行，一般用于最高层级的入口点main()
     2. await等待一个协程，一般用于子任务实现。
     3. asyncio.create_task()并发执行多个协程，一般用于任务调度。
+
+
 
 ##### 程序入口点：asyncio.run()
 
@@ -5759,7 +6481,10 @@ print(main()) # <coroutine object main at 0x00000000>
 asyncio.run(main())
 ```
 
+
+
 ##### 阻塞执行：await
+
 ```python
 import asyncio
 import time
@@ -5779,7 +6504,10 @@ async def main():
 asyncio.run(main())
 ```
 
+
+
 ##### 并发执行：asyncio.create_task()
+
 * 只要在loop中创建了任务，阻塞了就会执行
 * `asyncio.create_task(coroutine, *, name=None)`
 * 将协程打包为一个Task，返回Task对象
@@ -5846,6 +6574,8 @@ if '__main__' == __name__:
     asyncio.run(main())
 ```
 
+
+
 ##### 协程与多线程间同步、调度、通信
 
 ```python
@@ -5891,6 +6621,8 @@ async def main():
 if '__main__' == __name__:
     asyncio.run(main())
 ```
+
+
 
 ##### 从外部动态添加任务给事件循环
 
@@ -5985,6 +6717,8 @@ if '__main__' == __name__:
         time.sleep(1)
 ```
 
+
+
 ##### 使用Future封装异步任务
 
 ```python
@@ -6043,8 +6777,6 @@ class DefaultAsyncTaskExecutor(AsyncTaskExecutor):
     pass
 
 ```
-
-
 
 
 
@@ -6115,6 +6847,8 @@ asyncio.run(main())
     * 协程函数执行后生成协程对象
 * 判断协程函数：`asyncio.iscoroutinefunction(func)`
 
+
+
 ##### 协程任务队列
 
 * 先进先出队列：asyncio.Queue
@@ -6171,7 +6905,10 @@ async def main():
 asyncio.run(main())
 ```
 
+
+
 ##### 网络IO
+
 * TCP客户端：`asyncio.open_connection()`
 * TCP服务端：`asyncio.start_server()`
 * UNIX客户端：`asyncio.open_unix_connection()`
@@ -6253,7 +6990,10 @@ async def main():
 asyncio.run(main())
 ```
 
+
+
 ##### 协程同步
+
 * 互斥锁（临界区）：asyncio.Lock()
 
 
@@ -6340,6 +7080,8 @@ async def main():
 asyncio.run(main())
 ```
 
+
+
 ##### 在线程池中运行IO密集型计算、CPU密集型计算、文件IO、ConsoleIO
 
 * 方法一：使用`loop.run_in_executor()`
@@ -6406,10 +7148,11 @@ if '__main__' == __name__:
     asyncio.run(main())
 ```
 
+
+
 ##### 协程调试日志
+
 `logging.getLogger("asyncio").setLevel(logging.WARNING)`
-
-
 
 
 
@@ -6433,7 +7176,10 @@ if '__main__' == __name__:
 * `asyncio.set_event_loop(loop)`
 * `asyncio.new_event_loop(loop)`
 
+
+
 ##### 事件循环方法集合，所有事件循环API
+
 * 运行和停止循环
     * `loop.run_until_complete(future)`
         * 运行单个任务，直到完成或future被完成
@@ -6509,13 +7255,20 @@ finally:
 * 错误处理API
 * 调试模式
 
+
+
 ##### 回调处理
 
 * 调度方法返回的对象， 如`loop.call_soon()`返回`Handle`对象，`loop.call_later()`返回`TimerHandle`对象
 
+
+
 ##### Server Object，网络服务器对象
 
+
+
 ##### Event Loop 底层实现（平台区别）
+
 
 
 ## 正则表达式
@@ -6561,306 +7314,25 @@ m.groups() = ('1', '2', '3')
 +? # 非贪婪匹配   
 ```
 
+
+
 ### match fullmatch search
+
 * match 只匹配开头，后面有其他字符也匹配
 * search 搜索整个字符串，前后有其他字符也匹配
 * fullmatch 必须全部字符串匹配
 
 
 
-## 类型标注
-
-* 类型标注不影响程序执行，只会被第三方工具所使用
-
-### 基本格式
-
-```python
-def greeting(name: str) -> str:
-    return 'Hello' + name
-```
-
-### 类型别名
-
-* 可以重命名类型，用于缩短泛型嵌套
-
-
-* 示例1，将泛型重命名
-
-
-```python
-from typing import List
-Vector = List[float]
-
-def scale(scalar: float, vector: Vector) -> Vector:
-    return [scalar * num for num in vector]
-
-new_vector = scale(2.0, [1.0, -4.2, 5.4])
-```
-
-
-* 示例2，避免泛型嵌套
-
-
-```python
-from typing import Dict, Tuple, Sequence
-
-ConnectionOptions = Dict[str, str]
-Address = Tuple[str, int]
-Server = Tuple[Address, ConnectionOptions]
-
-# 简化后
-def broadcast_message(message: str, servers: Sequence[Server]) -> None:
-    pass
-    
-# 简化前
-def broadcast_message(
-    message: str, 
-    servers: Sequence[Tuple[Tuple[str, int], Dict[str, str]]) -> None:
-    pass
-```
-
-
-### NewType静态检查
-
-* NewType在静态检查时，创建一个等同于子类的的类型，用于分别相同类型，发现Bug
-
-
-* 使用NewType创建类型在运行时无效，完全等效于原始类型
-* NewType创建的类型在运行时，等效于一个函数，返回原类型原值
-* 使用NewType创建类型用于静态检查，父类传入会导致检查失败
-
-
-```python
-from typing import NewType
-
-UserId = NewType('UserId', int)
-
-def get_user_name(user_id: UserId) -> str:
-    pass
-
-# 静态检查成功
-user_a = get_user_name(UserId(42351)) 
-
-# 静态检查失败，int类型无法匹配子类UserId
-user_b = get_user_name(-1)
-```
-
-
-* NewType操作完全等效于原类型，运行结果也一定为原类型
-
-
-```python
-# 返回int而不是UserId
-output = UserId(2222) + UserId(3333)
-```
-
-* NewType仅可用于静态检查，不能在运行时当作类型继承
-
-
-```python
-# 继承失败，因为UserId运行时是一个函数
-class AdminUserId(UserId): pass 
-```
-
-
-### 自定义泛型
-
-* typing已将内部容器类型扩展为支持泛型，使用[]符号限定内容类型
-
-
-```python
-from typing import Mapping, Sequence
-
-def notify_by_email(employees: Sequence[Employee],
-                    overrides: Mapping[str, str]) -> None
-    pass
-```
-
-
-* 使用typing.TypeVar参数化泛型
-
-
-```python
-from typing import Sequence, TypeVar
-
-T = TypeVar('T') # 如不指定，则匹配任意类型，相当于Any
-T = TypeVar('T', int) # 错误，至少两个类型
-T = TypeVar('T', float, int) # float 或 Int
-```
-
-
-* 自定义泛型类型，继承typing.Generic
-* Generic的每个参数类型必须是不同的，如Generic[T, T]无效
-
-
-```python
-from typing import TypeVar, Generic
-from logging import Logger
-
-T = TypeVar('T')
-
-class LoggeredVar(Generic[T]):
-    def __init__(self, value: T, name: str, logger: Logger) -> None:
-        self.name = name
-        self.logger = logger
-        self.value = value
-    
-    def set(self, new: T) -> None
-        self.log('Set ' + repr(self.value))
-        self.value = new
-    
-    def get(self) -> T:
-        self.log('Get ' + repr(self.value))
-        return self.value
-    
-    def log(self, message: str) -> None:
-        self.logger.info('%s: %s', self.name, message)
-
-from typing import Iterable
-def zero_all_vars(vars: Iterable[LoggedVar[int]]) -> None:
-    for var in vars:
-        var.set(0)
-```
-
-### 特殊类型
-
-#### Callable
-* 格式：`Callable[[Type1, Type2], ReturnType]`
-* 省略入参列表：`Callable[..., ReturnType]`
-
-
-```python
-from typing import Callable
-
-def feeder(get_next_item: Callable[[], str]) -> None:
-    pass
-    
-def async_query(on_success: Callable[[int], None], 
-                on_error: Callable[int, Exception], None]) -> None:
-    pass
-```
-
-#### Any，所有类型
-
-#### NoReturn
-
-```python
-from typing import NoReturn
-
-def stop() -> NoReturn:
-    raise RuntimeError
-```
-
-#### Union，并集
-* Union[X, Y]，要么X类型，要么Y类型
-
-#### Optional[X]
-* X或者None
-
-#### Literal，字面量
-* 若不定义枚举类型，可以使用Literal限定字面量，限定字符串
-
-
-```python
-from typing import Literal
-
-MODE = Literal['r', 'rb', 'w', 'wb']
-def open_helper(file: str, mode: MODE) -> str:
-    pass
-    
-open_helper('path', 'r') # 正确
-open_helper('path', 'a') # 错误
-```
-
-#### typing.AnyStr
-* 允许任何类型的字符串
-* 但是不允许混合
-* AnyStr = TypeVar('AnyStr', str, bytes)
-
-
-```python
-def concat(a: AnyStr, b: AnyStr) -> AnyStr:
-    return a+b
-
-concat(u'foo', u'bar')
-concat(b'foo', b'bar')
-concat(u'foo', b'bar') # 错误
-```
-
-#### typing.ClassVar
-* 限定变量指向类
-
-
-```python
-class Starship:
-    stats: ClassVar[Dict[str, int]] = {} # 类
-    damage: int = 10                     # 对象
-```
-
-#### typing.Final
-* 声明变量不可再被赋值
-
-
-```python
-MAX_SIZE: Final = 9000
-MAX_SIZE += 1 # 错误
-
-class Connection:
-    TIMEOUT: Final[int] = 10
-
-class FastConnector(Connection):
-    TIMEOUT = 1 # 错误
-```
-
-#### @typing.overload
-#### @typing.final 不可继承，可以修饰函数、类
-#### @typing.no_type_check 不检查类型
-#### @typing.no_type_check_decorator
-#### @typing.type_check_only 仅用于静态检查，运行时无效
-#### @typing.runtime_checkable
-
-
-### 内置类型的泛型版本
-
-#### list
-* Sequence，一般用来标注参数类型，可以容纳子类
-* List，一般用来标注返回类型
-
-#### dict
-* Mapping，一般用来标注参数类型
-* Dict，一般用来标注返回类型
-
-#### Tuple
-* Tuple[int, float, str] 限定tuple内类型为int, float, str
-
-#### 其他
-* Iterable(Generic[T_co]) -> collections.abc.Iterable
-* Iterator(Iterable[T_co]) -> collections.abc.Iterator
-* Reversible(Iterable[T_co]) -> collections.abc.Reversible
-* Container(Generic[T_co]) -> collections.abc.Container
-* Hashable -> collections.abc.Hashable
-* Sized -> collections.abc.Sized
-* Collection(Sized, Iterable[T], Container[T]) -> collections.abc.Collection
-* AbstractSet(Sized, Collection[T_co]) -> collections.abc.Set
-* MutableSet(AbstractSet[T]) -> collections.abc.MutableSet
-* Mapping(Sized, Collection[KT], )
-
-
-
-### 专题：lambda表达式类型标注
-
-```python
-from typing import Callable
-
-func: Callable[[str, str], int] = lambda var1, var2: var1.index(var2)
-```
-
 
 
 
 ## 常用内建模块
 
+
+
 ### datetime
+
 * datetime是Python处理日期和时间的标准库
 * datetime需要时区信息才能确定一个时间
 * timestamp与时区无关
@@ -6917,11 +7389,16 @@ bj_dt = utc_dt.astimezone(timezone(timedelta(hours=8)))
 bj_dt # 2015-05-18 17:05:12.377316+08:00
 ```
 
+
+
 ### collections
 
 * collections是Python内建的一个集合模块，提供许多有用的集合类
 
+
+
 #### namedtuple
+
 * 命名tuple可以使tuple具有名称、含义
 * 可以用属性而不是索引访问tuple
 * 定义class可以达到相同效果，但是太麻烦
@@ -6946,7 +7423,10 @@ isinstance(p, tuple) # True
 Circle = nametuple('Circle', ['x', 'y', 'r'])
 ```
 
+
+
 #### deque
+
 * list是线性存储，按索引访问元素快，插入和删除元素慢，量大时效率低
 * deque是为了高性能实现插入和删除操作的双向列表，适合用于队列和栈
 * deque除了实现list的append()和pop()外，还支持appendleft()和popleft()，这样就可以非常高效地往头部添加或删除元素
@@ -6960,7 +7440,10 @@ q.appendleft('y')
 q # deque(['y', 'a', 'b', 'c', 'x'])
 ```
 
+
+
 #### defaultdict
+
 * 普通dict key不存在时抛出KeyError，可以使用get避免，但是每次都要设置返回值
 * default可以为key不存在时，返回特定默认值
 
@@ -6972,7 +7455,10 @@ dd['key1'] = 'abc'
 dd['key2'] # 返回'N/A'，不抛出KeyError
 ```
 
+
+
 #### OrderedDict
+
 * dict key是无序的
 * 使用OrderedDict可以保持Key的顺序
 * OrderedDict按Key的插入顺序排列，而不是Key本身
@@ -7004,7 +7490,10 @@ class LastUpdatedOrderedDict(OrderedDict):
         OrderedDict.__setitem__(self, key, value)
 ```
 
+
+
 #### ChainMap
+
 * 组合多个dict，合并查找
 * 例如参数通过多途径输入，可以合并环境变量，本地变量，参数输入
 
@@ -7043,7 +7532,10 @@ user=bob
 """
 ```
 
+
+
 #### Counter
+
 * Counter是dict的子类，用于按key计数
 
 ```python
@@ -7061,7 +7553,10 @@ c.update('hello')
 c # Counter({'r':2, 'o':2, 'g':2, 'm':2, 'l':2, 'p':1, 'a':1, 'i':1, 'n':1, 'h':1, 'e':1})
 ```
 
+
+
 ### base64
+
 * Base64是一种用64个字符来表示任意二进制数据的方法
 * Base64的64个字符`['A',...,'Z','a',...,'z','0',...,'9','+','/']`
 * 64是2的6次方，所以一个Base64字符只能表示6个比特
@@ -7081,7 +7576,10 @@ base64.urlsafe_b64decode('xxx')
 
 * 重要：因为等号会与URL、Cookie冲突，有的Base64编码会把等号去掉，恢复时需考虑Base64编码长度是4的倍数，恢复等号
 
+
+
 ### struct
+
 * python缺少bytes等二进制数据的处理能力
 * `> <`大于号小于号表示大端数据、小端数据
 * `I H `等表示数据类型
@@ -7112,7 +7610,10 @@ s = b'\x42\x4d\x38\x8c\x0a\x00\x00\x00\x00\x00\x36\x00\x00\x00\x28\x00\x00\x00\x
 struct.unpack('<ccIIIIIIHH', s) # （b'B', b'M', 691256, 0, 54, 40, 640, 360, 1, 24）
 ```
 
+
+
 ### hashlib
+
 * hashlib库提供了常见的摘要算法，如MD5，SHA1等
 * MD5生成结果固定是一个128bit字节，通常用一个32位的16进制字符串表示
 * SHA1计算结果是一个160bit字节，通常用一个40位的16进制字符串表示
@@ -7141,7 +7642,10 @@ sha1.hexdigest()
 * 常用密码hash值为固定值，容易被彩虹表比对，可以在系统时为密码加盐（salt)
 * 盐值一般也为固定值，可以将用户名也一起进行hash计算，可以避免不同用户hash值相同
 
+
+
 ### hmac
+
 * hmac实现固定hash加盐算法
 * hmac输入参数均为bytes，输出与原始算法相同
 
@@ -7153,7 +7657,10 @@ h = hmac.new(key, message, digestmod='MD5')
 h.hexdigest()
 ```
 
+
+
 ### itertools
+
 * 提供用于迭代对象的函数
 
 
@@ -7209,10 +7716,16 @@ def pi(N):
     return sum([(-1) ** (n - 1) * 4 / (n * 2 - 1) for n in itertools.takewhile(lambda i: i <= N, itertools.count(1))])
 ```
 
+
+
 ### contextlib
+
 * 为实现上下文管理提供库
 
+
+
 #### contextmanager
+
 * contextmanager这个decorator接受一个generator，用yield语句把with ... as var的变量输出出去
 
 
@@ -7288,7 +7801,10 @@ world
 """
 ```
 
+
+
 #### closing
+
 * 可以把任意对象变温上下文对象，并支持with语句
 * 如果一个对象没有实现上下文，就不能使用with语句，这时可以用closing来吧该对象变为上下文对象
 
@@ -7310,10 +7826,16 @@ def closing(thing):
         thing.closing()
 ```
 
+
+
 ### urllib
+
 * urllib的request模块可以非常方便地抓取URL内容，发送HTTP请求，接收HTTP响应
 
+
+
 #### Get
+
 ```python
 from urllib import request
 
@@ -7331,7 +7853,10 @@ with request.urlopen(req) as f:
     pass
 ```
 
+
+
 #### Post
+
 ```python
 from urllib import request, parse
 
@@ -7361,7 +7886,10 @@ with request.urlopen(req, data=login_data.encode('utf-8')) as f:
 
 ```
 
+
+
 #### Handler
+
 * 通过Proxy访问网站
 ```python
 proxy_handler = urllib.request.ProxyHandler({'http': 'http://www.example.com:3128/'})
@@ -7372,7 +7900,10 @@ with opener.open('http://www.example.com/login.html') as f:
     pass
 ```
 
+
+
 #### python3 urllib  python2 urllib2兼容
+
 ```python
 try:  
     # python3  
@@ -7384,9 +7915,14 @@ except ImportError:
     from urllib import urlencode  
 ```
 
+
+
 ### XML
 
+
+
 #### XML
+
 
 
 ### HTMLParser
@@ -7394,15 +7930,23 @@ except ImportError:
 * HTML本质上是XML自己，但是语法没有XML严格，所以不能用标准的DOM或SAX来解析HTML
 * HTMLParser就为了方便HTML解析
 
+
+
 ### zipfile
 
+
+
 #### 压缩文件
+
 import zlib
 import zipfile
 with zipfile.ZipFile('./x.zip', 'w', zipfile.ZIP_DEFLATED) as z:
     z.write('./file.txt')
 
+
+
 ### sqlite3
+
 ```python
 import sqlite3
 
@@ -7428,15 +7972,26 @@ cursor.close()
 conn.close()
 ```
 
+
+
 ### uuid
+
 uuid
 
+
+
 ### hashlib
+
 hashlib
+
+
 
 ## 网络编程
 
+
+
 ### 理论
+
 * IPC，InterProcess Communation，进程间通信
 * socket是最流行的一种跨平台IPC机制，在同一个系统下可能会有更高效的方式
 * socket作为BSC Unix操作系统的一部分在伯克利诞生，称为因特网的基础。
@@ -7482,12 +8037,20 @@ hashlib
         * 设置为非阻塞模式：socket.setblocking(False)
         * 影响函数：send、recv、connect、accept
 
+
+
 ### 底层接口 socket
 
+
+
 #### 套接字编程指南
+
 <https://docs.python.org/zh-cn/3/howto/sockets.html>
 
+
+
 #### TCP
+
 * 简单TCPClient
 
 
@@ -7627,7 +8190,10 @@ while True:
         time.sleep(1)
 ```
 
+
+
 #### UDP
+
 * UDP无绑定，不会新建一个client_socket
 * UDP数据不保证顺序，不保证完整
 
@@ -7657,7 +8223,9 @@ s.close()
 ```
 
 
+
 #### API
+
 * python的socket是Unix系统调用和套接字接口的直译
 * python读写操作封装了IO缓冲，较c接口更加高级
 * 套接字地址与协议族相关
@@ -7759,7 +8327,9 @@ socket.proto                      # 协议，0
 ```
 
 
+
 ### 网络通信框架 socketserver
+
 * <https://docs.python.org/zh-cn/3/library/socketserver.html>
 * 该模块提供了以下方便使用的高级类：
     * 任务类：BaseRequestHandler
@@ -7789,7 +8359,9 @@ socket.proto                      # 协议，0
     * 该模块将处理client消息简化为实现一个BaseRequestHandler.handle方法
 
 
+
 #### API
+
 ```python
 # 同步Server类默认会绑定和监听，除非设置bind_and_activate=False
 TCPServer(server_address, RequestHandlerClass, bind_and_activate=True)
@@ -7860,7 +8432,10 @@ DatagramRequestHandler()
 # rfile，wfile是io.BufferedIOBase对象
 ```
 
+
+
 #### TCP示例
+
 * TCP服务端
 ```python
 import socketserver
@@ -7927,7 +8502,10 @@ print("Sent:     {}".format(data))
 print("Received: {}".format(received))
 ```
 
+
+
 #### UDP示例
+
 * UDP服务端
 
 
@@ -7997,7 +8575,9 @@ print("Received: {}".format(received))
 ```
 
 
+
 #### Unix示例
+
 * Unix服务端
 ```python
 import socketserver
@@ -8052,10 +8632,14 @@ with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
     received = str(sock.recv(1024), 'utf-8')
 ```
 
+
+
 ### 多路复用低级API，select
 
 
+
 ### 多路复用高级API，selector
+
 * selectors是操作系统级操作的高级封装
 * BaseSelector各种多路复用方法的抽象基类
 * DefaultSelector是本平台最高效的实现
@@ -8122,9 +8706,13 @@ while True:
 ```
 
 
+
 ## Web开发
 
+
+
 ### WSGI
+
 * 200，成功
 * 3xx，重定向
 * 4xx，请求错误
@@ -8137,18 +8725,25 @@ def application(environ, start_response):
     return [b'<h1>Hello, web!</h1>'] #返回BODY
 ```
 
+
+
 #### WSGI服务器
+
 ```python
 from wsgiref.simple_server import make_server
 httpd = make_server('', 8000, application)
 httpd.serve_forever()
 ```
 
+
+
 ## ctypes
 
 * python与c代码直接交互有两种方式
   * 通过ctypes调用编译好的动态链接库
   * 使用Python/C API，按Python规定的接口编写c代码，这种方式可以在C中调用Python
+
+
 
 ### ctypes介绍
 
@@ -8157,6 +8752,8 @@ httpd.serve_forever()
 * 它提供了一些与C兼容的数据类型，并可以自动将Python类型转换为C类型，或者反过来
 * 使用ctypes模块，可以在Python中调用C语言编写的函数，或者在C语言中调用Python编写的函数
 
+
+
 ### windows系统提供了哪些动态链接库
 
 - Kernel32.dll：提供内核级的功能，如内存管理、进程和线程操作、同步等。
@@ -8164,12 +8761,16 @@ httpd.serve_forever()
 - GDI32.dll：提供图形设备接口的功能，如绘图、字体、颜色、位图等。
 - 其他
 
+
+
 ### linux系统提供了哪些动态链接库
 
 - libc.so：提供C标准库的功能，如字符串处理、内存分配、数学函数等。
 - libm.so：提供数学库的功能，如三角函数、对数函数、随机数生成等。
 - libpthread.so：提供线程库的功能，如线程创建、同步、调度等。
 - 其他
+
+
 
 ### 示例：MessageBox 弹出消息窗口
 
