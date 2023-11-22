@@ -5,7 +5,21 @@
 ## 概念
 
 * 什么是数据类
+  * 可以通过简单的声明来定义一个类
+  * 自动生成一些数据类常用的方法
+
+
+
 * 使用数据类有什么好处
+  * 简化代码
+  * 提高可读性
+  * 提高可维护性
+  * 提高代码质量
+
+
+
+* 性能
+  * 初始化后，性能影响接近于0
 
 
 
@@ -15,8 +29,9 @@
   * python原生
 * attrs
   * 原创
+  * 功能更加丰富
 * cattrs
-  * 
+  * python对象与JSON、dict互转
 
 
 
@@ -70,8 +85,6 @@ def __init__(self, name: str, unit_price: float, quantity_on_hand: int = 0):
 
 
 
-
-
 ### 定义默认初始值
 
 * 定义
@@ -93,8 +106,6 @@ def __init__(self, a: int, b: int = 0):
   * 默认值规则同函数参数默认值规则
   * 默认值后，必须都具有默认值
   * 即，默认值参数之后不能有无默认值的参数
-
-
 
 
 
@@ -182,8 +193,17 @@ class C:
 #### 初始化后不可变
 
 * `frozen=False`，默认关闭，初始化后可变
+
+
+
 * 约束
   * 如果有自定义`__setattr__`，`__delattr__`则报错，因为内置实现使用了这两个魔术方法
+
+
+
+* 使用要点
+  * 被改变时抛出`exception dataclasses.FrozenInstanceError`
+  * `FrozenInstanceError`是`AttributeError`的子类
 
 
 
@@ -219,10 +239,18 @@ class C:
 
 
 
-### field
+### field功能
 
 * 功能
   * 用于对特定属性（字段）提供更细节的定义
+
+
+
+* 类原型
+
+```py
+dataclasses.field(*, default=MISSING, default_factory=MISSING, init=True, repr=True, hash=None, compare=True, metadata=None, kw_only=MISSING)
+```
 
 
 
@@ -253,20 +281,267 @@ c.mylist += [1, 2, 3]
 
 
 
-
-
-#### 属性默认值
-
-* 属性默认没有默认值
-* `default=MISSING`是因为`None`对于属性来说，可能是一个有效的默认值
+* 类属性与对象属性
 
 ```py
+@dataclass
+class C:
+    x: int
+    y: int = field(repr=False)
+    z: int = field(repr=False, default=10)
+    t: int = 20
 
+# C.x # 不存在
+# C.y # 不存在
+C.z = 10 # 保存默认值
+C.t = 20 # 保存默认值
 ```
 
 
 
+#### 属性默认值
+
+* 默认没有默认值
+* `default=MISSING`是因为`None`对于属性来说，可能是一个有效的默认值
 
 
-### 其他功能
+
+#### 属性默认值工厂
+
+* 默认没有默认值工厂
+* `default_factory=MISSING`是因为`None`对于属性来说，可能是一个有效的默认值
+
+
+
+#### 是否初始化
+
+* 默认初始化字段，`init=True`
+
+
+
+#### 是否包含在repr
+
+* 默认repr中包含字段，`repr=True`
+
+
+
+#### 是否包含在hash
+
+* 默认为`None`，`hash=None`，含义为使用`dataclasses.field.compare`的值
+* 不建议修改
+
+
+
+#### 是否参与比较
+
+* 默认用于比较，`compare=True`
+* 将被用于生成，`__eq__`和`__gt__`等
+
+
+
+#### metadata
+
+* 默认是None，`metadata=None`
+* 用于第三方扩展
+
+
+
+#### 是否关键字初始化
+
+* 默认不适用关键字初始化，`kw_only=MISSING`
+
+
+
+### 获取数据类的描述
+
+* 方法原型
+
+```py
+dataclasses.fields(class_or_instance)
+```
+
+
+
+### 将数据类转换为一个字典
+
+* 方法原型
+
+```py
+dataclasses.asdict(obj, *, dict_factory=dict)
+```
+
+
+
+* 使用要点
+  * 默认使用深拷贝复制内部数据
+  * 入参obj必须是一个数据类
+
+
+
+* 示例
+
+```py
+@dataclass
+class Point:
+     x: int
+     y: int
+
+@dataclass
+class C:
+     mylist: list[Point]
+
+p = Point(10, 20)
+assert asdict(p) == {'x': 10, 'y': 20}
+
+c = C([Point(0, 0), Point(10, 4)])
+assert asdict(c) == {'mylist': [{'x': 0, 'y': 0}, {'x': 10, 'y': 4}]}
+```
+
+
+
+### 将数据类转换为一个元组
+
+* 方法原型
+
+```py
+dataclasses.astuple(obj, *, tuple_factory=tuple)
+```
+
+
+
+* 示例
+
+```py
+@dataclass
+class Point:
+     x: int
+     y: int
+
+@dataclass
+class C:
+     mylist: list[Point]
+
+assert astuple(p) == (10, 20)
+assert astuple(c) == ([(0, 0), (10, 4)],)
+```
+
+
+
+### 判断是否是数据类
+
+* 原型
+
+```py
+dataclasses.is_dataclass(obj)
+```
+
+
+
+* 使用要点
+  * 这个函数会同时判断数据类和数据类对象
+
+
+
+* 示例
+
+```py
+def is_dataclass_instance(obj):
+    return is_dataclass(obj) and not isinstance(obj, type)
+```
+
+
+
+### 关键字参数分隔符
+
+* 原型
+
+```py
+dataclasses.KW_ONLY
+```
+
+
+
+* `_: KW_ONLY`，之前为位置参数，之后为关键字参数
+
+```py
+@dataclass
+class Point:
+    x: float
+    _: KW_ONLY
+    y: float
+    z: float
+
+p = Point(0, y=1.5, z=2.0)
+```
+
+
+
+### 扩展初始化操作
+
+* 使用要点
+  * 在生成的`__init__`之后调用自定义的`__post_init__`
+
+
+
+## attrs
+
+
+
+### 安装
+
+```sh
+pip install attrs
+```
+
+
+
+### 入门示例
+
+```py
+from attrs import asdict, define, make_class, Factory
+
+@define
+class SomeClass:
+    a_number: int = 42
+    list_of_numbers: list[int] = Factory(list)
+
+    def hard_math(self, another_number):
+        return self.a_number + sum(self.list_of_numbers) * another_number
+
+
+# 自动生成 __init__
+sc = SomeClass(1, [1, 2, 3])
+
+
+# 自动生成 __repr__
+sc # SomeClass(a_number=1, list_of_numbers=[1, 2, 3])
+
+sc.hard_math(3) 
+# 19
+
+
+# 自动生成 __eq__
+sc == SomeClass(1, [1, 2, 3])
+# True
+
+
+# 自动生成 __ne__
+sc != SomeClass(2, [3, 2, 1])
+# True
+
+
+# 生成的类可以转换为字典
+asdict(sc)
+# {'a_number': 1, 'list_of_numbers': [1, 2, 3]}
+
+
+# 可以定义默认值
+SomeClass()
+# SomeClass(a_number=42, list_of_numbers=[])
+
+
+C = make_class("C", ["a", "b"])
+C("foo", "bar")
+# C(a='foo', b='bar')
+```
 

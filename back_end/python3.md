@@ -2,7 +2,7 @@
 
 
 
-## Markdown说明
+## Markdown示例
 
 
 
@@ -42,7 +42,7 @@
 * Python是解释型语言，执行时不用提前编译，所以执行速度慢，效率低
 * Python是著名的“龟叔”Guido van Rossum在1989年圣诞节期间，为了打发无聊的圣诞节而编写的一个编程语言，第一个版本发行于1991年
 * Python内建大量库，被称为“batteries included”，减少重复工作
-* Python社区还构建Pypi，支持大量第三方库，减少重复开发
+* Python社区还构建PyPi，支持大量第三方库，减少重复开发
 
 
 
@@ -54,8 +54,6 @@
 * cython，将Python代码编译为机器码运行
 * Jython，Python的Java运行环境解释器
 * IronPython，Python的.Net运行环境解释器
-
-
 
 
 
@@ -529,8 +527,6 @@ html
 
 
 
-
-
 ## 基础入门
 
 
@@ -647,8 +643,12 @@ os.system("pause")
 #### 浮点数
 
 * 浮点数超过一定范围为inf，无穷大
-* inf优点，可以参与浮点数计算，计算时无需特殊处理
-* inf缺点，json中没有该类型，存储或暴露接口时需要特殊处理
+* inf优点
+  * 可以参与浮点数计算，计算时无需特殊处理
+
+* inf缺点
+  * json中没有该类型，存储或暴露接口时需要特殊处理
+
 
 ```python
 # 浮点数示例
@@ -3737,7 +3737,7 @@ class Bat(Mammal, Flyable):
 
 
 
-#### 定制类
+### 定制类
 
 ```python
 # __slots__() # 限制属性
@@ -3828,11 +3828,11 @@ class O(object):
 
 
 
-#### 枚举类
+### 枚举类
 
 
 
-##### 自增值Enum，默认从1开始计数
+#### 自增值Enum，默认从1开始计数
 
 ```python
 from enum import Enum
@@ -3846,7 +3846,7 @@ for name, member in Month.__members__.items():
 
 
 
-##### 自定义枚举类
+#### 自定义枚举类
 
 ```python
 from enum import Enum, unique
@@ -3872,11 +3872,29 @@ Weekday.__members__.items()
 
 
 
-#### 使用元类
+### 元类
 
 
 
-##### type()定义类
+#### 元类的使用场景
+
+* 单例模式，确保在整个应用程序中只有一个实例
+* ORM 框架，使用元类可以自动为数据库表创建类定义，从而实现 ORM
+* 动态调用方法，元类可以在类定义时自动添加方法，这些方法可以在运行时动态调用。这种技术被广泛应用于框架和库的开发中
+* 自动注册，元类可以自动将类注册到某个全局注册表中，从而方便其他代码使用
+* 自动化测试，元类可以自动为类生成测试用例，从而提高代码的质量和可靠性
+* 自动化文档，元类可以自动为类生成文档，从而提高代码的可读性和可维护性
+* 自动化序列化，元类可以自动为类生成序列化和反序列化方法，从而方便数据的存储和传输
+* 自动化验证，元类可以自动为类生成验证方法，从而确保数据的有效性和安全性
+* 自动化缓存，元类可以自动为类生成缓存方法，从而提高代码的性能和响应速度
+* 自动化路由，元类可以自动为类生成路由方法，从而方便 Web 应用程序的开发
+* 自动化映射，元类可以自动为类生成映射方法，从而方便数据的转换和处理
+* 自动化重载，元类可以自动为类生成重载方法，从而方便代码的调试和优化
+* 自动化扩展，元类可以自动为类生成扩展方法，从而方便代码的扩展和升级
+
+
+
+#### type()定义类
 
 * 由于动态语言特性，python的类和方法都是运行时动态创建的
 * type函数可以查看一个类型或变量的类型
@@ -3906,7 +3924,7 @@ h = Hello()
 
 
 
-##### metaclass元类
+#### metaclass元类
 
 * 根据定义创建类
 * 一般来说mateclass类名总是以Metaclass结尾
@@ -3931,7 +3949,7 @@ L.add(1)
 
 
 
-##### metaclass用途
+#### metaclass用途
 
 * ORM（Object Relational Mapping）对象关系映射
 * 数据库字段根据定义动态生成
@@ -4016,6 +4034,284 @@ class Model(dict, metaclass=ModelMetaclass):
         print('SQL: %s' % sql)
         print('ARGS: %s' % str(args))
 ```
+
+
+
+#### 元类与类装饰器
+
+* 指定元类
+  * 定义类时使用`metaclass`参数指定元类
+  * 定义类时使用`__metaclass__`属性指定元类，Python3已废弃
+
+
+
+* 元类与类的`__new__`、`__init__`、`__call__`对比
+
+  * `Meta.__new__(cls, name, bases, attrs)`
+    * 调用时机：创建类之前，只调用一次
+    * 用途：修改类属性`attrs`
+    * 入参：类名、父类列表、属性列表
+    * 返回值：创建的类，Meta的父类构建的对象
+  * `Meta.__init__(cls, name, bases, attrs)`
+    * 调用时机：创建类之后，只调用一次
+    * 用途：初始化类属性`attrs`，无法修改`attrs`
+    * 入参：`Meta.__new__(cls, name, bases, attrs)`中修改后调用`super().__new__(cls, name, bases, attrs)`传入的类名、父类列表、属性列表
+    * 返回值：无
+  * `Meta.__call__(cls, *args, **kwargs)`
+    * 调用时机：创建类之后，每次创建类实例之前
+    * 用途：自定义实例化过程，修改类的实例的参数、行为
+    * 入参：用户实例化类时传入，修改或透传给`Class.__new__(cls, *args, **kwargs)`
+    * 返回值：实例化的对象，Metaclass的父类构建的对象
+  * `Class.__new__(cls, *args, **kwargs)`
+    * 调用时机：每次创建实例之前
+    * 用途：在实例化之前做一些操作，干预对象的构建
+    * 入参：用户实例化类时传入，在`Metaclass.__call__`中修改或透传的
+    * 返回值：实例化的对象，Class的父类构建的对象
+  * `Class.__init__(self, *args, **kwargs)`
+    * 调用时机：每次创建实例之后
+    * 用途：在实例化之后做一些工作，干预对象，如初始化
+    * 入参：自定义
+    * 返回值：无
+
+  * `Class.__call__(self)`
+    * 调用时机：用户主动调用对象时
+    * 用途：实现`callable`对象，使得对象可以使用函数调用操作符
+    * 入参：用户自定义
+    * 返回值：用户自定义
+
+
+
+
+* 类构建的过程
+  * `读取类的定义` 
+  * -> `Meta.__new__` -> `Meta父类.__new__`
+  * -> `调用Python内核构建类` 
+  * -> `Meta.__init__` -> `Meta父类.__init__`
+  * -> `类构建完成`
+  * -> `读取装饰器`
+
+
+
+* 对象创建的过程
+  * `读取对象的创建参数` 
+  * `执行装饰器返回的包装对象`
+  * -> `Meta.__call__ 前` -> `Meta父类.__call__`
+  * -> `Class.__new__` -> `Class父类.__new__` 
+  * -> `调用Python内核构建对象` 
+  * -> `Class.__init__` -> `Class父类.__init__`
+  * -> `Meta.__call__ 后`
+
+
+
+* 调用父类的方法
+
+  * 单继承使用`super()`调用父类方法
+    * `super().__init__()`，不需要传`self`
+
+  * 多继承使用`super()`调用父类方法
+    * `super(父类, self).__init__()`，不需要传`self`
+  * 显示调用父类方法
+    * `父类.__init__(self, param)`，需要传`self`
+
+
+
+* 测试
+
+```py
+from icecream import ic
+
+
+class Meta(type):
+    def __new__(cls, name, bases, attrs):
+        ic('Meta.__new__ 前', cls, name, bases, attrs)
+
+        # 添加类属性
+        attrs['Meta_new_attr'] = None
+
+        # 调用父类 __new__
+        tmp = super().__new__(cls, name, bases, attrs)
+
+        # 返回创建的类
+        ic('Meta.__new__ 后', type(tmp), tmp)
+        return tmp
+
+    def __init__(cls, name, bases, attrs):
+        ic('Meta.__init__ 前', cls, name, bases, attrs)
+
+        # 添加类属性无效，类已经创建完成
+        attrs['Meta_init_attr'] = None
+
+        # 调用父类
+        super().__init__(name, bases, attrs)
+
+        # 不需要返回值
+        ic('Meta.__init__ 后')
+
+    def __call__(cls, *args, **kwargs):
+        ic('Meta.__call__ 前', cls, args, kwargs)
+
+        # 修改创建对象的参数
+        kwargs['Meta_call_kwarg'] = None
+
+        # 调用父类
+        tmp = super().__call__(*args, **kwargs)
+
+        # 返回
+        ic('Meta.__call__ 后', type(tmp), tmp)
+        return tmp
+
+
+def class_decorator(cls):
+    ic('class_decorator 前', cls)
+
+    def class_decorator_new(*args, **kwargs):
+        ic('class_decorator_new 前', cls, args, kwargs)
+
+        kwargs['class_decorator_new_kwargs'] = None
+
+        obj = cls(*args, **kwargs)
+
+        ic('class_decorator_new 后', type(obj), obj)
+        return obj
+
+    return class_decorator_new
+
+
+@class_decorator
+class Cls(metaclass=Meta):
+    Class_define_attr = None
+
+    def __new__(cls, *args, **kwargs):
+        ic('Class.__new__ 前', cls, args, kwargs)
+
+        kwargs['Class_new_kwarg'] = None
+
+        # 调用父类
+        # 父类是Object，不再需要参数
+        # 父类是其他，可能需要参数
+        tmp = super().__new__(cls)
+
+        # 返回对象
+        ic('Class.__new__ 后', type(tmp), tmp)
+        return tmp
+
+    def __init__(self, *args, **kwargs):
+        ic('Class.__init__ 前', self, args, kwargs)
+
+        # 添加对象创建属性无效，对象已经创建完成
+        kwargs['Class_init_kwarg'] = None
+
+        # 调用父类
+        # 父类是Object, 不再需要参数
+        # 父类是其他，可能需要参数
+        super().__init__()
+
+        # 不需要返回值
+        ic('Class.__init__ 后')
+
+    def __call__(self):
+        ic('用户主动调用函数执行操作符时')
+
+
+
+a = Cls('用户创建对象参数1')
+ic(a.Class_define_attr)
+ic(a.Meta_new_attr)
+# ic(a.Meta_init_attr)
+b = Cls('用户创建对象参数2')
+```
+
+
+
+* 打印结果
+
+```py
+ic| 'Meta.__new__ 前': 'Meta.__new__ 前'
+    cls: <class '__main__.Meta'>
+    name: 'Cls'
+    bases: ()
+    attrs: {'Class_define_attr': None,
+            '__call__': <function Cls.__call__ at 0x000002519E7DD3A0>,
+            '__classcell__': <cell at 0x000002519DDCE430: empty>,
+            '__init__': <function Cls.__init__ at 0x000002519E7DD310>,
+            '__module__': '__main__',
+            '__new__': <function Cls.__new__ at 0x000002519E7DD280>,
+            '__qualname__': 'Cls'}
+ic| 'Meta.__new__ 后': 'Meta.__new__ 后'
+    type(tmp): <class '__main__.Meta'>
+    tmp: <class '__main__.Cls'>
+ic| 'Meta.__init__ 前': 'Meta.__init__ 前'
+    cls: <class '__main__.Cls'>
+    name: 'Cls'
+    bases: ()
+    attrs: {'Class_define_attr': None,
+            'Meta_new_attr': None,
+            '__call__': <function Cls.__call__ at 0x000002519E7DD3A0>,
+            '__classcell__': <cell at 0x000002519DDCE430: Meta object at 0x000002519B9C7450>, 
+            '__init__': <function Cls.__init__ at 0x000002519E7DD310>,
+            '__module__': '__main__',
+            '__new__': <function Cls.__new__ at 0x000002519E7DD280>,
+            '__qualname__': 'Cls'}
+ic| 'Meta.__init__ 后'
+ic| 'class_decorator 前', cls: <class '__main__.Cls'>
+ic| 'class_decorator_new 前': 'class_decorator_new 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数1',)
+    kwargs: {}
+ic| 'Meta.__call__ 前': 'Meta.__call__ 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数1',)
+    kwargs: {'class_decorator_new_kwargs': None}
+ic| 'Class.__new__ 前': 'Class.__new__ 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数1',)
+    kwargs: {'Meta_call_kwarg': None, 'class_decorator_new_kwargs': None}
+ic| 'Class.__new__ 后': 'Class.__new__ 后'
+    type(tmp): <class '__main__.Cls'>
+    tmp: <__main__.Cls object at 0x000002519E869070>
+ic| 'Class.__init__ 前': 'Class.__init__ 前'
+    self: <__main__.Cls object at 0x000002519E869070>
+    args: ('用户创建对象参数1',)
+    kwargs: {'Meta_call_kwarg': None, 'class_decorator_new_kwargs': None}
+ic| 'Class.__init__ 后'
+ic| 'Meta.__call__ 后': 'Meta.__call__ 后'
+    type(tmp): <class '__main__.Cls'>
+    tmp: <__main__.Cls object at 0x000002519E869070>
+ic| 'class_decorator_new 后': 'class_decorator_new 后'
+    type(obj): <class '__main__.Cls'>
+    obj: <__main__.Cls object at 0x000002519E869070>
+ic| a.Class_define_attr: None
+ic| a.Meta_new_attr: None
+ic| 'class_decorator_new 前': 'class_decorator_new 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数2',)
+    kwargs: {}
+ic| 'Meta.__call__ 前': 'Meta.__call__ 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数2',)
+    kwargs: {'class_decorator_new_kwargs': None}
+ic| 'Class.__new__ 前': 'Class.__new__ 前'
+    cls: <class '__main__.Cls'>
+    args: ('用户创建对象参数2',)
+    kwargs: {'Meta_call_kwarg': None, 'class_decorator_new_kwargs': None}
+ic| 'Class.__new__ 后': 'Class.__new__ 后'
+    type(tmp): <class '__main__.Cls'>
+    tmp: <__main__.Cls object at 0x000002519F8FEB20>
+ic| 'Class.__init__ 前': 'Class.__init__ 前'
+    self: <__main__.Cls object at 0x000002519F8FEB20>
+    args: ('用户创建对象参数2',)
+    kwargs: {'Meta_call_kwarg': None, 'class_decorator_new_kwargs': None}
+ic| 'Class.__init__ 后'
+ic| 'Meta.__call__ 后': 'Meta.__call__ 后'
+    type(tmp): <class '__main__.Cls'>
+    tmp: <__main__.Cls object at 0x000002519F8FEB20>
+ic| 'class_decorator_new 后': 'class_decorator_new 后'
+    type(obj): <class '__main__.Cls'>
+```
+
+
+
+
 
 
 
