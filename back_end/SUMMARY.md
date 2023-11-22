@@ -14,7 +14,6 @@
 * [RabbitMQ](rabbitmq.md)
 * [Kafka](kafka.md)
 * [icecream](icecream.md)
-* [dataclasses, attrs, cattrs](dataclasses-attrs-cattrs.md)
 * [pipenv, poetry, pdm](pipenv-poetry-pdm.md)
 * [unittest, pytest](unittest-pytest.md)
 * [typing](typing.md)
