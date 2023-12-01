@@ -24,3 +24,5 @@
 * [network programming](network-programming.md)
 * [date & time](date-and-time.md)
 * [regular expression](regular-expression.md)
+* [Python packaging](python-packaging.md)
+* [Python GUI](python-gui.md)
