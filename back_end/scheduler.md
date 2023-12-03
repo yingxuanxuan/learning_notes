@@ -124,3 +124,36 @@ rocketry
 ```
 
 \
+
+## apscheduler
+
+### AsyncIOScheduler
+
+```
+import asyncio
+import os
+from datetime import datetime
+
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+async def tick():
+    print('Tick! The time is: %s' % datetime.now())
+
+if __name__ == '__main__':
+	# 注意，AsyncIOScheduler在创建时获取loop，注意loop位置
+    scheduler = AsyncIOScheduler()
+    scheduler.add_job(tick, 'interval', seconds=3)
+    scheduler.start()
+    print('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
+
+    # Execution will block here until Ctrl+C (Ctrl+Break on Windows) is pressed.
+    try:
+        asyncio.get_event_loop().run_forever()
+    except (KeyboardInterrupt, SystemExit):
+        pass
+
+```
+
+
+
+## 

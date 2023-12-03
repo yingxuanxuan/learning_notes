@@ -2,16 +2,725 @@
 
 
 
-## 进程与线程
+## 并发技术发展史
+
+* 穿孔卡片
+  * 特点
+    * 用户独占整个机器，用户占用率高，资源利用率低
+  * 存在的问题
+    * CPU与IO（读穿孔卡片、写输出）未分离，CPU利用率低
+    * 人工操作穿孔卡片是性能瓶颈
 
 
 
-### fork多进程（Linux only）
+![img](.gitbook/assets/827651-20180110182812441-1603066554.png)
 
-* Unix/Linux提供一个系统调用fork()，调用一次返回两次，操作系统把当前进程复制一份作为子进程
-* 子进程永远返回0，父进程返回子进程ID，可以据此在代码中判断当前处于父进程还是子进程
-* 父进程需要记录每个子进程的ID
-* 子进程需要调用getppid()就可以拿到父进程的ID
+
+
+* 联机批处理系统
+  * 特点
+    * 增加输入机、输出机作为缓存，将人工操作与IO解耦
+  * 解决的问题
+    * 将人工操作与IO解耦，提升了整体利用率
+  * 存在的问题
+    * CPU与IO（读输入机、写输出机）未分离，CPU利用率低
+
+
+
+![img](.gitbook/assets/827651-20180110182929754-795493284.png)
+
+
+
+* 脱机批处理系统
+  * 特点
+    * 增加高速磁带作为CPU缓存，将将CPU与IO解耦
+  * 解决的问题
+    * 减少输入输出的等待时间，增加了CPU的利用率
+  * 存在的问题
+    * CPU只能执行一道作业，每当发生IO时，CPU处于等待状态
+
+
+
+
+
+![img](.gitbook/assets/827651-20180110183131738-1701797644.png)
+
+
+
+* 多道技术
+  * 解决的问题
+    * CPU能执行多道作业，每当发生IO时，CPU可以让渡给其他程序使用
+  * 意义
+    * 多道程序系统的出现，标志着操作系统渐趋成熟的阶段，先后出现了作业调度管理、处理机管理、存储器管理、外部设备管理、文件系统管理等功能
+    * 由于多个程序同时在计算机中运行，开始有了空间隔离的概念，只有内存空间的隔离，才能让数据更加安全、稳定
+    * 出了空间隔离之外，多道技术还第一次体现了时空复用的特点，遇到IO操作就切换程序，使得cpu的利用率提高了，计算机的工作效率也随之提高
+
+
+
+
+
+![img](.gitbook/assets/827651-20180110183621582-153745188.png)
+
+![img](.gitbook/assets/827651-20180110183714426-287499114.png)
+
+
+
+* 多线程技术
+  * 多道技术的发展成熟与操作系统的形成密不可分
+  * 多道技术在操作系统中即多个程序，即多进程体
+  * 多进程存在的问题
+    * 切换开销大，数据量和系统调用都更复杂
+    * 数据共享和通讯复杂且开销大
+    * 使用多进程开发并发程序会造成程序逻辑复杂化
+  * 多线程解决的问题
+    * 切换开销小、简单
+    * 数据共享和通讯开销小、简单
+    * 开发并发程序相对多进程容易
+
+
+
+* 协程技术
+  * 多线程存在的问题
+    * 线程仍然有内核态的切换开销
+    * 线程同步与死锁处理相对复杂
+    * 使用回调实现异步编程相对复杂
+    * 妥协方案Future、Promise等封装相对难以理解
+  * 协程解决的问题
+    * 协程完全在用户态切换，减少了切换开销
+    * 部分减少同步与死锁的问题
+    * 切换过程对用户透明，用户使用同步代码编写方法，降低了学习成本
+
+
+
+## 并发编程概念
+
+
+
+### 并发与并行的区别
+
+* 并行
+  * 微观概念
+  * 多个程序同时执行
+  * 需要有多个cpu
+* 并发
+  * 宏观概念
+  * 多个程序只要看起来像同时运行即可
+  * CPU运行速度非常快，用户是感受不到切换
+
+
+
+### 单核调度算法
+
+* 先来先服务，FCFS（First Come，First Serve）
+  * 缺点
+    * 短作业长时间得不到执行
+* 短作业优先，SJN（Shortest Job Next）
+  * 优点
+    * 减少了平均等待时间
+  * 缺点
+    * 长作业可能长时间得不到执行
+* 时间片轮转调度，RR（Round Robin）
+  * 原理
+    * 进程按顺序排队
+    * 每个进程执行固定时间片段后，重新加入队尾
+  * 优点
+    * 减少了平均等待事件
+    * 所有进程公平获得执行机会
+  * 缺点
+    * 切换机制死板，可能导致不必要的切换
+    * 可能增加短作业的平均执行时间
+* 多级队列调度
+  * 原理
+    * 结合时间片轮转机制
+    * 将进程分为多个队列，优先级依次递减
+    * 新创建的进程放入高优先级队列
+    * 时间片用完之后，放入低一级队列
+  * 缺点
+    * 缺少反馈机制，长作业可能得不到执行
+* 多级反馈队列调度
+  * 原理
+    * 在多级队列调度的基础上
+    * 长作业主键被移到高优先级的队列
+
+
+
+
+
+### 进程状态机
+
+
+
+![img](.gitbook/assets/827651-20180110201327535-1120359184.png)
+
+
+
+
+
+
+
+## 高层线程模块，threading
+
+* 简介
+  * `threading`模块是对底层接口模块`_thread`模块的封装
+  * 由于解释器`CPython`实现中的全局解释器锁的存在，同一时刻只有一个线程可以执行Python代码，所以`threading`模块只适用于I/O密集型任务，不适用于计算密集型任务
+  * 计算密集型任务可以使用多进程
+
+
+
+### 创建线程
+
+* 使用要点
+  * `threading.Thread`类代表一个在独立控制线程中的运行的活动
+  * 指定活动有两种方式
+    * 向构造器传递一个可调用对象，即函数式创建线程
+    * 继承`Thread`类，重载`Thread.run`方法，即类式创建线程
+  * 继承`Thread`类的注意事项
+    * 用户只应该重载`Thread.__init__`方法和`Thread.run`方法
+  * 启动线程
+    * 必须调用`Thread.start`方法开始线程
+
+
+
+* 函数式启动线程示例
+  * 函数式创建线程对线，`thread = threading.Thread(target=loop, name='name')`
+  * 启动线程，`thread.start()`
+  * 阻塞在调用点直到线程结束，`thread.join()`
+
+
+```python
+import threading
+import time
+import random
+
+def loop(tid):
+    for times in range(10):
+        sleep_time = random.random()
+        time.sleep(sleep_time)
+        print('thread {} sleep {}'.format(tid, sleep_time))
+    print('thread {} stop'.format(tid))
+
+tl = [threading.Thread(target=loop, name='thread {}'.format(i), args=[i]) for i in range(4)]
+
+[x.start() for x in tl]
+[x.join() for x in tl]
+print('all thread stoped')
+```
+
+
+
+* 继承式启动线程
+
+```python
+from threading import Thread
+class Task(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+
+    def run(self):
+        pass
+
+task = Task()
+task.start()
+task.join()
+```
+
+
+
+### 守护线程
+
+* 功能
+  * 当一个进程剩下的线程都是守护线程时，整个 Python 程序将会退出
+
+
+
+* 设置一个线程为守护线程的两种方式
+
+  * 调用`threading.Thread.setDaemon()`
+
+  * 设置构造函数的参数`daemon`为任意非`None`值，如`threading.Thread(daemon=True)`
+
+
+
+* 注意
+  * 守护线程在程序关闭时会突然关闭。他们的资源（例如已经打开的文档，数据库事务等等）可能没有被正确释放。
+  * 如果你想你的线程正常停止，设置他们成为非守护模式并且使用合适的信号机制，如`Event`
+  * 主线程对应Python程序里面初始的控制线程，它不是一个守护线程。
+
+
+
+### 全局解释器锁，GIL
+
+* Python的线程虽然是真正的线程，但解释器执行代码时，有一个GIL锁：Global Interpreter Lock，任何Python线程执行前，必须先获得GIL锁
+* 每执行100条字节码，解释器就自动释放GIL锁，让别的线程有机会执行
+* 这个GIL全局锁实际上把所有线程的执行代码都给上了锁，所以，多线程在Python中只能交替执行，即使100个线程跑在100核CPU上，也只能用到1个核
+
+
+
+* 既然有GIL，为什么还需要有线程锁？
+
+
+
+### 定时器，Timer
+
+* 什么是Timer
+  * 启动一个定时器，延迟一段时间再执行
+
+
+
+* 注意事项
+
+  * `threading.Timer`是`threading.Thread`的子类，是线程的一种应用，与同一个线程内的调度器有本质区别
+
+  * 回调是在另一个线程触发，使用资源时需要注意线程安全
+
+
+
+* 间隔任务示例
+
+```python
+def r():
+    print('Time's up')
+    t.start()
+
+t = threading.Timer(5, r)
+t.start()
+```
+
+
+
+### 线程间同步（互斥）
+
+
+
+#### 原始锁，Lock
+
+* 说明
+  * 对低级接口的直接封装
+
+* 功能
+  * 只能在一个线程的一个位置获得锁
+
+* 两种状态
+  * 锁定
+  * 非锁定
+* 接口
+  * 获取锁
+    * `threading.Lock.acquire(blocking=True, timeout=-1)`
+    * 当状态为未锁定时，则锁定并返回
+    * 当状态为已锁定时，则阻塞直到锁被其他线程释放锁，然后再锁定并返回
+  * 释放锁
+    * `threading.Lock.release()`
+    * 当状态为已锁定时，才能调用
+    * 当状态为锁定时，调用会返回`RuntimeError`异常
+  * 获取锁定状态
+    * `threading.Lock.locked()`
+
+
+
+* 普通方式使用锁
+
+```python
+lock = threading.Lock()
+
+# 加锁
+lock.acquire()
+
+# 捕获异常，避免死锁
+try
+    # 临界区内容
+    pass
+finally:
+    
+    # 释放锁
+    lock.release()
+```
+
+
+
+* 上下文管理器使用锁
+  * 异常时自动释放锁
+
+```python
+lock = threading.Lock()
+with lock:
+    # 临界区内容
+    pass
+```
+
+
+
+* 多线程使用锁的示例
+  * 不加锁可能会执行超过MAX_COUNT次
+
+```python
+"""
+多线程竞争加1
+
+启动 MAX_THREAD_NUM 个线程
+对 TestThread.Count + 1
+直到 TestThread.Count 大于等于 MAX_COUNT
+"""
+
+from icecream import ic
+import threading
+
+
+MAX_THREAD_NUM = 100
+MAX_COUNT = 1000000
+
+
+class TestThread(threading.Thread):
+    Lock = threading.Lock()
+    Count = 0
+
+    def __init__(self, *args, **kwargs) -> None:
+        self.local_count = 0
+        super().__init__(*args, **kwargs)
+
+    def run(self) -> None:
+        while True:
+            try:
+                # 使用with语句，可以自动处理异常并释放锁
+                with TestThread.Lock:
+
+                    # 抛出异常
+                    if TestThread.Count >= MAX_COUNT:
+                        e_str = f'{self.name} Count 达到最大值退出'
+                        raise Exception(e_str)
+
+                    # 自增
+                    else:
+                        TestThread.Count = TestThread.Count + 1
+                        self.local_count = self.local_count + 1
+
+            except Exception:
+                break
+
+
+# 初始化
+thread_list = [TestThread(name=f'T-{i}') for i in range(MAX_THREAD_NUM)]
+
+# 启动线程
+[t.start() for t in thread_list]
+
+# 阻塞等待所有线程退出
+[t.join() for t in thread_list]
+
+# 统计实际自增次数
+ic(sum([t.local_count for t in thread_list]))
+```
+
+
+
+#### 递归锁/重入锁，RLock
+
+* 功能
+  * 可以被一个线程多次获取，但不能被不同线程同时获取
+* 原理
+  * 在内部记录当前锁定的线程和锁定次数（递归等级）
+  * 已锁定时，相同线程可以获得锁，并计数
+* 状态
+  * 锁定，某个线程拥有锁
+  * 未锁定，没有线程拥有锁
+* RLock对比Lock
+  * Lock
+    * 优点
+      * 性能高，直接对应底层接口
+      * 内部机制简单易懂
+    * 缺点
+      * 在同一线程中，递归获取锁，会导致死锁
+      * 对于复杂场景的使用门槛较高
+  * RLock
+    * 优点
+      * 同一线程，可以递归多次获取锁
+      * 通过一次封装，降低使用门槛，复杂场景时无需考虑是否已经加过锁
+    * 缺点
+      * 性能比原始锁差
+
+
+
+#### 条件对象，Condition
+
+* 功能
+  * 封装了一种编程模型，降低锁的锁定范围，形成一种生产者消费者模型
+  * 当生产者满足某个条件后，并通知一个或多个消费者
+  * 消费者等待条件满足后，开始工作
+
+
+
+* 使用方法
+  * 条件对象自身需要受到保护，如果构造函数没有传入，则默认会创建一个递归锁
+  * 生产者获得条件对象的递归锁后，可以通知消费者条件改变
+  * 消费者获得条件对象的递归锁后，可以等待生产者改变条件，等待期间条件对象会自动释放锁，等待结束条件对象会重新申请锁
+  * 也可以生产者消费者合二为一，作为一种对称的、可多次使用的通知机制
+  * 如果不使用条件对象封装的`wait()`和`notify()`机制，条件对象会退化为一个递归锁
+
+
+
+* 编程模型
+
+```python
+# 生产者
+
+# 竞争条件对象
+# 此处等同于加锁，notify并不释放锁
+with condition:
+	# 改变多线程都会使用的临界信息
+    pass
+
+	# 通知等待者，即消费者
+    condition.notify()
+```
+
+```python
+# 消费者
+
+# 竞争条件对象
+# 此处不等同于加锁，因为wait时会使用消费者、生产者之间一对一的锁，替换保护条件对象临界内容的锁
+with condition
+	# 查询多线程都会使用的临界信息
+    while not 某个条件:
+        # 等待
+        condition.wait()
+        
+    # 改变多线程都会使用的临界信息
+    pass
+    # wait()获得权限后，会重新竞争conditon的保护锁，此处代码相当于加锁状态
+```
+
+
+
+* 生产者消费者示例
+
+```python
+"""
+多个工作线程等待任务
+
+生产者生产 PRODUCE_TIMES 批任务
+每批随机生产 [1, WORDER_NUM] 个任务
+WORDER_NUM 个工作线程等待执行
+"""
+
+import time
+from icecream import ic
+import threading
+import random
+
+
+TASK_LIST = []
+WORDER_NUM = 5
+PRODUCE_TIMES = 10
+STOP_SIGN = False
+CONDITION = threading.Condition()
+
+
+def produce():
+    # 生产 PRODUCE_TIMES 批任务后结束生产
+
+    for batch in range(PRODUCE_TIMES):
+        # 生产任务（需要1秒）
+        time.sleep(1)
+        task_num = random.randint(1, WORDER_NUM)
+
+        # 发放任务
+        with CONDITION:
+            for task_id in range(task_num):
+                TASK_LIST.append(f'batch {batch} task {task_id}')
+            CONDITION.notify(task_num)
+            ic(f'Batch {batch} produce {task_num} tasks')
+
+    STOP_SIGN = True
+
+
+def consume():
+    task = None
+
+    # 获取任务
+    with CONDITION:
+        CONDITION.wait_for(lambda: len(TASK_LIST))
+        task = TASK_LIST.pop()
+        print(f'Worker {threading.current_thread().getName()} get {task}')
+
+    # 消费任务（需要1秒）
+    time.sleep(1)
+
+
+class WorkerThread(threading.Thread):
+    def run(self) -> None:
+        while not STOP_SIGN:
+            consume()
+
+
+# 初始化
+thread_list = [WorkerThread(name=f'WORKER-{i}') for i in range(WORDER_NUM)]
+
+# 启动线程
+[t.start() for t in thread_list]
+
+# 生产
+produce()
+
+# 等待线程结束
+[t.join() for t in thread_list]
+
+```
+
+
+
+* 注意事项
+  * 什么时候需要外部传入锁
+    * 当多个条件对象需要共享一个临界区时，用户可以自行传入锁
+  * `Conditon.notify(n=1)`和`Condition.notify_all()`的区别
+    * 取决于生产者的一次条件改变，需要被几个工作线程所用
+    * 由生产者控制需要唤醒的工作线程
+  * `Condition.wait(timeout=None)`与`Conditon.wait_for(predicate, timeout=None)`的区别
+    * `wait_for`是对`wait`的封装
+    * 将用户需要实现的循环等待直到满足某个条件封装在内部
+
+
+
+* `wait_for`的使用方法
+  * 可以将条件判断封装为一个`Callable`
+  * `Callable`满足条件后竞争得到锁，`wait_for`返回前会再次执行`Callable`作为返回值，可以检查`wait_for`的返回值作为 Double Check
+
+
+
+#### 信号量，Semaphore
+
+* 功能
+  * 信号量表示一个原子的计数器，表示有多少个资源可以被使用
+  * 多线程竞争得到一个信号，则信号计数减1
+  * 多线程释放一个信号，则信号计数加1
+  * 在其他编程语言中，信号量可能对应一个原子的指令，但是在Python中信号量是使用条件变量实现的。即在Python中，信号量是对条件对象的一个特殊使用场景的封装。
+
+
+
+#### 有界信号量，BoundedSemaphore
+
+* 功能
+
+  * 对信号量进行检查，避免信号量的当前值超过初始值
+
+  
+
+* 原理
+  * 可能由于用户编码错误，多次调用`Semaphore.release(n=1)`，或者传递的参数`n`与实际申请的不符
+
+
+
+#### 事件，Event
+
+* 功能
+  * 事件表示一个简单的布尔信号，初始状态为`False`，但是内部实现也是基于条件对象
+  * 当一个线程调用`threading.Event.wait()`时，进入等待状态
+  * 其他线程调用`threading.Event.set()`时，事件状态改变为`True`，同时等待的线程被唤醒
+
+
+
+#### 栅栏，Barrier
+
+* 功能
+  * 固定数量的线程彼此等待，当所有线程都准备好时，大家同时获得唤醒
+
+
+
+* 原理
+  * 内部实现也是基于条件对象
+  * 所有等待的线程互为生产者消费者
+
+
+
+### 线程间通信/消息队列，queue
+
+* 为什么要有queue模块
+  * 创造线程概念的初衷就是为了规避进程间通信的不便，所有线程都运行在一个进程内部，原本就是共享所有数据的访问权限
+  * 只是为了规避多线程同时访问一个资源，改变数据的一致性，所以需要考虑线程间的同步和互斥
+  * queue并非一个考虑性能的数据结构，而是一个简单的消息队列
+  * queue模块的实现完全是为了使用方便，所有数据操作都有锁保护数据的一致性，在python进程内部的多线程环境下是完全安全的
+
+
+
+* 什么是queue模块
+
+  * queue模块实现了多生产者多消费者的队列
+
+  * queue模块将任务获取和任务完成解耦，实现了消息队列任务重试的基本功能
+
+
+
+* queue模块封装的几种队列
+  * `class queue.Queue`
+    * 实现了队列的基础接口
+    * FIFO，First In First Offer，先进先出队列
+    * 发布任务，`Queue.put(item, block=True, timeout=None)`
+    * 获取任务，`Queue.get(block=True, timeout=None)`
+    * 完成任务，`Queue.task_done()`
+    * 等待所有任务完成，`Queue.join()`，内部使用条件变量，队列中所有任务完成后，等待者获得通知
+  * `class queue.LifoQueue(Queue)`
+    * LIFO，Last In First Offer，后进先出队列
+  * `class queue.PriorityQueue(Queue)`
+    * 优先级队列，值小的任务会被优先消费
+    * 发布任务时，任务项为一个元组，`(优先级, 数据)`
+    * ==`数据`也会被比较，需要有可比性，如果没有可比性可以自定义一个类包裹，只比较优先级==
+    * 内部使用二叉树动态排序
+  * `class queue.SimpleQueue`
+    * 简化的队列，并不是`queue.Queue`的子类
+    * 没有大小限制
+    * 没有完成任务接口
+    * 没有等待任务完成接口
+
+
+
+* queue.Queue 使用示例
+
+```python
+import threading, queue
+q = queue.Queue()
+
+def worker():
+    while True:
+        item = q.get()
+        q.task_done() # 不调用task_done会导致join()一直阻塞
+
+threading.Thread(target=worker, daemon=True).start()
+for item in range(30):
+    q.put(item)
+
+q.join() # block until all task_done
+```
+
+
+
+## 底层线程模块，_thread
+
+* todo
+
+
+
+## Linux原生多进程，os.fork
+
+* 原理
+  * Unix/Linux提供一个系统调用fork()，调用一次返回两次，操作系统把当前进程复制一份作为子进程
+
+
+
+
+* 父进程如何判断子进程创建成功
+
+  * 子进程永远返回0，父进程返回子进程ID，可以据此在代码中判断当前处于父进程还是子进程
+
+  * 记忆方法
+    * 父进程需要获得产生的子进程的ID
+
+
+
+
+* 子进程如何知道自己是谁
+  * 子进程永远返回0，
+  * 子进程获取自己的进程ID，`os.getpid()`
+  * 子进程获取父进程的ID，`getppid()`
+
+
 
 ```python
 #!/usr/bin/python
@@ -32,12 +741,21 @@ else:
 
 
 
-### multiprocessing.Process多进程
+## 多进程模块，multiprocessing
 
-* multiprocessing是跨平台通用的多进程模块
-* multiprocessing在windows上模拟fork操作，将对象通过pickle序列化后传到子进程，调用失败时需要检查pickle操作
-* Process 类代表一个进程对象
-* `multiprocessing`创建进程必须在`if __name__ == '__main__'`之内，用以区分父子进程。因为`multiprocessing`通过`import`而非`fork`实现创建进程。
+
+
+### 进程，Process
+
+* `multiprocessing`是跨平台的多进程模块
+* 使用多进程，不受全局解释器锁限制，适合CPU密集型任务
+* `Process` 类代表一个进程对象，与县城`Thread`的接口类似
+
+
+
+* 注意事项
+  * `multiprocessing`在 windows 上模拟`fork`操作，将对象通过`pickle`序列化后传到子进程，调用失败时需要检查`pickle`操作
+  * `multiprocessing`创建进程必须在`if __name__ == '__main__'`之内，用以区分父子进程。因为`multiprocessing`通过`import`而非`fork`实现创建进程。
 
 
 
@@ -84,14 +802,21 @@ if __name__ == '__main__':
 
 
 
-### multiprocessing.Pool多进程（进程池）
+### 进程池，Pool
 
-* 超过Pool进程数量的任务会等待进程空闲依次执行
+* 什么是`multiprocessing.Pool`
+  * 方法
+
+
+
+
+* 注意事项
+  * 超过Pool进程数量的任务会等待进程空闲依次执行
+
 
 
 
 * 常用方法
-
   * `Pool.apply(func[, args[, kwds]])`
     * 在进程执行方法，阻塞直到完成。
   * `Pool.apply_async(func[, args[ kwds[, callback[, error_callback]]]])`
@@ -107,7 +832,6 @@ if __name__ == '__main__':
     * map多进程版，异步回调结果
     * 返回MapResult
     * 异步体现在回调，如果从MapResult中获取结果，会阻塞在get
-
   * apply和apply_async返回multiprocessing.pool.AsyncResult对象，用于获取结果
 
 
@@ -233,58 +957,11 @@ if __name__ == '__main__':
 
 
 
-### multiprocessing理论
-
-* multiprocessing支持三种启动进程的模式
-  * spawn
-    * 只继承run()方法所需的资源
-    * 文件描述符和句柄不会被继承
-    * 启动新python解释器
-    * 相对于fork和forkserver慢
-    * 支持unix和win
-    * win上默认，mac默认
-  * fork
-    * os.fork()产生解释器分叉，子进程与父进程相同
-    * 父进程所有资源都被子进程继承
-    * 只支持unix
-    * unix上默认
-  * forkserver
-    * 启动服务器进程，父进程连接到服务器请求分叉一个新进程。
-    * 没有不必要的资源被继承
-    * 支持unix
-    * 支持通过unix管道传递文件描述符
-  * 为避免子进程被杀死造成资源泄漏，unix上通过spawn和forkserver方式启动多进程会同时启动一个资源追踪进程，在所有进程退出后，负责释放泄露的资源。
+### 子进程，subprocess
 
 
 
-* 设置启动方法的方法
-
-  * 主模块中设置默认启动方法
-
-  ```python
-  import multiprocessing
-  
-  if __name__ == '__main__':
-      multiprocessing.set_start_method('spawn')
-  ```
-
-  * 使用上下文对象选择特定启动方法
-
-  ```python
-  import multiprocessing
-  
-  if __name__ == '__main__':
-      ctx = multiprocessing.get_context('spawn')
-      ctx.Process(target=foo)
-  ```
-
-
-
-### subprocess执行命令作为子进程
-
-
-
-* subprocess.call（命令式调用）
+* `subprocess.call`，命令式调用
 
 ```python
 import subprocess
@@ -294,7 +971,7 @@ print('Exit code:', r)
 
 
 
-* subprocess.communicate（持续交互）
+* `subprocess.communicate`，持续交互
 
 ```python
 import subprocess
@@ -306,27 +983,87 @@ print('Exit code:', p.returncode)
 
 
 
+### multiprocessing的上下文和启动模式
+
+* `multiprocessing`支持三种启动进程的模式
+  * `spawn`（win、mac 默认）
+    * 子进程使用新的python解释器
+    * 子进程只继承`Process.run()`方法所需的资源
+    * 非必须的文件描述符和句柄不会被继承
+    * 相对于`fork`和`forkserver`慢很多
+    * POSIX和WINDOWS平台都可用
+  * `fork`（除 macOS 之外的 POSIX 默认）
+    * `os.fork()`产生解释器分叉，子进程与父进程相同
+    * 父进程所有资源都被子进程继承
+    * 支持 POSIX
+    * 在子进程里无法再次`fork`
+    * Python 3.14 之后，不再默认
+  * `forkserver`
+    * 启动服务器进程，父进程连接到服务器请求分叉一个新进程。
+    * 没有不必要的资源被继承
+    * 在支持通过Unix管道传递文件描述符的 POSIX 平台上可用，如 Linux
+
+
+
+* 注意事项
+  * 为避免子进程被杀死造成资源泄漏，unix上通过`spawn`和`forkserver`方式启动多进程会同时启动一个资源追踪进程，在所有进程退出后，负责释放泄露的资源。
+  * `'spawn'` 和 `'forkserver'` 启动方法在 POSIX 系统上通常不能与 “已冻结” 可执行程序一同使用（例如由 `PyInstaller` 和 `cx_Freeze` 等软件包产生的二进制文件）。 如果代码没有使用线程则可以使用 `'fork'` 启动方法。
+
+
+
+* 设置启动方法的方法
+  * 主模块中设置默认启动方法
+  * 使用上下文对象选择特定启动方法
+    * 上下文对象与`multiprocessing`模块具有相同的API，并允许在同一程序中使用多种启动方法
+
+
+
+```python
+# 主模块中设置默认启动方法
+
+import multiprocessing
+
+if __name__ == '__main__':
+    multiprocessing.set_start_method('spawn')
+```
+
+
+```python
+# 使用上下文对象选择特定启动方法
+
+import multiprocessing
+
+if __name__ == '__main__':
+    ctx = multiprocessing.get_context('spawn')
+    ctx.Process(target=foo)
+```
+
+
+
 ### 进程间通信
 
 
 
-#### 队列，multiprocessing.Queue
+#### 队列，Queue
 
-* 用于多个进程间通信
-* 多个Process可以Put、Get同一个Queue
-* Queue是单向的，只有一个方向的管道，如果需要交换多种信息，需要区分类型或者建立多个Queue
-* Queue内部使用管道Pipe加锁实现
-* multiprocessing.Queue是进程安全、线程安全的
-* api
-  * `multiprocessing.Queue([maxsize])`
-  * `Queue.empty()`
-  * `Queue.put(obj[, block=True[, timeout=None]])`
-    * 阻塞直到放入队列
-  * `Queue.put_nowait(obj)`
-    * `Queue.put(obj, False)`
-  * `Queue.get([block=True[, timeout=None]])`
-  * `Queue.get_nowait()`
-    * `Queue.get(False)`
+* 什么是`multiprocessing.Queue`
+  * `multiprocessing.Queue`用于多个进程间通信的队列，多个Process可以同时操作队列，是进程安全、线程安全的
+  * `multiprocessing.Queue`内部使用管道Pipe加锁实现
+  * 放入`multiprocessing.Queue`的对象，会被一个后台线程用`pickle`序列化
+
+
+
+
+* `multiprocessing.Queue`的接口
+  * `multiprocessing.Queue`与`queue.Queue`接口类似，只缺少`Queue.task_done()`功能，使得父类更加简洁，`multiprocessing`模块中另有`multiprocessing.JoinableQueue`类，实现了`Queue.task_done()`功能
+  * 创建队列，`multiprocessing.Queue()`
+  * 发布任务，`Queue.put(obj, block=True, timeout=None)`
+  * 监听任务，`Queue.get(block=True, timeout=None)`
+  * 关闭队列，相比`queue.Queue`多了`Queue.join_thread()`和`Queue.close()`接口
+
+
+
+* `multiprocessing.Queue`示例
 
 ```python
 from multiprocessing import Queue
@@ -362,37 +1099,58 @@ if __name__ == '__main__':
 
 
 
-* multiprocessing.SimpleQueue
+#### 简单队列，SimpleQueue
 
-  * 一个简化的Queue
-
-  * `SimpleQueue.empty()`
-
-  * `SimpleQueue.get()`
-
-  * `SimpleQueue.put(item)`
+* `multiprocessing.SimpleQueue`
+  * 一个简化的`multiprocessing.Queue`
+  * 发送消息，`SimpleQueue.put(item)`
+  * 获取消息，`SimpleQueue.get()`
+  * 没有关闭接口
 
 
 
+#### 消息队列，JoinableQueue
 
-* multiprocessing.JoinableQueue([maxsize])
+* 什么是`multiprocessing.JoinableQueue`
+  * `multiprocessing.JoinableQueue`是`multiprocessing.Queue`的子类
+  * 扩展了`JoinableQueue.task_done()`和`JoinableQueue.join()`功能
 
-  * 是Queue的子类
+
+
+
+* `multiprocessing.JoinableQueue`接口
   * `JoinableQueue.task_down()`
     * 每个每次调用get()、执行完任务后，执行task_down()标记任务完成，join释放
-
   * `JoinableQueue.join()`
     * 阻塞直到任务完成
 
 
 
 
-#### 管道，multiprocessing.Pipe
+#### 管道，Pipe
 
-* 两个进程间通信
-* Pipe是双向管道
-* 多进程同时读、同时写需要加锁
-* Pipe返回两个multiprocessing.connection.Connection对象
+* 什么是管道
+  * 管道是操作系统提供的一种通信机制
+  * 管道默认是双工的，既可读，又可写
+  * 管道只能用于两个进程间通信
+
+
+
+
+* 内部机制
+  * `multiprocessing.Pipe`不同于`os.pipe()`返回的操作系统管道，是独立的封装
+  * 在 Linux 平台下，单向管道使用的是操作系统的管道，双向管道底层使用的是`socket`
+
+
+
+* 使用要点
+  * `Pipe`实际是一个工厂函数，返回两个`multiprocessing.connection.Connection`对象
+  * `Pipe`工厂默认是双工的
+  * 通过指定参数`Pipe(duplex=True)`，设置管道为单工，返回的两个`Connection`，前一个只读，后一个只写
+
+
+
+* 管道使用示例
 
 
 ```python
@@ -426,23 +1184,16 @@ if __name__ == '__main__':
 
 
 
-#### 进程锁，multiprocessing.Lock
+#### 封装的共享内存，Value、Array
 
-* `Lock.acquire(block=True, timeout=None)`
-* `Lock.release()`
+* multiprocessing.Value ，单一，固定类型数据共享
 
-
-
-#### 共享内存
-
-* multiprocessing.Value ， 单一，固定类型数据共享
-* multiprocessing.Array ， 数组，固定类型数据共享
-* multiprocessing.sharedctypes ， 共享c数据类型
+* multiprocessing.Array ，数组，固定类型数据共享
 
 
 
 
-* 在子进程中修改数据示例：
+* 在子进程中修改数据示例
 
 
 ```python
@@ -467,24 +1218,52 @@ if __name__ == '__main__':
 
 
 
-#### 服务进程，管理器
+#### ctypes共享内存，sharedctypes
+
+* todo
+
+
+
+#### SystemV共享内存，SharedMemory
+
+
+
+#### 数据管理器/服务进程，Manager
+
+* 什么是数据管理器/服务进程
+  * 由数据管理器，创建并控制一个进程，用于保存 Python 对象
+  * 用于进程间或者跨网络进程间共享数据
+  * 其他进程使用代理，操作 Python 对象
+
+
+
+* 注意事项
+  * 效率低、速度慢
+
+
 
 * multiprocess.Manager()
-* 用于进程间或者跨网络进程间共享数据
-* 支持类型
-  * list
-  * dict
-  * Namespace
-  * Lock
-  * RLock
-  * Semaphore
-  * BoundedSemaphore
-  * Condition
-  * Event
-  * Barrier
-  * Queue
-  * Value
-  * Array
+
+
+
+* 数据管理器/服务进程支持的数据类型
+  * `list`
+  * `dict`
+  * `multiprocessing.Namespace`
+  * `multiprocessing.Queue`
+  * `multiprocessing.Value`
+  * `multiprocessing.Array`
+
+
+
+* 同步原语也算作支持的数据类型
+  * `Lock`
+  * `RLock`
+  * `Semaphore`
+  * `BoundedSemaphore`
+  * `Condition`
+  * `Event`
+  * `Barrier`
 
 
 
@@ -516,7 +1295,7 @@ if __name__ == '__main__':
 
 
 
-### 分布式进程，multiprocessing.managers
+#### 分布式进程的通信
 
 * 实现在另一个进程的数据共享
 * 可以实现在远端执行代码，但是两端代码必须使用相同定义
@@ -524,7 +1303,7 @@ if __name__ == '__main__':
 
 
 
-#### 示例
+##### 示例
 
 * Server
 
@@ -574,6 +1353,8 @@ if '__main__' == __name__:
 	main()
 ```
 
+
+
 * Client
 
 
@@ -618,7 +1399,7 @@ print('master exit.')
 
 
 
-#### 抽象通用远程任务队列
+##### 抽象通用远程任务队列
 
 * remote_queue.py
 
@@ -705,6 +1486,8 @@ class RemoteQueueClient:
 		return self.__proxy_result_queue
 ```
 
+
+
 * tasks.py，任务函数
 
 
@@ -715,6 +1498,8 @@ def run():
 def shutdown():
 	return 'shutdown'
 ```
+
+
 
 * server.py，监听并执行任务
 
@@ -747,6 +1532,8 @@ if '__main__' == __name__:
 	main()
 ```
 
+
+
 * client.py，连接并发送任务
 
 
@@ -774,265 +1561,49 @@ print('client exit.')
 
 
 
-### threading高级线程
+### 进程间的同步（互斥）
 
+* 为什么需要进程间的同步
+  * 由于进程间的数据空间原本就是相互隔离的，所以原生的进程间并不存在同步（互斥）的问题
+  * 进程间的通信机制原本就是为了进程间通信才出现的，也不存在同步（互斥）的问题
+  * 只有在使用了进程管理器之后，多个进程间存在了共享数据，才需要进程间的同步（互斥）
+  * 进程间的同步原语完全复刻了`threading.Thread`模块
 
 
-* 函数式启动线程
 
-```python
-# thread方法
-import threading # 导入
-thread = threading.Thread(target=loop, name='name') # 创建
-thread.start() # 启动
-thread.join()  # 等待
-threading.current_thread().name # 名字
+* 同步原语
+  * 原始锁，`multiprocessing.Lock`
+  * 递归锁，`multiprocessing.RLock`
+  * 条件变量，`multiprocessing.Condition`
+  * 事件，`multiprocessing.Event`
+  * 栅栏，`multiprocessing.Barrier`
+  * 信号量，`multiprocessing.Semaphore`
+  * 有界信号量，`multiprocessing.BoundedSemaphore`
 
-# 示例
-import threading
-import time
-import random
 
-def loop(tid):
-    for times in range(10):
-        sleep_time = random.random()
-        time.sleep(sleep_time)
-        print('thread {} sleep {}'.format(tid, sleep_time))
-    print('thread {} stop'.format(tid))
 
-tl = [threading.Thread(target=loop, name='thread {}'.format(i), args=[i]) for i in range(4)]
+## 未来结果，concurrent.futures
 
-[x.start() for x in tl]
-[x.join() for x in tl]
-print('all thread stoped')
-```
+* todo
 
 
 
-* 继承式启动线程
+## 协程
 
-```python
-from threading import Thread
-class Task(Thread):
-    def __init__(self)
-        Thread.__init__(self)
 
-    def run(self):
-        pass
 
-task = Task()
-task.start()
-task.join()
+* 什么是协程
 
-# 锁示例
-import threading
-import time
-import random
+  * 又称为微线程、纤程
 
-class T(threading.Thread):
-    lock = threading.Lock() # 类成员或者全局成员
-    
-    def __init__(self, tid):
-        threading.Thread.__init__(self)
-        self.tid = tid
+  * 没有线程切换，比线程效率高
 
-    def run(self):
-        for times in range(10):
-            sleep_time = random.random()
-            time.sleep(sleep_time)
-            self.lock_print('thread {} sleep {}'.format(self.tid, sleep_time))
-        self.lock_print('thread {} stop'.format(self.tid))
+  * 不需要锁机制，没有并发冲突（为了保护数据完整性，有协程互斥机制）
 
-    def lock_print(self, *args, **kw):
-        with self.lock:
-            print(*args, **kw)
 
 
-tl = [T(i) for i in range(4)]
-[t.start() for t in tl]
-[t.join() for t in tl]
 
-print('all thread stoped')
-```
-
-
-
-#### Lock
-
-```python
-lock = threading.Lock()
-lock.acquire()
-lock.release()
-
-with lock:
-    pass
-```
-
-
-
-#### ThreadLocal
-
-```python
-var = threading.local()
-```
-
-
-
-#### python多线程多核利用率问题
-
-因为Python的线程虽然是真正的线程，但解释器执行代码时，有一个GIL锁：Global Interpreter Lock，任何Python线程执行前，必须先获得GIL锁，然后，每执行100条字节码，解释器就自动释放GIL锁，让别的线程有机会执行。这个GIL全局锁实际上把所有线程的执行代码都给上了锁，所以，多线程在Python中只能交替执行，即使100个线程跑在100核CPU上，也只能用到1个核。
-
-
-
-#### threading.Timer
-
-* threading.Timer是Thread的子类
-
-
-```python
-class threading.Timer(interval, function, args=None, kwargs=None)
-Timer.start()
-Timer.cancel()
-
-# 示例
-def r():
-    print('Time's up')
-    t.start()
-
-t = threading.Timer(5, r)
-t.start()
-```
-
-
-
-#### 线程间通信 queue.Queue，可多线程读，多线程写，无需加锁
-
-```python
-import threading, queue
-q = queue.Queue()
-
-def worker():
-    while True:
-        item = q.get()
-        q.task_done() # 不调用task_done会导致join()一直阻塞
-
-threading.Thread(target=worker, daemon=True).start()
-for item in range(30):
-    q.put(item)
-
-q.join() # block until all task_done
-```
-
-
-
-### `_thread`低级线程
-
-略
-
-
-
-## 线程上下文，contextvars 
-
-* <https://docs.python.org/zh-cn/3/library/contextvars.html>
-* contextvars本地变量用于在并发环境中存储上下文变量，类似于threading.local()存储线程本地变量
-* 在`contextvars.Context.run`接口中调用的函数可以访问或者修改变量，将内容保存在Context上下文中
-
-
-
-* 示例
-
-
-```python
-var = ContextVar('var')
-var.set('spam')
-
-def main():
-    # 'var' was set to 'spam' before
-    # calling 'copy_context()' and 'ctx.run(main)', so:
-    # var.get() == ctx[var] == 'spam'
-
-    var.set('ham')
-
-    # Now, after setting 'var' to 'ham':
-    # var.get() == ctx[var] == 'ham'
-
-# 返回当前上下文中Context对象的拷贝
-ctx = copy_context()
-
-# Any changes that the 'main' function makes to 'var'
-# will be contained in 'ctx'.
-ctx.run(main)
-
-# The 'main()' function was run in the 'ctx' context,
-# so changes to 'var' are contained in it:
-# ctx[var] == 'ham'
-
-# However, outside of 'ctx', 'var' is still set to 'spam':
-# var.get() == 'spam'
-```
-
-
-* asyncio中原生支持context，每个asyncio.Task中使用自己当前Task的contextvar
-
-
-```python
-import asyncio
-import contextvars
-
-client_addr_var = contextvars.ContextVar('client_addr')
-
-def render_goodbye():
-    # The address of the currently handled client can be accessed
-    # without passing it explicitly to this function.
-
-    client_addr = client_addr_var.get()
-    return f'Good bye, client @ {client_addr}\n'.encode()
-
-async def handle_request(reader, writer):
-    addr = writer.transport.get_extra_info('socket').getpeername()
-    client_addr_var.set(addr)
-
-    # In any code that we call is now possible to get
-    # client's address by calling 'client_addr_var.get()'.
-
-    while True:
-        line = await reader.readline()
-        print(line)
-        if not line.strip():
-            break
-        writer.write(line)
-
-    writer.write(render_goodbye())
-    writer.close()
-
-async def main():
-    srv = await asyncio.start_server(
-        handle_request, '127.0.0.1', 8081)
-
-    async with srv:
-        await srv.serve_forever()
-
-asyncio.run(main())
-
-# To test it you can use telnet:
-#     telnet 127.0.0.1 8081
-```
-
-
-
-## 协程、异步IO
-
-
-
-### 协程、Coroutine
-
-* 又称为微线程、纤程
-* 没有线程切换，比线程效率高
-* 不需要锁机制，没有并发冲突（为了保护数据完整性，有协程互斥机制）
-
-
-
-#### yield 实现协程
+### 生成器提供的协程基础
 
 * 生成器和协程的区别：
   * 生成器，generator
@@ -1042,6 +1613,8 @@ asyncio.run(main())
     * yield给出当前值，同时使用yield接收下一个输入值
     * 调用者使用send()给协程函数传入参数，同时获取下一个值
     * 调用者使用close()关闭协程函数
+
+
 
 ```python
 def consumer():
@@ -1101,7 +1674,7 @@ producer(c)
 
 
 
-### python3.4：装饰器版本asyncio
+### 装饰器版本asyncio（python3.4）
 
 ```python
 import asyncio
@@ -1124,47 +1697,7 @@ loop.close()
 
 
 
-### gevent
-
-* gevent是一个基于greenlet实现的网络库，通过greenlet实现协程
-* gevent是对greenlet的高级封装，greenlet遇到io操作的时候就会切换到其他greenlet
-* greenlet封装了libevent时间循环的api，可以让开发者在不改变编程习惯的同时，用同步的方式写异步IO的代码
-
-
-
-#### 动态添加gevent示例
-
-```python
-import gevent
-
-count = 0
-
-# 子greenlet任务可以是一次性任务，也可以是死循环，但是死循环需要yield让渡执行权限
-def task(count):
-    while True:
-        print(count)
-        gevent.sleep(1)
-
-# 主greenlet循环执行或读取，等待时需要yield出让执行权限
-def main():
-    global count
-
-    while True:
-        count = count + 1
-        print("new task count %s" % count)
-        new = gevent.spawn(task, count)
-        gevent.sleep(1)
-
-if __name__ == "__main__"
-    # 启动主调度greenlet
-    main = gevent.spawn(main)
-    # 等待主调度greenlet执行完毕（死循环）
-    main.join()
-```
-
-
-
-### python3.5以上版本的asyncio
+### 新版asyncio（>python3.5）
 
 * python3.5引入关键字`async`、`await`
 * `async`关键字替换`@asyncio.coroutine`
@@ -1248,6 +1781,8 @@ async def main():
 if '__main__' == __name__:
 	asyncio.run(main())
 ```
+
+
 
 * 示例2
 
@@ -1367,6 +1902,8 @@ async def main():
 
 asyncio.run(main())
 ```
+
+
 
 * create_task嵌套执行定时任务示例
 
@@ -1841,6 +2378,8 @@ finally:
     lock.release()
 ```
 
+
+
 * 互斥量（独占资源）：asyncio.Condition
   * 互斥量必须与互斥锁一起使用
   * asyncio.Condition.acquire()封装了互斥锁
@@ -1863,6 +2402,8 @@ finally:
     cond.release()
 ```
 
+
+
 * 信号量（资源计数）：asyncio.Semaphore, BoundedSemaphore
 
 ```python
@@ -1879,6 +2420,8 @@ try:
 finally:
     sem.release()
 ```
+
+
 
 * 事件：asyncio.Event()
   * 阻塞等待：Event.wait()
@@ -2032,6 +2575,8 @@ if '__main__' == __name__:
     * 使用asyncio.run()时无需调用这个函数。
 
 
+
+
 ```python
 try:
     loop.run_forever()
@@ -2039,6 +2584,8 @@ finally:
     loop.run_until_complete(loop.shutdown_asyncgens())
     loop.close()
 ```
+
+
 
 
 * 调度回调函数
@@ -2099,3 +2646,151 @@ finally:
 
 
 ##### Event Loop 底层实现（平台区别）
+
+
+
+## gevent
+
+* gevent是一个基于greenlet实现的网络库，通过greenlet实现协程
+* gevent是对greenlet的高级封装，greenlet遇到io操作的时候就会切换到其他greenlet
+* greenlet封装了libevent时间循环的api，可以让开发者在不改变编程习惯的同时，用同步的方式写异步IO的代码
+
+
+
+* 动态添加gevent示例
+
+```python
+import gevent
+
+count = 0
+
+# 子greenlet任务可以是一次性任务，也可以是死循环，但是死循环需要yield让渡执行权限
+def task(count):
+    while True:
+        print(count)
+        gevent.sleep(1)
+
+# 主greenlet循环执行或读取，等待时需要yield出让执行权限
+def main():
+    global count
+
+    while True:
+        count = count + 1
+        print("new task count %s" % count)
+        new = gevent.spawn(task, count)
+        gevent.sleep(1)
+
+if __name__ == "__main__"
+    # 启动主调度greenlet
+    main = gevent.spawn(main)
+    # 等待主调度greenlet执行完毕（死循环）
+    main.join()
+```
+
+
+
+
+
+## 上下文变量，contextvars 
+
+* <https://docs.python.org/zh-cn/3/library/contextvars.html>
+* contextvars本地变量用于在并发环境中存储上下文变量，类似于threading.local()存储线程本地变量
+* 在`contextvars.Context.run`接口中调用的函数可以访问或者修改变量，将内容保存在Context上下文中
+
+
+
+* 示例
+
+
+
+
+```python
+var = ContextVar('var')
+var.set('spam')
+
+def main():
+    # 'var' was set to 'spam' before
+    # calling 'copy_context()' and 'ctx.run(main)', so:
+    # var.get() == ctx[var] == 'spam'
+
+    var.set('ham')
+
+    # Now, after setting 'var' to 'ham':
+    # var.get() == ctx[var] == 'ham'
+
+# 返回当前上下文中Context对象的拷贝
+ctx = copy_context()
+
+# Any changes that the 'main' function makes to 'var'
+# will be contained in 'ctx'.
+ctx.run(main)
+
+# The 'main()' function was run in the 'ctx' context,
+# so changes to 'var' are contained in it:
+# ctx[var] == 'ham'
+
+# However, outside of 'ctx', 'var' is still set to 'spam':
+# var.get() == 'spam'
+```
+
+
+
+
+* asyncio中原生支持context，每个asyncio.Task中使用自己当前Task的contextvar
+
+
+
+
+```python
+import asyncio
+import contextvars
+
+client_addr_var = contextvars.ContextVar('client_addr')
+
+def render_goodbye():
+    # The address of the currently handled client can be accessed
+    # without passing it explicitly to this function.
+
+    client_addr = client_addr_var.get()
+    return f'Good bye, client @ {client_addr}\n'.encode()
+
+async def handle_request(reader, writer):
+    addr = writer.transport.get_extra_info('socket').getpeername()
+    client_addr_var.set(addr)
+
+    # In any code that we call is now possible to get
+    # client's address by calling 'client_addr_var.get()'.
+
+    while True:
+        line = await reader.readline()
+        print(line)
+        if not line.strip():
+            break
+        writer.write(line)
+
+    writer.write(render_goodbye())
+    writer.close()
+
+async def main():
+    srv = await asyncio.start_server(
+        handle_request, '127.0.0.1', 8081)
+
+    async with srv:
+        await srv.serve_forever()
+
+asyncio.run(main())
+
+# To test it you can use telnet:
+#     telnet 127.0.0.1 8081
+```
+
+
+
+### ThreadLocal对比contextvars
+
+* to'do
+
+```python
+var = threading.local()
+```
+
