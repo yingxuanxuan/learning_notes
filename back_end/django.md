@@ -106,7 +106,7 @@ ctrl + shift + p
 
 ```sh
 # 创建项目目录
-mkdir django
+mkdir mysite
 
 # 使用脚手架创建项目
 
@@ -151,7 +151,7 @@ mysite/
     * `django.contrib.messages`，消息框架
     * `django.contrib.staticfiles`，静态文件框架
 
-```
+```python
 # project/settings.py
 
 INSTALLED_APPS = [
@@ -162,7 +162,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles'
 ]
-
 ```
 
 
@@ -180,6 +179,8 @@ python manage.py runserver 80
 # 指定IP+端口
 python manage.py runserver 0.0.0.0:80
 ```
+
+
 
 
 * 允许访问的host配置
@@ -224,7 +225,7 @@ python manage.py createsuperuser
 
 * 创建应用
 
-```
+```sh
 python manage.py startapp 应用名称
 python manage.py startapp polls
 ```
@@ -299,7 +300,7 @@ polls/
   ]
   ```
   
-  * 导入应用url
+  * 导入应用，修改项目的url.py
 
   ```py
   # website/urls.py
@@ -420,7 +421,7 @@ python manage.py makemigrations
 # 给特定应用创建迁移
 python manage.py makemigrations polls
 
-# 生成数据迁移文件
+# 生成的数据迁移文件
 # polls/migrations/0001_initial.py
 
 # 实施数据库迁移
@@ -491,9 +492,9 @@ q.choice_set.create(choice_text='The sky', votes=0)
 ### 使用Admin管理界面
 
 * 将应用的模型注册到管理应用
-  * Question可以直接注册称为一个表单
-  * Choice也可以直接注册称为表单，但是实际上Choice是与Question相关的，这样做的话，每添加一个Choice选项，都需要打开一个新的页面，都需要使用外键选择与哪一个Question相关联
-  * Choice注册为Question的关联对象，在Question添加、编辑界面内联表单
+  * Question可以直接注册为一个`ModelAdmin`
+  * Choice也可以直接注册为`ModelAdmin`，但是实际上Choice是与Question相关的，这样做的话，每添加一个Choice选项，都需要打开一个新的页面，都需要使用外键选择与哪一个Question相关联
+  * Choice注册为Question的内联对象，在Question添加、编辑界面内联表单
 
 ```py
 # polls/admin.py
@@ -525,21 +526,31 @@ admin.site.register(Question, QuestionAdmin)
 
 ```
 
+
+
 * 默认生成的模型管理类索引页
 
 ![Django admin index page, now with polls displayed](.gitbook/assets/admin03t.png)
+
+
 
 * 默认生成的Question list页面
 
 ![Polls change list page](.gitbook/assets/admin04t.png)
 
+
+
 * 默认生成的Question
 
 ![Editing form for question object](.gitbook/assets/admin05t.png)
 
+
+
 * Choice的`StackedInline`样式，默认5个，可以修改
 
 ![image-20230927212227141](.gitbook/assets/image-20230927212227141.png)
+
+
 
 * Choice的`TabularInline`样式，默认5个，可以修改
 
@@ -699,25 +710,31 @@ def vote(request, question_id):
 
 ### 自动化测试
 
+* todo
+
 
 
 ### 使用静态文件
+
+* todo
 
 
 
 ### 自定义后台HTML模板
 
+* todo
+
 
 
 ### 打包Django APP
 
-
-
-
+* todo
 
 
 
 ## 模型与数据库
+
+
 
 ### 数据模型，Model
 
@@ -752,8 +769,6 @@ DATABASES = {
 
 
 
-
-
 #### 概览
 * 每个Model都继承django.db.models.Model
 * Model的每个类属性都对应生成一个数据表的列column
@@ -762,8 +777,10 @@ DATABASES = {
 * 如果Model未定义主键，django自动为Model添加一个名为id的自增整数作为主键
 
 
-* 示例：
-```
+
+
+* 示例
+```python
 # 定义Model
 from django.db import models
 
@@ -780,12 +797,15 @@ CREATE TABLE "myapp_person" (
 ```
 
 
+
+
 * 发现模型迁移
-```
+
+```python
 # 先将模型所在app添加至website站点的settings.INSTALLED_APPS
 # 该app应用定义在`py manage.py startapp`时自动生成在`myapp/apps.py`
 
-INSTALLED_APPS = ['myapp.apps.MyappConfig']
+INSTALLED_APPS += ['myapp.apps.MyappConfig']
 
 # 发现模型迁移
 py manage.py makemigrations app
@@ -793,27 +813,39 @@ py manage.py makemigrations
 ```
 
 
+
+
 * 显示迁移记录
-```
+
+```sh
 py manage.py showmigrations
 py manage.py showmigrations catalog
 ```
 
 
+
+
 * 显示迁移SQL语句
-```
+
+```sh
 py manage.py sqlmigrate myapp 0001
 ```
 
 
+
+
 * 迁移模型
-```
+
+```sh
 py manage.py migrate
 ```
 
+
+
 * sql执行回调函数（钩子函数，包装函数）
 * connection.execute_wrapper(wrapper)
-```
+
+```python
 # 使用包装函数禁止sql查询
 def blocker(*args):
     raise Exception('这里禁止执行sql语句')
@@ -861,7 +893,10 @@ print(ql.queries)
 ```
 
 
+
+
 * sql历史记录
+
 ```
 # DEBUG=True时可以通过connection.queries显示sql语句
 # 结果为历史SQL语句词典列表：

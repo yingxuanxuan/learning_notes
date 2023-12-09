@@ -1,6 +1,57 @@
 # Celery
 
+
+
 ## 入门
+
+
+
+### 简介
+
+* 什么是 Celery
+  * 用于处理大量消息
+  * 一个分布式调度系统
+  * 以及相关操作的工具
+  * 使用 Python 语言编写，但支持多种其他语言客户端
+
+
+
+* 什么是任务队列，Task Queue
+  * 任务队列是用于跨线程、进程、及其分配工作的一种机制
+  * 任务队列传递的内容称为任务，即定义工作的信息
+  * 执行任务的称为工作线程（Worker），工作线程不断监视任务队列中的新任务，并执行任务
+  * 传递任务的队列中间件称为代理（Broker)，如 RabbitMQ
+  * Celery 支持多 Broker、多 Worker
+
+
+
+* 特点
+  * 简单
+    * 默认配置合理
+    * 渐进式学习曲线
+  * 高可用
+    * 工作线程支持自动重连、重试任务
+    * 支持 Broker 的高可用方案，如主从
+  * 快速
+    * 百万 / 每分钟
+    * 延迟亚毫秒级（特定Broker、特定设置）
+  * 灵活
+    * 高解耦
+    * 高可扩展
+
+
+
+* 支持的组件
+  * 消息队列，Broker
+    * Redis、RabbitMQ、Redis
+    * Amazon SQS
+
+  * 结果存储，Result Stores
+    * AMQP、Redis
+    * Memcached
+
+
+
 
 ### 入门示例
 
@@ -8,11 +59,11 @@
   * 完成任务
 
 * 步骤
-  * 安装python，略
-  * 安装celery
-  * 使用推荐Broker Rabbitmq
+  * 安装 Python，略
+  * 安装 Celery
+  * 使用推荐的 Broker —— Rabbitmq 
   * 编写任务
-  * 启动任务Worker
+  * 启动任务 Worker
   * 发布任务
 
 
