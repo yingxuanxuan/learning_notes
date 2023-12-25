@@ -1,41 +1,70 @@
 # CSS
 
+
+
 ## CSS基础
 
-* Cascading Style Sheet的缩写，层叠样式表
-* 用来控制网页样式，将样式与内容、结构的配置表
-* html发展早期通过元素属性来控制样式，但是结构与样式混用会使网页代码难以维护，逐步从html中解耦出来
-* CSS2.1之后，标准分模块制定，进展差异很大，所以放弃版本控制，采用定期发布标准
-* 浏览器会忽略不存在的属性和无效的属性值
+* 什么是CSS
+  * Cascading Style Sheet的缩写，层叠样式表
+  * 用来控制网页样式，将样式与内容、结构的配置表
+  * html发展早期通过元素属性来控制样式，但是结构与样式混用会使网页代码难以维护，逐步从html中解耦出来
+
+
+
+
+* 说明
+
+  * CSS2.1之后，标准分模块制定，进展差异很大，所以放弃版本控制，采用定期发布标准
+
+  * 浏览器会忽略不存在的属性和无效的属性值，而非报错
+
+
 
 ### CSS基本语法
 
-* 使用`/*注释*/`注释
-* 属性名称和属性值均不区分大小写
+* 基本规则
+  * 使用`/*注释*/`注释
+  * 属性名称和属性值均不区分大小写
+
+
+
 
 #### 行内CSS基本语法
 
-* 在html元素style属性内使用纯文本书写CSS
-* 多个属性用分号分割
+* 基本规则
+  * 在html元素style属性内使用纯文本书写CSS
+  * 属性与值之间使用冒号分隔
+  * 多个属性用分号分隔
+  * 多个值用空格分隔
+
 
 ```html
-<h1 style="color: blue;background-color: yellow;border: 1px solid black;">
+<h1 style="color:blue; background-color:yellow; border:1px solid black;">
   Hello World!
 </h1>
 ```
 
+
+
 #### 独立CSS基本语法
 
-* 选择器（Selector） + 大括号 + 多条声明组成属性集、规则集、规则
-* 大括号内多条声明（Declaration）用分号分割
-* 属性（Properties）和属性值（Property value）使用冒号分隔
-* 一个属性集使用多个选择器时，使用逗号分隔
+* 基本规则
+
+  * 选择器（Selector） + 大括号 + 多条声明组成属性集、规则集、规则
+
+  * 大括号内多条声明（Declaration）用分号分隔
+
+  * 属性（Properties）和属性值（Property value）使用冒号分隔
+
+  * 一个属性集使用多个选择器时，使用逗号分隔
+
 
 <div align="left">
-
-<figure><img src=".gitbook/assets/image (14).png" alt=""><figcaption></figcaption></figure>
-
+<figure>
+<img src=".gitbook/assets/image (14).png" alt=""><figcaption></figcaption>
+</figure>
 </div>
+
 
 示例：
 
@@ -52,7 +81,11 @@
 </style>
 ```
 
+
+
 ### 在HTML中使用CSS的方式
+
+
 
 #### 内联样式表（行内式）
 
@@ -77,6 +110,8 @@
   </body>
 </html>
 ```
+
+
 
 #### 内部样式表（嵌入式）
 
@@ -106,15 +141,21 @@
 </html>
 ```
 
+
+
 #### 外部样式表
 
 * css保存在独立文件，产生额外一次http请求
+
+
 
 示例：
 
 ```html
 <link rel="stylesheet" href="styles.css" />
 ```
+
+
 
 完整示例：
 
@@ -146,11 +187,24 @@ p {
 </html>
 ```
 
+
+
 ## CSS选择器
+
+
 
 ### 原子选择器
 
-#### 元素选择器（类型选择器、标签选择器、标签名选择器）
+
+
+#### 元素选择器
+
+* 又名
+  * 类型选择器
+  * 标签选择器
+  * 标签名选择器
+
+
 
 示例：
 
@@ -159,6 +213,8 @@ h1 {
 }
 ```
 
+
+
 #### 全局选择器
 
 ```css
@@ -166,6 +222,10 @@ h1 {
     margin: 0;
 }
 ```
+
+
+
+* 全局选择器特殊用途，区别自带选择器和伪类选择器
 
 ```css
 /* 全局选择器特殊用途，区别自带选择器和伪类选择器： */
@@ -176,12 +236,14 @@ h1 {
 */
 article :first-child {
 }
+
 /*
     artical元素选择器与:first-child中间无空格
     表示选择artical作为其他元素的第一个子元素
 */
 article:first-child {
 }
+
 /*
     使用*:first-child可以与伪类选择器显著区别
 */
@@ -189,13 +251,26 @@ article *:first-child {
 }
 ```
 
+
+
 #### 类选择器
 
-* 使用点加类名表示选择器
-* 不同html元素可以设置相同class
-* 一个html元素可以设置多个class类，使用空格分开
+* 格式
+  * 点加类名
 
-示例：
+
+
+
+* 说明
+
+  * 不同html元素可以设置相同class
+
+  * 一个html元素可以设置多个class类，使用空格分开
+  * html多个元素分类设置属性，而非每个元素设置所有属性是一种解耦的思想
+
+
+
+* 示例
 
 ```css
 .highlight {
@@ -203,9 +278,9 @@ article *:first-child {
 }
 ```
 
-* html多个元素分类设置属性，而飞每个元素设置所有属性是一种解耦的思想
 
-示例：
+
+* 示例
 
 ```html
 <!doctype html>
@@ -252,33 +327,50 @@ article *:first-child {
 </html>
 ```
 
+
+
 #### id选择器
 
-* 使用井号加类名表示选择器
-* html元素id页面唯一
+* 格式
+  * 使用井号加类名表示选择器
 
-示例：
+
+
+
+* 说明
+  * html元素id页面唯一
+
+
+
+
+* 示例
 
 ```css
 #unique {
 }
 ```
 
+
+
 #### 标签属性选择器
 
-根据标签上属性是否存在选择：
+* 使用方法1：根据标签上属性是否存在选择
 
 ```css
 a[title] {
 }
 ```
 
-根据标签上属性的值选择：
+
+
+* 使用方法2：根据标签上属性的值选择：
 
 ```css
 a[href="https://example.com"] {
 }
 ```
+
+
 
 #### 伪类、伪元素选择器
 
@@ -313,13 +405,23 @@ a:hover {
   * ::before，特殊伪元素
   * ::after，特殊伪元素
 
+
+
 ### 关系选择器（关系，Combinator，组合选择器）
+
+
 
 #### 组合选择器（官方文档中不认为是关系选择器的一种）
 
-* 多个选择器之间使用逗号分隔
-* 官方建议多个选择器之间换行排版
-* 官方认为只是将多个相同定义的选择器合并写在一起的一种写法
+* 格式
+  * 多个选择器之间使用逗号分隔
+  * 官方建议多个选择器之间换行排版
+
+
+
+
+* 说明
+  * 官方认为只是将多个相同定义的选择器合并写在一起的一种写法
 
 ```css
 /* 分开写法 */
@@ -340,13 +442,22 @@ span {
 }
 ```
 
+
+
 #### 交集选择器（官方文档中不认为是关系选择器的一种）
 
-* 多个原子选择器紧挨着书写
-* 由于没有分隔符，所以元素选择器只能在第一位
-* 由于一个html元素只有自身一种类型，所以元素选择器只能出现一次
-* 由于一个html元素只能设置一个id，所以id选择器只能出现一次
-* 由于一个html元素能设置多个class，所以class选择器可以出现多次
+* 格式
+  * 多个原子选择器紧挨着书写
+
+
+
+
+* 说明
+  * 由于没有分隔符，所以元素选择器只能在第一位
+  * 由于一个html元素只有自身一种类型，所以元素选择器只能出现一次
+  * 由于一个html元素只能设置一个id，所以id选择器只能出现一次
+  * 由于一个html元素能设置多个class，所以class选择器可以出现多次
+
 
 ```css
 /* 元素交类 */
@@ -362,6 +473,8 @@ p#pid{
 }
 ```
 
+
+
 #### 后代选择器
 
 * DOM树中元素的后代元素（支持多层嵌套，不必是直接孩子，包含子代）
@@ -371,6 +484,8 @@ p#pid{
 // Some code
 ```
 
+
+
 #### 子代关系选择器
 
 * DOM树中元素直接孩子元素
@@ -378,6 +493,8 @@ p#pid{
 
 ```markup
 ```
+
+
 
 #### 邻接兄弟选择器
 
@@ -388,6 +505,8 @@ p#pid{
 // Some code
 ```
 
+
+
 #### 通用兄弟选择器
 
 * DOM书中元素的兄弟元素（可不邻接）
@@ -397,13 +516,17 @@ p#pid{
 // Some code
 ```
 
+
+
 ## CSS继承、层叠、优先级
+
+
 
 ### 继承
 
-* 某些css属性会被内部元素集成，如font-size，font-wight，color
-* 某些css属性不会被内部元素继承，如width、margin、padding、border
-* 浏览器对部分标签的部分属性有特定设置，优先级较高，不会继承自父元素，如a，h1
+* 某些css属性会被内部元素集成，如`font-size`，`font-wight`，`color`
+* 某些css属性不会被内部元素继承，如`width`、`margin`、`padding`、`border`
+* 浏览器对部分标签的部分属性有特定设置，优先级较高，不会继承自父元素，如`<a>`，`<h1>`
 
 ```html
 <!-- h1标签和p标签均继承了body的color属性  -->
@@ -433,15 +556,16 @@ p#pid{
 ```
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
+
 
 #### 默认值
 
 * 协议中会规定每个属性的默认值（初始值）
 * 浏览器（user-agent）为了使得html结构在默认效果下能够区分，给属性设置了一部分默认值
+
+
 
 #### 继承控制
 
@@ -451,6 +575,8 @@ p#pid{
   * `revert`重置为浏览器的默认样式。在许多情况下，此值的作用类似于 `unset`。
   * `revert-layer` 重置为在上一个层叠层中建立的值。
   * `unset`将属性重置为自然值，也就是如果属性是自然继承那么就是 `inherit`，否则和 `initial` 一样
+
+
 
 示例：
 
@@ -486,13 +612,14 @@ p#pid{
 </html>   
 ```
 
+
+
 效果：
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (16).png" alt=""><figcaption></figcaption></figure>
-
 </div>
+
 
 说明：
 
@@ -500,6 +627,8 @@ p#pid{
 * 强制使用inherit属性值，则强制继承父元素\<body>的绿色
 * 强制使用initial属性值，color属性的协议默认值为黑色
 * 强制使用unset属性值，color属性为自然继承，则继承\<body>元素的绿色
+
+
 
 #### 重置所有属性
 
@@ -511,6 +640,8 @@ p {
 }
 ```
 
+
+
 ### 优先级（specificity），权重
 
 * 指向更具体的选择器权重越高，如id选择器>类选择器>元素选择器
@@ -521,11 +652,15 @@ p {
 * 选择器计分累加，但是不进位
 * 继承优先级低于所有选择器
 
+
+
 HTML：
 
 ```html
 <p class="special">我是什么颜色的？</p>
 ```
+
+
 
 CSS：
 
@@ -541,6 +676,8 @@ p {
 
 以上代码效果为红色，class选择器权重大于元素选择器
 
+
+
 #### !important强制优先，尽量避免使用
 
 ```css
@@ -550,9 +687,11 @@ p {
 }
 ```
 
+
+
 ### 层叠（cascade）
 
-* 同优先级的选择器，按解析顺序，后出现的属性覆盖先出现的
+* 同优先级的选择器，按CSS解析顺序，后出现的属性覆盖先出现的，不按HTML解析顺序
 
 &#x20; 示例：
 
@@ -565,6 +704,8 @@ p {
   color: blue;
 }
 ```
+
+
 
 ### 清除浏览器默认样式
 
@@ -621,9 +762,15 @@ table {
 }
 ```
 
+
+
 ## 常用属性
 
+
+
 ### 字体属性
+
+
 
 #### font综合属性
 
@@ -631,10 +778,14 @@ table {
 // Some code
 ```
 
+
+
 #### font-family
 
 * 字体在用户设备上没有时，使用默认字体
 * 可以设置多个备选字体，用逗号分隔
+
+
 
 #### font-size
 
@@ -642,12 +793,16 @@ table {
 * em，相对字体大小，1em=1倍字体大小
 * rem
 
+
+
 #### color
 
 * 可使用单词（枚举值）表示法赋值，不用加引号
 * rgb(0-255, 0-255, 0-255)，RGB表示法
 * rgba(0-255, 0-255, 0-255, 0-1)，RGBA表示法，多一个透明度（alpha）
 * \#FFFFFF 16进制表示法
+
+
 
 #### font-style
 
@@ -660,6 +815,8 @@ font-style: normal;
 font-style: italic;
 font-style: oblique;
 ```
+
+
 
 #### font-weight
 
@@ -675,7 +832,11 @@ font-weight: 1;
 font-weight: 1000;
 ```
 
+
+
 ### 文本属性
+
+
 
 #### text-decoration
 
@@ -684,17 +845,23 @@ font-weight: 1000;
 * underline 下划线
 * overline 上划线
 
+
+
 #### text-indent 缩进
 
 * 在每个p元素包裹内容的首行缩进
 * 一般使用em，相对字体大小
 * 也可以使用px
 
+
+
 #### line-height 行高
 
 * 文本正常在中间显示
 * 行高不会合并
 * 一般使用em，相对字体大小
+
+
 
 #### letter-spacing 文字间距，只对文字起作用
 
@@ -722,15 +889,16 @@ font-weight: 1000;
 * background填充的是contant、padding、border的部分
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (1) (1).png" alt=""><figcaption></figcaption></figure>
-
 </div>
+
 
 ### padding、margin
 
 * 以padding为例
 * margin，bolder-width，border-style，border-color类似
+
+
 
 ### 外边距折叠，外边距塌陷
 
@@ -771,6 +939,8 @@ padding: 1px 2px 3px;
 padding: 1px 2px 3px 4px;
 ```
 
+
+
 ### 盒子居中
 
 * 子盒子宽度不足以填充父盒子时，右填充margin
@@ -788,7 +958,7 @@ margin-right: auto;
 margin: 0 auto;
 ```
 
-###
+
 
 ### border，边框
 
@@ -822,6 +992,8 @@ border: none;
 border: 0;
 ```
 
+
+
 ### outline，外线
 
 * input 除边框外还有外线
@@ -832,7 +1004,11 @@ border: 0;
 outline: none;
 ```
 
+
+
 ## 布局,排版
+
+
 
 ### 默认流布局
 
@@ -841,6 +1017,8 @@ outline: none;
 * 行内元素（块内）水平方向从左到右依次分布
 * 使用css修改布局的过程就是逐步改变浏览器默认布局的过程，没有被改变的部分还会按默认布局
 * 嵌套在块内的内容，也按照块元素、行内元素的特性进行排版，如块\<ul>中的块\<li>
+
+
 
 #### 默认的html元素的布局分类
 
@@ -863,6 +1041,8 @@ outline: none;
     * 可以设置宽高
 * display: none，不显示
 
+
+
 #### 修改默认display的用途——排版，为默认inline的元素设置宽高
 
 ```css
@@ -877,6 +1057,8 @@ text-align: center;
 line-height: 与content的height相同;
 ```
 
+
+
 #### 修改默认display的用途——隐藏元素
 
 ```css
@@ -889,10 +1071,14 @@ display: none;
 
 * 给父元素设置flex布局、排列方式、拉伸，给子元素设置是否伸展
 
+
+
 ### 网格，Grid，display:grid
 
 * 给父元素设置行列，子元素自动布局
 * 也可以给子元素设置在父元素中占据的行列
+
+
 
 ### 表格布局，display:table
 
@@ -904,26 +1090,29 @@ display: none;
 * display:table-header-group，thead
 * display:table-footer-group，tfoot
 
+
+
 ### 多列布局
 
 
 
 ## 辅助布局
 
+
+
 ### 浮动，float
 
-####
-
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
-
 </div>
+
 
 #### 浮动的文字环绕特性（原始需求）
 
 * 浮动的组件脱离了标准文档流，但是会排开标准文档流中的内容，但是不会排开盒子
 * 浮动的组件可以使用margin占用标准文档流的空间，但是标准文档流的组件不能使用margin占用浮动组件的空间
+
+
 
 #### 浮动的特性
 
@@ -933,6 +1122,8 @@ display: none;
 * `float:right`，盒子向右靠拢
 * `float:none`，默认值，不浮动。
 * `float:inherit`，继承父元素的浮动属性。
+
+
 
 #### 清除浮动（解决浮动盒子造成父盒子塌陷）
 
@@ -978,36 +1169,37 @@ display: none;
 不浮动时父盒子高度被子盒子1+子盒子2撑开
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (17).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 child1浮动时，child1脱离标准文档流，父盒子高度=child2高度
 
+
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (18).png" alt=""><figcaption></figcaption></figure>
-
 </div>
 
 child1、child2都浮动时，child1、child2都脱离标准文档流，父盒子塌陷高度为0
 
+
 <div align="left">
-
 <figure><img src=".gitbook/assets/image (19).png" alt=""><figcaption></figcaption></figure>
-
 </div>
+
 
 方法一：固定高度
 
 * 给父盒子设置固定高度为子盒子高度
 * 缺点：不能被子盒子撑开高度，父子元素耦合，不易维护
 
+
+
 方法二：内墙法
 
 * 在所有浮动元素之后加一个空的块元素，设置清除浮动的css属性`clear: both;`
 * 缺点：结构冗余
+
+
 
 代码：
 
@@ -1056,16 +1248,18 @@ child1、child2都浮动时，child1、child2都脱离标准文档流，父盒�
 效果：父盒子高度自动撑开到最大的子元素高度
 
 <div align="left">
-
 <figure><img src=".gitbook/assets/image.png" alt=""><figcaption></figcaption></figure>
-
 </div>
+
+
 
 方法三：伪元素内墙
 
 * 使用伪元素给父盒子后面添加文本
 * 将文本转换成block
 * 设置clear:both;属性
+
+
 
 代码：
 
@@ -1111,6 +1305,8 @@ child1、child2都浮动时，child1、child2都脱离标准文档流，父盒�
 </html>
 ```
 
+
+
 方法四：overflow:hidden;
 
 * overflow的特性：
@@ -1121,6 +1317,8 @@ child1、child2都浮动时，child1、child2都脱离标准文档流，父盒�
 * 利用overflow实现修复父盒子塌陷：
   * 父盒子设置overflow:hidden;属性后，父盒子及其子盒子形成独立BFC区域
   * 计算BFC高度时，浮动子元素也参与计算
+
+
 
 代码：
 
@@ -1162,14 +1360,20 @@ child1、child2都浮动时，child1、child2都脱离标准文档流，父盒�
 </html>
 ```
 
+
+
 #### 为什么不能用div.display = inline-block实现多列布局
 
 * \<div>标签换行会导致inline-block中间出现空格，无法准确计算布局数值
 * \<div>连续书写可以解决这个问题，但是代码难以阅读
 
+
+
 #### 使用浮动进行列布局
 
 传统布局方式利用浮动实现多栏布局，用于布局的一行盒子会一起浮动
+
+
 
 ### 定位，position
 

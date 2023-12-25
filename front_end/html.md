@@ -1,5 +1,7 @@
 # HTML
 
+
+
 ## HTML的历史发展过程
 
 * 1993年6月，超文本标记语言第一版
@@ -9,13 +11,19 @@
 * **2000年05月，HTML4.01严格版（长时间流行版本）**
 * **2014年10月28日，HTML5（当前标准）**
 
+
+
 ## HTML是什么
 
 * HTML是HyperText Markup Language的缩写，超文本标记语言
 * 超文本指的是可以存放、展示图片、音频、视频、超链接等
 * 标记指的是`<>`包裹的标签，用于描述文档的功能和结构
 
+
+
 ## HTML结构规范
+
+
 
 ### HTML5结构
 
@@ -41,6 +49,8 @@
 </html>
 ```
 
+
+
 ### HTML4.01文档声明
 
 ```html
@@ -49,12 +59,18 @@ Transitional//EN" "http://www.w3.org/TR/
 xhtml1/DTD/xhtml1-transitional.dtd">
 ```
 
+
+
 ## HTML常用标签
+
+
 
 ### h标签，heading，标题标签
 
 * 不要为了调整大小跳过标签级别使用标签
-* 不要利用h标签调整字体大小
+* 不要利用h标签调整字体大小（HTML描述结构、CSS描述样式）
+
+
 
 #### h标签示例
 
@@ -86,10 +102,13 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### p标签，paragraph，段落标签
 
 * 默认多个文本之间的换行、空格会空白折叠，缩减成单个空格
 * 使用p标签包裹的内容占据整块布局显示，具有段落间距和首行缩进
+
+
 
 #### p标签示例
 
@@ -121,9 +140,9 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <div align="left">
 <figure><img src=".gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
-### strong标签，强调，
 
-### em标签，emphasis，着重标签
+
+### strong标签，强调 & em标签，emphasis，着重标签
 
 * strong比em标签更加强调
 * strong默认使用粗体显示
@@ -131,6 +150,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 * strong更加常用
 * strong与b标签比较，strong带有逻辑意义，b仅标识物理样式
 * em与i标签同上
+
+
 
 #### strong，em示例
 
@@ -155,11 +176,14 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### br标签，换行
 
 * 文本换行存在空白折叠，达不到换行效果，即多个空格和换行会替换为一个空格
-* xhtml中规范协作`<br/>`，html5中写作`<br>`
+* xhtml中规范写作`<br/>`，html5中写作`<br>`
 * 编程规范习惯使用`<br/>`，容易分辨出单闭合标签
+
+
 
 #### br示例
 
@@ -195,10 +219,13 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <figure><img src=".gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### hr标签，horizontal，水平分割线
 
 * 默认样式为水平线，html5标准将hr定义修改为分割结构上主题内容的转换
 * 仅效果上的水平分割线应使用css实现
+
+
 
 #### hr示例
 
@@ -235,11 +262,14 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### ul标签，unordered list，无序列表
 
 * 可以通过css属性list-style-type设置列表前的圆点样式
 * ul自身可以无限嵌套
 * ul和ol可以交替使用，并无限嵌套
+
+
 
 #### ul示例
 
@@ -267,7 +297,10 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### ol标签，ordered list，有序列表
+
+
 
 #### ol示例
 
@@ -295,11 +328,14 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### dl标签，description list，描述列表
 
 * dl也可以解释为definition list，定义列表
 * dt，description term，描述项
 * dd，description details，描述细节
+
+
 
 #### dl示例
 
@@ -335,6 +371,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <figure><img src=".gitbook/assets/image (2) (2).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### table标签，表格
 
 * \<table>\</table> 最外层表格标签
@@ -346,6 +383,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 * \<th>\</th> 标题项，可选，可以在首行中均为th，也可以在各行中第一列为th
 * \<caption> 表标题，可选
 * \<colgroup> 列组，可选，给列分组，整体设置属性
+
+
 
 #### 完整表格示例
 
@@ -399,6 +438,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 #### 最简表格示例
 
 代码：
@@ -431,6 +471,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <div align="left">
 <figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
+
 
 #### 跨行跨列示例
 
@@ -508,6 +549,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 <figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 #### 简单单线边框，分割线为2像素
 
 ```css
@@ -522,6 +564,8 @@ table{
 }
 ```
 
+
+
 #### 边框合并属性，border-collapse
 
 ```css
@@ -532,6 +576,8 @@ table{
     border-collapse: collapse;
 }
 ```
+
+
 
 #### 单像素边框设置css，表头固定表身滚动时border-collapse不能正确显示
 
@@ -559,7 +605,11 @@ tr:last-child td{
 }
 ```
 
+
+
 ### a标签，anchor，锚点
+
+
 
 #### target属性
 
@@ -571,6 +621,8 @@ tr:last-child td{
   * `_parent`：当前浏览环境的父级浏览上下文。如果没有父级框架，行为与 `_self` 相同。
   * `_top`：最顶级的浏览上下文（当前浏览上下文中最“高”的祖先）。如果没有祖先，行为与 `_self` 相同。
 
+
+
 #### 相对路径
 
 ```html
@@ -578,6 +630,8 @@ tr:last-child td{
 <a href="/zh-CN/docs/Web/HTML">相对于源的 URL</a>
 <a href="./p">相对于路径的 URL</a>
 ```
+
+
 
 #### 页面内跳转
 
@@ -588,6 +642,8 @@ tr:last-child td{
 <!-- 要链接到的标签 -->
 <h2 id="Section_further_down">id所在位置</h2>
 ```
+
+
 
 #### a标签实例
 
@@ -617,6 +673,8 @@ tr:last-child td{
 <div align="left">
 <figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 </div>
+
+
 #### 屏蔽默认跳转行为
 
 * 方法一，onclick函数返回false
@@ -637,10 +695,14 @@ tr:last-child td{
 <a href="javascript:void(0);">Link</a>
 ```
 
+
+
 ### img标签，image，图片
 
 * alt属性，在获取不到图片时，在图片位置替代显示
 * width和height只设置一个时，会自动保持宽高比
+
+
 
 #### img标签示例
 
@@ -665,12 +727,15 @@ tr:last-child td{
 <figure><img src=".gitbook/assets/image (9) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### form标签，表单
+
+
 
 #### form常用属性
 
 * action属性，值为表单提交的路径，这个值可被 `<button>`、`<input type="submit">` 或`<input type="image">` 元素上的 `formaction` 属性覆盖。
-* method属性，值为表单提交的http方法，默认为get，可能的值：
+* method属性，值为表单提交的http方法，==默认为get==，可能的值：
   * get，表单数据附加在action指向的提交路径url后，以?分隔
   * post，表单数据附加在表单体内
   * dialog，略
@@ -678,6 +743,8 @@ tr:last-child td{
   * `application/x-www-form-urlencoded`：未指定属性时的默认值
   * `multipart/form-data`：当表单包含 `type=file` 的`<input>`元素时使用此值
   * `text/plain`：出现于 HTML5，用于调试。这个值可被 `<button>`、`<input type="submit">` 或 `<input type="image">` 元素上的 `formenctype` 属性覆盖。
+
+
 
 #### input常用属性
 
@@ -692,11 +759,14 @@ tr:last-child td{
 * 设置input的readonly属性，使输入框只读（页面生成前会从后端获取默认值），效果为可选不可修改
 * 设置input的disabled属性，使得输入框组件不可操作
 * 设置input的required属性，使得输入框组件无值时，前端不允许提交
-*
+
+
 
 #### input类型示例
 
 [https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input#input\_%E7%B1%BB%E5%9E%8B](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/input#input\_%E7%B1%BB%E5%9E%8B)
+
+
 
 #### form get提交示例
 
@@ -730,6 +800,8 @@ url:
 http://192.168.4.101:5555/anything?username=yx&password=123456
 ```
 
+
+
 #### form post提交示例
 
 代码：
@@ -762,6 +834,7 @@ http post内容：
 <div align="left">
 <figure><img src=".gitbook/assets/image (3).png" alt=""><figcaption></figcaption></figure>
 </div>
+
 
 #### label关联input
 
@@ -808,13 +881,15 @@ http post内容：
 <figure><img src=".gitbook/assets/test.gif" alt=""><figcaption></figcaption></figure>
 </div>
 
-### \<input type="radio"> 单选
 
-* name属性值相同的radio标签为相同单选的不同选项
-* 相同单选的不同选项互斥
+### \<input type="radio">，单选
+
+* ==name属性值相同的radio标签为相同单选的不同选项==
+* ==相同单选的不同选项互斥==
 * 可以结合label标签for属性为input.radio设置关联标签
 * 设置`input.checked="checked"`的单选input标签为默认选项，或者仅添加`input.checked`属性
 * `input.value`属性的值为`input.radio`当前值，即表单提交时`input.radio.name`对应表单项的值
+* 不设置`input.value`会导致选中值为`on`
 
 代码：
 
@@ -849,7 +924,8 @@ http post内容：
 <figure><img src=".gitbook/assets/test (1).gif" alt=""><figcaption></figcaption></figure>
 </div>
 
-### \<input type="checkbox"> 多选
+
+### \<input type="checkbox">，多选
 
 代码：
 
@@ -878,7 +954,7 @@ http post内容：
 </html>
 ```
 
-效果1：无选择时无payload
+效果1：无选择，无payload
 
 <div align="left">
 <figure><img src=".gitbook/assets/image (10).png" alt=""><figcaption></figcaption></figure>
@@ -898,7 +974,8 @@ http post内容：
 <figure><img src=".gitbook/assets/image (12).png" alt=""><figcaption></figcaption></figure>
 </div>
 
-### \<input type="file"> 文件选择
+
+### \<input type="file">，文件选择
 
 * 上传文件时，form.method必须为"post"，form.enctype必须为"multipart/form-data"，否则只会有文件名表单字段上传
 * 设置input.file.multiple属性，可以上传多个文件
@@ -935,6 +1012,7 @@ http post内容：
 <div align="left">
 <figure><img src=".gitbook/assets/image (3) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
+
 
 ### select标签，下拉列表
 
@@ -987,6 +1065,7 @@ http post内容：
 <figure><img src=".gitbook/assets/image (14) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### textarea标签，文本区域
 
 * 支持多行输入显示
@@ -1023,6 +1102,7 @@ http post内容：
 <figure><img src=".gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 ### \<input type="reset"> 复位
 
 * 类似input.submit，可以通过value属性设置按钮名称，默认名称是”复位“
@@ -1050,6 +1130,8 @@ http post内容：
     </form>
 </html>
 ```
+
+
 
 ### button标签，普通按钮
 
@@ -1089,7 +1171,8 @@ http post内容：
 <figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
-### div标签，division，内容划分
+
+### div标签，division，块级内容分割 / span标签，行内内容分割
 
 
 

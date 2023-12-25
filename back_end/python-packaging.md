@@ -16,15 +16,41 @@
 
 ### pyinstaller
 
+* 什么是打包模式
+  * 目录模式
+    * 默认
+    * 参数`-D`
+    * 打包到目录中
+  * 文件模式
+    * 参数`-F`
+    * 打包到自解压文件中
+    * 解压到临时目录后运行
+    * 注意当前文件位置会在临时目录
+
+
+
+* 编译后获取正确运行路径的方法
+  * 文件法
+    * `os.path.abspath(__file__)`
+  * 运行参数法
+    * `sys.argv[0]`
+  * 检测冻结法
+    * 打包的文件`getattr(sys, 'frozen', False)`为真
+    * `sys.executable`为可执行文件路径
+
+
+
 #### 安装
 
-```
+```sh
 pip3 install wheel
 pip3 install pyinstaller
 ```
 
 * 将PyQt加入PATH
 * 手动安装uxp：https://upx.github.io/
+
+
 
 #### 简单示例
 
@@ -47,6 +73,8 @@ cd /d %~dp0 # 切换到脚本所在目录
 pyinstaller -F --clean -n io  ../main.py
 pause       # 按下pause再消失窗口
 ```
+
+
 
 #### 参数解释
 
@@ -72,12 +100,16 @@ pause       # 按下pause再消失窗口
 --noupx # 不使用UPX
 ```
 
+
+
 #### 代码混淆
 
 * pyinstaller将文件编译为pyc文件，pyc是未经过优化的字节码，很容易被反编译
 * pyinstaller可以将发布文件使用AES256加密，但是很容易从exe中找到密钥并解密发布文件，
 * py文件可以编译为pyo文件，pyo文件是经过优化的字节码、并且删除了文档和注释，但是pyo也很容 易被反编译，而且影响pyinstaller定位import文件
 * 可以将文件编译为pyo为pyinstaller手动添加import？？？？？？？？？？？？？？？？？？？？
+
+
 
 #### 可复用脚本、配置
 
@@ -88,6 +120,8 @@ pyi-makespec options script.py [other scripts ...]
 # 使用scpc配置文件编译（只支持有限的options）
 pyinstaller options script.spec  
 ```
+
+
 
 #### linux下使用pyinstaller
 
@@ -121,6 +155,8 @@ cp /home/yingxuanxuan/python/Python-3.8.5/libpython3.* .
 # 根据spec文件打包
 /usr/python38/bin/pyinstaller --distpath linux --workpath tmp_linux --clean -F ./io_linux.spec
 ```
+
+
 
 #### windows下添加version_file
 
@@ -184,6 +220,8 @@ VSVersionInfo(
 )
 ```
 
+
+
 #### spec file中添加版本号及图标
 
 - **如果使用spec file，命令行中添加版本号及图标的参数将无效，文档中没有说明**
@@ -197,4 +235,13 @@ exe = EXE(
 )
 ```
 
-## 
+
+
+#### 如何打包隐式导入的依赖
+
+* 什么是隐式导入
+  * 通过`import`语句导入的包为显式导入，pyinstaller 可以检测并自动打包依赖
+  * 通过字符串模式导入的包为隐式导入，pyinstaller 不能检测打包
+  * 需要在spec文件中加入`hidden import`列表中
+
+#### 

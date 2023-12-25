@@ -46,10 +46,76 @@
     * Redis、RabbitMQ、Redis
     * Amazon SQS
 
-  * 结果存储，Result Stores
+  * 结果存储，Result Stores（后端，Backends）
     * AMQP、Redis
     * Memcached
+    * SQLAlchemy、Django ORM
+    * Apache Cassandra、Elasticsearch、Riak
+    * MongoDB、CouchDB、Couchbase、ArangoDB
+    * Amazon DynamoDB、Amazon S3
+    * Microsoft Azure Block Blob，Microsoft Azure Cosmos DB
+    * File system
 
+  * 并发，Concurrency
+    * prefork（multiprocessing）
+    * Eventlet、gevent
+    * thread（multithreaded）
+    * solo（single threaded）
+
+  * 序列化，Serialization
+    * pickle、json、yaml、msgpack
+    * zlib、bzip2 compression
+    * Cryptographic message signing
+
+
+
+
+* 附加组件，Bundles
+  * 序列化器，Serializers
+    * celery[auth]
+    * celery[msgpack]
+    * celery[yaml]
+  * 并发，Concurrency
+    * celery[eventlet]
+    * celery[gevent]
+  * 传输和后端，Transports and Backends
+    * celery[librabbitmq]
+    * celery[redis]
+    * celery[sqs]
+    * celery[tblib]
+    * celery[memcache]
+    * celery[pymemcache]
+    * celery[cassandra]
+    * celery[couchbase]
+    * celery[arangodb]
+    * celery[elasticsearch]
+    * celery[riak]
+    * celery[dynamodb]
+    * celery[zookeeper]
+    * celery[sqlalchemy]
+    * celery[pyro]
+    * celery[slmq]
+    * celery[consul]
+    * celery[django]
+
+
+
+* 安装附加包的方法
+
+```sh
+pip install "celery[librabbitmq]"
+pip install "celery[librabbitmq,redis,auth,msgpack]"
+```
+
+
+
+* 特性
+  * 监控，Monitoring
+  * 调度，Scheduling
+  * 工作流，Work-flows
+  * 资源泄漏保护，Resource Leak Protection
+  * 时间和速率限制，Time & Rate Limits
+  * 定制用户组件，User Components
 
 
 
@@ -85,6 +151,9 @@ docker run --name rabbitmq -p 5672:5672 -p 15672:15672 -d --restart=unless-stopp
 
 
 * 任务
+  * 本示例所有工作都在一个文件中完成
+  * 较大的项目应当在一个模块中实现
+
 
 ```py
 # task.py
@@ -111,6 +180,9 @@ celery -A tasks worker --loglevel=INFO
 
 
 * 发布任务
+  * `delay()`是`apply_async()`的快接方法
+  * 发布任务会返回一个`AsyncResult`用于获得执行结果，默认是不启用的
+
 
 ```sh
 # publisher.py
@@ -177,7 +249,9 @@ def add(x, y):
 
 
 
-* 发布任务
+* 发布任务并获得结果
+  * ==如果开启结果存储就必须获取结果，否则会导致资源无法释放==
+
 
 
 ```py
@@ -186,10 +260,18 @@ def add(x, y):
 from task import add
 result = add.delay(4, 4)
 
+
+# 判断是否执行完成
+# result.ready()
+
+
+# 获得异常回溯
+# result.traceback
+
+
 # get，阻塞等待结果
 # timeout，阻塞超时时间
-# propagate，传播异常
-
+# propagate，是否传播异常
 print(result.get(propagate=True, timeout=5))
 ```
 
@@ -299,7 +381,11 @@ def spam_filter(comment_id, remote_addr=None):
 
 
 
-* broker建议
+* Broker建议
+  * Status=Experimental，没有专门的维护人员
+  * Monitoring=No，Broker没有事件产生，`Flower`、`celery events`、`celerymon`监控工具无法生效
+  * Remote Control=No，`Celery inspect`、`Celery control`无法工作
+
 
 | **Name**     | **Status**   | **Monitoring** | **Remote Control** |
 | ------------ | ------------ | -------------- | ------------------ |
@@ -323,6 +409,17 @@ def spam_filter(comment_id, remote_addr=None):
 
 
 
+* rabbitmq初始化
+
+```sh
+sudo rabbitmqctl add_user myuser mypassword
+sudo rabbitmqctl add_vhost myvhost
+sudo rabbitmqctl set_user_tags myuser mytag
+sudo rabbitmqctl set_permissions -p myvhost myuser ".*" ".*" ".*"
+```
+
+
+
 
 
 ### redis
@@ -333,8 +430,14 @@ def spam_filter(comment_id, remote_addr=None):
 # 安装
 # pip install -U "celery[redis]"
 
-# 格式
+# celery socket格式
 # redis://:password@hostname:port/db_number
+
+# celery unix socket格式
+# redis+socket:///path/to/redis.sock
+
+# celery unix socket 指定 vhost 格式
+# redis+socket:///path/to/redis.sock?virtual_host=db_number
 
 app.conf.broker_url = 'redis://localhost:6379/0'
 
@@ -343,6 +446,12 @@ app.conf.broker_url = 'redis://localhost:6379/0'
 
 
 * 哨兵连接
+
+```sh
+app.conf.broker_url = 'sentinel://localhost:26379;sentinel://localhost:26380;sentinel://localhost:26381;'
+app.conf.broker_transport_options = { 'master_name': 'cluster1' }
+app.conf.broker_transport_options = { 'sentinel_kwargs': { 'password': 'password' } }
+```
 
 
 
@@ -509,6 +618,13 @@ result_backend = 'redis://'
 
 
 
+* worker并发数
+  * 默认与CPU线程数相同
+  * 可以通过`-c`指定
+  * IO密集型任务可以指定为CPU线程数的2倍
+
+
+
 ```sh
 # eventlet
 pip install eventlet
@@ -533,6 +649,28 @@ def add(x, y): return x + y
 if __name__ == '__main__':
     args = ['worker', '--loglevel=INFO']
     app.worker_main(argv=args)
+```
+
+
+
+### 后台启动
+
+* 后台启动使用`celery multi`命令
+
+
+
+```py
+# 启动
+celery multi start w1 -A proj -l INFO
+
+# 重启
+celery multi restart w1 -A proj -l INFO
+
+# 停止
+celery multi stop w1 -A proj -l INFO
+
+# 安全停止
+celery multi stopwait w1 -A proj -l INFO
 ```
 
 
