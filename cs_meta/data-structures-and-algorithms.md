@@ -1187,7 +1187,7 @@ hanoi(3, 1, 2, 3)
 * 复杂度：
     * 最差O(n)
 
-### 二分查找、折半查找、Binary Sea5rch
+### 二分查找、折半查找、Binary Search
 
 * 复杂度：
     * 循环减半 O(logn)

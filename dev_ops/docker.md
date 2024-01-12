@@ -80,7 +80,7 @@
 
 * 其他概念
   * Docker Daemon，后台服务，包括
-    * Docker Server，与用户接口进行通讯，控制Docker雨欣
+    * Docker Server，与用户接口进行通讯，控制Docker运行
     * Docker Engine，任务管理
   * Docker Client，用户接口
   * rootfs(layered)，迷你版操作系统
@@ -158,6 +158,7 @@ EOF
 systemctl daemon-reload
 systemctl restart docker
 ```
+
 
 
 ### 启动
@@ -281,16 +282,16 @@ docker images -a
 * 默认搜索，<https://hub.docker.com>
 
 ```sh
-docker search reponame
+docker search 镜像名称
 
 # 显示详细信息
-docker search --no-trunc reponame
+docker search --no-trunc 镜像名称
 
 # 过滤star数30以上
-docker search -s 30 reponame
+docker search -s 30 镜像名称
 
 # 限制搜索数量
-docker search --limit 5 redis
+docker search --limit 5 镜像名称
 ```
 
 ![image-20230920125435518](.gitbook/assets/image-20230920125435518.png)
@@ -874,8 +875,6 @@ docker run -it --name dc01 zzyy/centos
 docker run -it --name dc02 --volumes-from dc01 zzyy/centos
 docker run -it --name dc03 --volumes-from dc01 dc02 zzyy/centos
 ```
-
-
 
 
 
@@ -1505,7 +1504,11 @@ portainer/portainer-ce:latest
 
 ## 案例
 
+
+
 ### python
+
+
 
 #### 将自己的代码构建成镜像
 
@@ -1541,6 +1544,8 @@ docker build -t my-python-app .
 # 运行
 docker run -it --rm --name my-running-app my-python-app
 ```
+
+
 
 #### 使用容器运行当前目录的python文件
 
