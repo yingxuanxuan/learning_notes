@@ -27,3 +27,6 @@
 * [Python packaging](python-packaging.md)
 * [Python GUI](python-gui.md)
 * [Memcached](memcached.md)
+* [Starlette](starlette.md)
+* [Pydantic](pydantic.md)
+* [FastAPI](fastapi.md)
