@@ -65,16 +65,15 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 
 
-### h标签，heading，标题标签
+### h，标题标签
 
+* heading
 * 不要为了调整大小跳过标签级别使用标签
 * 不要利用h标签调整字体大小（HTML描述结构、CSS描述样式）
 
 
 
-#### h标签示例
-
-代码：
+* 示例代码
 
 ```html
 <!DOCTYPE html>
@@ -97,22 +96,24 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+* 示例效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (1) (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### p标签，paragraph，段落标签
+### p，段落标签
 
+* paragraph
 * 默认多个文本之间的换行、空格会空白折叠，缩减成单个空格
 * 使用p标签包裹的内容占据整块布局显示，具有段落间距和首行缩进
 
 
 
-#### p标签示例
-
-代码：
+示例代码
 
 ```html
 <!DOCTYPE html>
@@ -136,14 +137,18 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+示例效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (2) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### strong标签，强调 & em标签，emphasis，着重标签
+### strong，强调，em，着重标签
 
+* em, emphasis
 * strong比em标签更加强调
 * strong默认使用粗体显示
 * em默认使用斜体显示
@@ -153,9 +158,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 
 
-#### strong，em示例
-
-代码：
+示例代码
 
 ```html
 <!DOCTYPE html>
@@ -171,13 +174,16 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+示例效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (3) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### br标签，换行
+### br，换行
 
 * 文本换行存在空白折叠，达不到换行效果，即多个空格和换行会替换为一个空格
 * xhtml中规范写作`<br/>`，html5中写作`<br>`
@@ -185,9 +191,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 
 
-#### br示例
-
-代码：
+示例代码
 
 ```html
 <!DOCTYPE html>
@@ -214,22 +218,24 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+示例效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (3) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### hr标签，horizontal，水平分割线
+### hr，水平分割线
 
+* horizontal
 * 默认样式为水平线，html5标准将hr定义修改为分割结构上主题内容的转换
 * 仅效果上的水平分割线应使用css实现
 
 
 
-#### hr示例
-
-代码：
+示例代码
 
 ```html
 <!DOCTYPE html>
@@ -256,24 +262,25 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+示例效果
 
 <div align="left">
 <figure><img src=".gitbook/assets/image (4) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### ul标签，unordered list，无序列表
+### ul，无序列表
 
+* unordered list
 * 可以通过css属性list-style-type设置列表前的圆点样式
 * ul自身可以无限嵌套
 * ul和ol可以交替使用，并无限嵌套
 
 
 
-#### ul示例
-
-代码：
+示例代码
 
 ```html
 <!DOCTYPE html>
@@ -292,19 +299,22 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### ol标签，ordered list，有序列表
+### ol，有序列表
+
+* ordered list
 
 
 
-#### ol示例
-
-代码：
+示例代码
 
 ```html
 <!DOCTYPE html>
@@ -323,23 +333,25 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (6).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### dl标签，description list，描述列表
+### dl，描述列表
 
-* dl也可以解释为definition list，定义列表
+* dl，description list
+* 也可以解释为definition list，定义列表
 * dt，description term，描述项
 * dd，description details，描述细节
 
 
 
-#### dl示例
-
-代码：
+示例代码
 
 ```html
 <!DOCTYPE html>
@@ -366,13 +378,16 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (2) (2).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### table标签，表格
+### table，表格
 
 * \<table>\</table> 最外层表格标签
 * \<thead>\</thead> 表头结构，可选
@@ -387,6 +402,8 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 
 #### 完整表格示例
+
+示例代码
 
 ```html
 <!DOCTYPE html>
@@ -433,7 +450,10 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (1) (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
@@ -441,7 +461,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 #### 最简表格示例
 
-代码：
+代码
 
 ```html
 <!DOCTYPE html>
@@ -467,7 +487,10 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+
+
+效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (2) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
@@ -475,7 +498,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 
 #### 跨行跨列示例
 
-代码：
+代码
 
 ```html
 <!DOCTYPE html>
@@ -544,7 +567,7 @@ xhtml1/DTD/xhtml1-transitional.dtd">
 </html>
 ```
 
-效果：
+效果
 <div align="left">
 <figure><img src=".gitbook/assets/image (7).png" alt=""><figcaption></figcaption></figure>
 </div>
@@ -607,7 +630,9 @@ tr:last-child td{
 
 
 
-### a标签，anchor，锚点
+### a，锚点
+
+* anchor
 
 
 
@@ -647,7 +672,7 @@ tr:last-child td{
 
 #### a标签实例
 
-代码：
+代码
 
 ```html
 <!DOCTYPE html>
@@ -669,7 +694,10 @@ tr:last-child td{
 </html>
 ```
 
-效果：
+
+
+效果
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (8).png" alt=""><figcaption></figcaption></figure>
 </div>
@@ -697,16 +725,15 @@ tr:last-child td{
 
 
 
-### img标签，image，图片
+### img，图片
 
+* image
 * alt属性，在获取不到图片时，在图片位置替代显示
 * width和height只设置一个时，会自动保持宽高比
 
 
 
-#### img标签示例
-
-代码：
+示例代码
 
 ```html
 <!DOCTYPE html>
@@ -721,14 +748,16 @@ tr:last-child td{
 </html>
 ```
 
-效果：
+
+
+效果
 
 <div align="left">
 <figure><img src=".gitbook/assets/image (9) (1) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### form标签，表单
+### form，表单
 
 
 
@@ -770,7 +799,9 @@ tr:last-child td{
 
 #### form get提交示例
 
-代码：
+
+
+代码
 
 ```html
 <!DOCTYPE html>
@@ -789,12 +820,16 @@ tr:last-child td{
 </html>
 ```
 
-界面：
+
+
+界面
+
 <div align="left">
 <figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
 </div>
 
-url:
+
+url
 
 ```
 http://192.168.4.101:5555/anything?username=yx&password=123456
@@ -804,7 +839,7 @@ http://192.168.4.101:5555/anything?username=yx&password=123456
 
 #### form post提交示例
 
-代码：
+代码
 
 ```html
 <!DOCTYPE html>
@@ -823,7 +858,9 @@ http://192.168.4.101:5555/anything?username=yx&password=123456
 </html>
 ```
 
-界面：
+
+
+界面
 
 <div align="left">
 <figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption></figcaption></figure>
@@ -841,7 +878,9 @@ http post内容：
 * 点击label，定位到input
 * label标签的for属性设置为关联input标签的id属性
 
-代码：
+
+
+代码
 
 ```html
 <!DOCTYPE html>
@@ -875,7 +914,9 @@ http post内容：
 </html>
 ```
 
-效果：
+
+
+效果
 
 <div align="left">
 <figure><img src=".gitbook/assets/test.gif" alt=""><figcaption></figcaption></figure>
@@ -891,7 +932,9 @@ http post内容：
 * `input.value`属性的值为`input.radio`当前值，即表单提交时`input.radio.name`对应表单项的值
 * 不设置`input.value`会导致选中值为`on`
 
-代码：
+
+
+代码
 
 ```html
 <!DOCTYPE html>
@@ -918,7 +961,9 @@ http post内容：
 </html>
 ```
 
-效果：
+
+
+效果
 
 <div align="left">
 <figure><img src=".gitbook/assets/test (1).gif" alt=""><figcaption></figcaption></figure>
@@ -927,7 +972,7 @@ http post内容：
 
 ### \<input type="checkbox">，多选
 
-代码：
+代码
 
 ```html
 <!DOCTYPE html>
@@ -954,6 +999,8 @@ http post内容：
 </html>
 ```
 
+
+
 效果1：无选择，无payload
 
 <div align="left">
@@ -968,6 +1015,7 @@ http post内容：
 <figure><img src=".gitbook/assets/image (11).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 效果3：多选
 
 <div align="left">
@@ -981,7 +1029,9 @@ http post内容：
 * 设置input.file.multiple属性，可以上传多个文件
 * 设置input.file.accept属性，可以限制上传文件的MIME类型
 
-代码：
+
+
+代码
 
 ```html
 <!DOCTYPE html>
@@ -1003,7 +1053,9 @@ http post内容：
 </html>
 ```
 
-效果：
+
+
+效果
 
 <div align="left">
 <figure><img src=".gitbook/assets/image (1) (1) (1).png" alt=""><figcaption></figcaption></figure>
@@ -1014,14 +1066,16 @@ http post内容：
 </div>
 
 
-### select标签，下拉列表
+### select，下拉列表
 
 * select默认是单选，下拉列表
 * 给select标签添加multiple即可变成多选，样式变为选择框，按住ctrl键即可多选
 * 多选情况下可以添加多个selected作为默认选项
 * 用户选择的取值是select的value属性，如果没有value属性会使用text
 
-代码：
+
+
+代码
 
 ```html
 <!DOCTYPE html>
@@ -1047,17 +1101,21 @@ http post内容：
 </html>
 ```
 
+
+
 效果：单选下拉列表
 
 <div align="left">
 <figure><img src=".gitbook/assets/image (13).png" alt=""><figcaption></figcaption></figure>
 </div>
 
+
 效果：多选框
 
 <div align="left">
 <figure><img src=".gitbook/assets/image (15).png" alt=""><figcaption></figcaption></figure>
 </div>
+
 
 效果：payload
 
@@ -1066,7 +1124,7 @@ http post内容：
 </div>
 
 
-### textarea标签，文本区域
+### textarea，文本区域
 
 * 支持多行输入显示
 * 自动换行
@@ -1074,7 +1132,9 @@ http post内容：
 * 可以设置默认宽高
 * textarea是双闭合标签，内部包含的内容会显示在文本框内，所以空textarea中间不能包含空白
 
-代码：
+
+
+代码
 
 ```html
 <!DOCTYPE html>
@@ -1096,7 +1156,9 @@ http post内容：
 </html>
 ```
 
-样式：
+
+
+样式
 
 <div align="left">
 <figure><img src=".gitbook/assets/image (9) (1).png" alt=""><figcaption></figcaption></figure>
@@ -1108,7 +1170,9 @@ http post内容：
 * 类似input.submit，可以通过value属性设置按钮名称，默认名称是”复位“
 * 按下按钮会将form内所有input内容清空，有默认值则恢复默认值
 
-代码：
+
+
+代码
 
 ```html
 <!DOCTYPE html>
@@ -1133,7 +1197,7 @@ http post内容：
 
 
 
-### button标签，普通按钮
+### button，普通按钮
 
 * button标签与input.submit默认样式可能不同
 * button标签默认`type="submit"`
@@ -1143,7 +1207,9 @@ http post内容：
   * `type="button"`，等同于`<input type="button">`
   * `type="reset"`，等同于`<input type="reset">`
 
-代码：
+
+
+代码
 
 ```html
 <!DOCTYPE html>
@@ -1165,14 +1231,20 @@ http post内容：
 </html>
 ```
 
-效果：
+
+
+效果
 
 <div align="left">
 <figure><img src=".gitbook/assets/image (2) (1).png" alt=""><figcaption></figcaption></figure>
 </div>
 
 
-### div标签，division，块级内容分割 / span标签，行内内容分割
+### div，块级内容分割
+
+### span，行内内容分割
+
+* division
 
 
 

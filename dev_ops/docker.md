@@ -110,7 +110,11 @@
 
 
 
-### CentOS yum安装
+### CentOS安装docker
+
+
+
+#### yum安装
 
 ```sh
 # 卸载旧版本
@@ -141,7 +145,7 @@ sudo yum install docker-ce docker-ce-cli containerd.io
 
 
 
-### 镜像加速
+#### 镜像加速
 
 * 需要在阿里云申请加速器地址
 * 修改配置文件使用加速器，`/etc/docker/daemon.json`
@@ -161,7 +165,7 @@ systemctl restart docker
 
 
 
-### 启动
+#### 启动
 
 ```sh
 # 启动
@@ -174,6 +178,19 @@ systemctl status docker
 # 本地不存在该镜像，会从docker hub下载
 docker run hello-world
 ```
+
+
+
+### Win11安装Docker Desktop
+
+*  安装系统组件
+  * 打开 "控制面板 -> 所有控制面板项 -> 程序和功能"
+  * 打开 ”启用或关闭 Windows 功能“
+  * 勾选，”Hyper-V“, "容器", "适用于 Linux 的 Windows 子系统"
+
+
+
+* 安装docker desktop
 
 
 
@@ -2062,6 +2079,13 @@ redis-cli --cluster del-node IP:6387 6387id
 
 ```sh
 docker pull redislabs/redisinsight
+
+docker run 
+-d
+-p 6379:6379
+--name redisinsight
+--privileged=true
+redislabs/redisinsight
 ```
 
 

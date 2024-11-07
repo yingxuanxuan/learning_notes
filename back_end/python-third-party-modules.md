@@ -845,6 +845,27 @@ for i in query:
 
 
 
+## python-dotenv
+
+
+
+### 功能简介
+
+* 自动当前目录下加载`.env`文件
+* 导入环境变量
+
+
+
+### 文档
+
+<https://github.com/theskumar/python-dotenv>
+
+
+
+### 功能
+
+
+
 ## 创建windows服务
 
 
